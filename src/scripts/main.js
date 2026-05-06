@@ -8,7 +8,7 @@ const stage = document.getElementById("stage");
     const powerButton = document.querySelector(".power-button");
     const volumeHud = document.getElementById("volumeHud");
     const volumeFill = document.getElementById("volumeFill");
-    const volumeLabel = document.getElementById("volumeLabel");
+    const volumeGlyph = document.getElementById("volumeGlyph");
     const muteToast = document.getElementById("muteToast");
     const lockDate = document.getElementById("lockDate");
     const lockTime = document.getElementById("lockTime");
@@ -22,6 +22,11 @@ const stage = document.getElementById("stage");
     let hudTimer;
     let toastTimer;
     let lockClockTimer;
+    let lastVolumePressAt = 0;
+    let lastVolumeButton = "";
+    let compactHudUntil = 0;
+
+    const DOUBLE_PRESS_WINDOW_MS = 360;
 
     const dateFormatter = new Intl.DateTimeFormat("en-GB", {
       weekday: "short",
@@ -145,6 +150,7 @@ const stage = document.getElementById("stage");
       }, 110);
     };
 
+
     const isInteractiveStep = () => activeStep === "step-5";
 
     const setPowerState = (off) => {
@@ -152,13 +158,25 @@ const stage = document.getElementById("stage");
       screen.classList.toggle("powered-off", isPoweredOff);
     };
 
-    const showVolumeHud = () => {
-      volumeLabel.textContent = isMuted ? "Silent" : "Ringer";
-      volumeFill.style.width = `${Math.round(volumeLevel * 100)}%`;
+    const getVolumeIcon = () => {
+      if (isMuted || volumeLevel <= 0) return "./assets/icons/muted.svg";
+      if (volumeLevel <= 0.25) return "./assets/icons/volume-low.svg";
+      if (volumeLevel <= 0.5) return "./assets/icons/volume-mid.svg";
+      if (volumeLevel <= 0.75) return "./assets/icons/volume-high.svg";
+      return "./assets/icons/volume-veryhigh.svg";
+    };
+
+    const showVolumeHud = (compact = false) => {
+      volumeFill.style.height = `${Math.round(volumeLevel * 100)}%`;
+      if (volumeGlyph) {
+        volumeGlyph.src = getVolumeIcon();
+      }
+      volumeHud.classList.toggle("compact", compact);
       volumeHud.classList.add("visible");
       window.clearTimeout(hudTimer);
       hudTimer = window.setTimeout(() => {
         volumeHud.classList.remove("visible");
+        volumeHud.classList.remove("compact");
       }, 820);
     };
 
@@ -179,21 +197,28 @@ const stage = document.getElementById("stage");
 
     const handleVolume = (up) => {
       if (!isInteractiveStep() || isPoweredOff) return;
+
+      const now = performance.now();
+      const buttonKey = up ? "up" : "down";
+      const isDoublePress = buttonKey === lastVolumeButton && now - lastVolumePressAt <= DOUBLE_PRESS_WINDOW_MS;
+      lastVolumePressAt = now;
+      lastVolumeButton = buttonKey;
+      if (isDoublePress) compactHudUntil = now + 1200;
+      const shouldShowCompact = now < compactHudUntil;
+
       const delta = up ? 0.14 : -0.14;
       volumeLevel = Math.max(0, Math.min(1, volumeLevel + delta));
       if (volumeLevel > 0 && isMuted) {
         isMuted = false;
-        showMuteToast(false);
         playTone("unmute");
       } else {
         playTone(up ? "volume-up" : "volume-down");
       }
       if (volumeLevel === 0 && !isMuted) {
         isMuted = true;
-        showMuteToast(true);
         playTone("mute");
       }
-      showVolumeHud();
+      showVolumeHud(shouldShowCompact);
     };
 
     const handleActionButton = () => {
@@ -202,7 +227,6 @@ const stage = document.getElementById("stage");
       if (isMuted) volumeLevel = Math.max(0, volumeLevel - 0.22);
       showMuteToast(isMuted);
       playTone(isMuted ? "mute" : "unmute");
-      showVolumeHud();
     };
 
     phoneButtons.forEach((button) => {
