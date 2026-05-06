@@ -5,496 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>iPhone 15</title>
-  <style>
-    :root {
-      --bg: #ffffff;
-      --body-1: #141416;
-      --body-2: #101013;
-      --body-3: #0c0c0e;
-      --bezel: #080809;
-      --screen-off-1: #080809;
-      --screen-off-2: #040405;
-      --screen-off-3: #010101;
-      --button: #26262a;
-      --button-shadow: #1a1a1d;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-    }
-
-    .scene {
-      height: 520vh;
-    }
-
-    .stage {
-      position: sticky;
-      top: 0;
-      width: 100%;
-      height: 100vh;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-    }
-
-    .iphone {
-      position: relative;
-      width: min(82vw, 360px);
-      aspect-ratio: 71.6 / 147.6;
-      border-radius: 58px;
-      padding: 11px;
-      background: linear-gradient(155deg, var(--body-1) 0%, var(--body-2) 48%, var(--body-3) 100%);
-      border: 1.5px solid #1b1b1f;
-      box-shadow:
-        0 38px 72px rgba(0, 0, 0, 0.18),
-        0 14px 24px rgba(0, 0, 0, 0.12),
-        inset 0 1px 1px rgba(255, 255, 255, 0.05),
-        inset 0 -1px 1px rgba(0, 0, 0, 0.28);
-      transform: translateX(0) scale(1);
-      transition: transform 220ms linear;
-    }
-
-    .rail {
-      position: absolute;
-      inset: 0;
-      border-radius: 58px;
-      pointer-events: none;
-      box-shadow:
-        inset 1.2px 0 1.6px rgba(255, 255, 255, 0.04),
-        inset -1.2px 0 1.6px rgba(0, 0, 0, 0.3),
-        inset 0 1px 1.2px rgba(255, 255, 255, 0.03),
-        inset 0 -1px 1.2px rgba(0, 0, 0, 0.26);
-    }
-
-    .phone-button {
-      position: absolute;
-      border: 0;
-      padding: 0;
-      margin: 0;
-      background: linear-gradient(180deg, #343439 0%, #26262a 55%, #1b1b1f 100%);
-      border-radius: 3px;
-      cursor: pointer;
-      z-index: 7;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.45);
-      transform-origin: center;
-      transition: transform 120ms ease, filter 120ms ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .phone-button:hover {
-      filter: brightness(1.08);
-      transform: scale(0.98);
-    }
-
-    .phone-button.is-pressed {
-      transform: scale(0.94);
-      filter: brightness(0.9);
-    }
-
-    .phone-button:focus-visible {
-      outline: 2px solid rgba(201, 255, 47, 0.8);
-      outline-offset: 2px;
-    }
-
-    .action-button {
-      left: -2px;
-      top: 19%;
-      width: 3px;
-      height: 28px;
-    }
-
-    .volume-up {
-      left: -2px;
-      top: 28.8%;
-      width: 3px;
-      height: 54px;
-    }
-
-    .volume-down {
-      left: -2px;
-      top: 39.2%;
-      width: 3px;
-      height: 54px;
-    }
-
-    .power-button {
-      right: -2px;
-      top: 30.5%;
-      width: 3px;
-      height: 88px;
-    }
-
-    .screen {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 47px;
-      background: linear-gradient(180deg, #070708 0%, #020203 100%);
-      border: 2px solid var(--bezel);
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.01),
-        inset 0 0 20px rgba(0, 0, 0, 0.84);
-      overflow: hidden;
-    }
-
-    .lime-fill {
-      position: absolute;
-      inset: 0;
-      background: #c9ff2f;
-      transform: translateY(102%);
-      transform-origin: bottom center;
-      transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-      z-index: 2;
-    }
-
-    .power-overlay {
-      position: absolute;
-      inset: 0;
-      background: #000;
-      opacity: 0;
-      transition: opacity 420ms ease;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-
-    .stage.step-3 .lime-fill,
-    .stage.step-4 .lime-fill {
-      transform: translateY(0);
-    }
-
-    .stage.step-4 .iphone {
-      transform: translateX(-31vw) scale(0.96);
-    }
-
-    .portfolio-word {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      margin: 0;
-      padding: 0;
-      color: #131313;
-      font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-      writing-mode: vertical-lr;
-      text-orientation: sideways;
-      font-size: clamp(66px, 12.2vw, 128px);
-      font-weight: 650;
-      line-height: 0.88;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      transform: translate(-170%, -50%);
-      opacity: 0;
-      transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease;
-      z-index: 5;
-      pointer-events: none;
-    }
-
-    .volume-hud {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) scale(0.92);
-      width: min(76%, 228px);
-      padding: 13px 14px 12px;
-      border-radius: 18px;
-      background: rgba(26, 26, 29, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px) saturate(1.2);
-      -webkit-backdrop-filter: blur(20px) saturate(1.2);
-      opacity: 0;
-      transition: opacity 220ms ease, transform 220ms ease;
-      z-index: 6;
-      pointer-events: none;
-    }
-
-    .volume-hud.visible {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .volume-hud-label {
-      margin: 0 0 8px;
-      color: rgba(255, 255, 255, 0.88);
-      font-size: 12px;
-      line-height: 1;
-      text-align: center;
-      letter-spacing: 0.01em;
-      font-weight: 500;
-    }
-
-    .volume-hud-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .volume-glyph {
-      width: 13px;
-      height: 11px;
-      border-radius: 2px;
-      background: rgba(255, 255, 255, 0.9);
-      position: relative;
-      flex: 0 0 13px;
-    }
-
-    .volume-glyph::before {
-      content: "";
-      position: absolute;
-      left: 12px;
-      top: 2px;
-      width: 6px;
-      height: 6px;
-      border-right: 2px solid rgba(255, 255, 255, 0.9);
-      border-top: 2px solid rgba(255, 255, 255, 0.9);
-      transform: rotate(45deg);
-    }
-
-    .volume-bar-track {
-      width: 100%;
-      height: 8px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.22);
-      overflow: hidden;
-    }
-
-    .volume-bar-fill {
-      width: 58%;
-      height: 100%;
-      border-radius: 999px;
-      background: #fff;
-      transition: width 180ms ease;
-    }
-
-    .mute-toast {
-      position: absolute;
-      left: 50%;
-      top: 74px;
-      transform: translateX(-50%) translateY(-10px);
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: rgba(15, 15, 17, 0.86);
-      color: #fff;
-      font-size: 12.5px;
-      letter-spacing: 0.01em;
-      opacity: 0;
-      transition: opacity 240ms ease, transform 240ms ease;
-      z-index: 6;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-
-    .mute-toast.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .stage.step-4 .portfolio-word {
-      transform: translate(0, -50%);
-      opacity: 1;
-    }
-
-    .stage.step-4 .screen.powered-off .lime-fill,
-    .stage.step-4 .screen.powered-off .portfolio-word {
-      opacity: 0;
-      transition: opacity 300ms ease;
-    }
-
-    .stage.step-4 .screen.powered-off .power-overlay {
-      opacity: 1;
-    }
-
-    .stage.step-4 .screen.powered-off .volume-hud,
-    .stage.step-4 .screen.powered-off .mute-toast {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.92);
-    }
-
-    .face-id-card {
-      position: absolute;
-      left: 50%;
-      top: 13px;
-      width: 26.8%;
-      aspect-ratio: 1;
-      border-radius: 999px;
-      background: #1f2025;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      gap: clamp(4px, 0.8vw, 10px);
-      padding-top: clamp(18px, 2.6vw, 28px);
-      transform: translateX(-50%) translateY(-26px) scale(0.16);
-      transform-origin: top center;
-      opacity: 0;
-      z-index: 7;
-      pointer-events: none;
-      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1), opacity 260ms ease;
-    }
-
-    .face-id-icon-wrap {
-      width: 46%;
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-
-    .face-id-icon,
-    .face-id-tick {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      transition: opacity 220ms ease, transform 220ms ease;
-    }
-
-    .face-id-icon {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .face-id-tick {
-      opacity: 0;
-      transform: scale(0.78);
-      display: grid;
-      place-items: center;
-    }
-
-    .face-id-tick::before {
-      content: "";
-      width: 34%;
-      height: 18%;
-      border-left: 4px solid #b5f745;
-      border-bottom: 4px solid #b5f745;
-      transform: rotate(-45deg);
-      border-radius: 2px;
-    }
-
-    .face-id-label {
-      color: #fff;
-      font-size: clamp(7px, 1.1vw, 12px);
-      font-weight: 550;
-      letter-spacing: -0.01em;
-      line-height: 1;
-      opacity: 1;
-      transition: opacity 220ms ease;
-    }
-
-    .dynamic-island {
-      transition: width 320ms cubic-bezier(0.22, 1, 0.36, 1), height 320ms cubic-bezier(0.22, 1, 0.36, 1), top 320ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .stage.step-1 .dynamic-island,
-    .stage.step-2 .dynamic-island {
-      width: 26.8%;
-      height: 29px;
-      top: 13px;
-      border-radius: 999px;
-    }
-
-    .stage.step-1 .face-id-card,
-    .stage.step-2 .face-id-card {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
-    }
-
-    .stage.step-2 .face-id-icon {
-      opacity: 0;
-      transform: scale(0.78);
-    }
-
-    .stage.step-2 .face-id-tick {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .stage.step-2 .face-id-label {
-      opacity: 0;
-    }
-
-    .screen::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0) 20%);
-      pointer-events: none;
-    }
-
-    .screen::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, rgba(255, 255, 255, 0) 18%, rgba(255, 255, 255, 0) 82%, rgba(255, 255, 255, 0.015) 100%);
-      pointer-events: none;
-    }
-
-    .dynamic-island {
-      position: absolute;
-      top: 13px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 26.8%;
-      height: 29px;
-      border-radius: 999px;
-      background: radial-gradient(75% 140% at 50% 0%, #060607 0%, #020202 56%, #000000 100%);
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.01),
-        inset 0 -1px 1px rgba(255, 255, 255, 0.01);
-      z-index: 8;
-    }
-
-    .dynamic-island::before {
-      content: "";
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 8.5px;
-      height: 8.5px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 38% 35%, #111216 0%, #090a0b 36%, #060708 100%);
-      box-shadow: inset 0 0 0 1px rgba(66, 72, 86, 0.3);
-    }
-
-    .shadow {
-      position: absolute;
-      width: 82%;
-      height: 7%;
-      bottom: -6.5%;
-      left: 9%;
-      background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0) 100%);
-      filter: blur(2px);
-      pointer-events: none;
-    }
-
-    @media (max-width: 900px) {
-      .stage.step-4 .iphone {
-        transform: translateX(-18vw) scale(0.94);
-      }
-
-      .action-button,
-      .volume-up,
-      .volume-down,
-      .power-button {
-        width: 2px;
-      }
-
-      .portfolio-word {
-        font-size: clamp(48px, 11.6vw, 90px);
-      }
-
-    }
-
-    
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/styles/main.css" />
 </head>
 
 <body>
@@ -507,19 +21,62 @@
         <button class="phone-button volume-down" type="button" aria-label="Bajar volumen"></button>
         <button class="phone-button power-button" type="button" aria-label="Boton lateral"></button>
         <div class="screen" aria-hidden="true">
-          <div class="lime-fill"></div>
-          <div class="power-overlay"></div>
-          <div class="dynamic-island"></div>
-          <div class="face-id-card" aria-hidden="true">
-            <div class="face-id-icon-wrap">
-              <svg class="face-id-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M8 3H7.8C6.11984 3 5.27976 3 4.63803 3.32698C4.07354 3.6146 3.6146 4.07354 3.32698 4.63803C3 5.27976 3 6.11984 3 7.8V8M8 21H7.8C6.11984 21 5.27976 21 4.63803 20.673C4.07354 20.3854 3.6146 19.9265 3.32698 19.362C3 18.7202 3 17.8802 3 16.2V16M21 8V7.8C21 6.11984 21 5.27976 20.673 4.63803C20.3854 4.07354 19.9265 3.6146 19.362 3.32698C18.7202 3 17.8802 3 16.2 3H16M21 16V16.2C21 17.8802 21 18.7202 20.673 19.362C20.3854 19.9265 19.9265 20.3854 19.362 20.673C18.7202 21 17.8802 21 16.2 21H16M7.5 8V9.5M16.5 8V9.5M11 12.6001C11.8 12.6001 12.5 11.9001 12.5 11.1001V8M15.2002 15.2C13.4002 17 10.5002 17 8.7002 15.2" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <div class="face-id-tick"></div>
+          <div class="home-screen" aria-hidden="true">
+            <div class="home-icons">
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
+              <span class="app-icon"></span>
             </div>
-            <div class="face-id-label">Face ID</div>
+            <div class="home-dock" aria-hidden="true">
+              <span class="dock-icon"></span>
+              <span class="dock-icon"></span>
+              <span class="dock-icon"></span>
+              <span class="dock-icon"></span>
+            </div>
           </div>
-          <p class="portfolio-word" aria-hidden="true">PORTFOLIO</p>
+          <div class="lock-screen-panel" aria-hidden="true">
+            <div class="wallpaper"></div>
+            <div class="lock-clock" aria-hidden="true">
+              <p class="lock-date" id="lockDate">Wed 6 May</p>
+              <p class="lock-time" id="lockTime">09:41</p>
+            </div>
+            <div class="lock-actions" aria-hidden="true">
+              <div class="lock-action-btn">
+                <img class="lock-action-icon lantern-icon" src="./assets/icons/lantern-svgrepo-com.svg" alt="" />
+              </div>
+              <div class="lock-action-btn">
+                <img class="lock-action-icon camera-icon" src="./assets/icons/camera-svgrepo-com.svg" alt="" />
+              </div>
+            </div>
+            <div class="unlock-indicator" aria-hidden="true"></div>
+          </div>
+          <div class="power-overlay"></div>
+          <div class="status-bar" aria-hidden="true">
+            <div class="status-left">CoceraCia</div>
+            <div class="status-right">
+              <img class="status-icon signal-icon" src="./assets/icons/signal-custom.svg" alt="" />
+              <img class="status-icon" src="./assets/icons/wifi-svgrepo-com.svg" alt="" />
+              <div class="battery-wrap">
+                <img class="status-icon battery-icon" src="./assets/icons/battery-empty-svgrepo-com.svg" alt="" />
+              </div>
+            </div>
+          </div>
+          <div class="dynamic-island">
+            <div class="island-lock" aria-hidden="true">
+              <img class="island-lock-icon lock-closed" src="./assets/icons/padlock_close.svg" alt="" />
+              <img class="island-lock-icon lock-open" src="./assets/icons/padlock_open.svg" alt="" />
+            </div>
+          </div>
+          <div class="island-camera" aria-hidden="true"></div>
           <div class="volume-hud" id="volumeHud" aria-hidden="true">
             <p class="volume-hud-label" id="volumeLabel">Ringer</p>
             <div class="volume-hud-row">
@@ -533,233 +90,21 @@
         </div>
         <div class="shadow" aria-hidden="true"></div>
       </main>
+      <aside class="portfolio-panel" aria-label="Sobre mi como desarrollador">
+        <h1 class="portfolio-title">Miguel Cocera Cia</h1>
+        <p class="portfolio-role">Desarrollador de apps multiplataforma y backend en Python.</p>
+        <p class="portfolio-intro">Construyo experiencias moviles fluidas, cuidadas y preparadas para produccion, conectadas a backends robustos y escalables.</p>
+        <p class="portfolio-motto">De una idea a una app lista para crecer.</p>
+        <div class="portfolio-tags" aria-hidden="true">
+          <span>Mobile Apps</span>
+          <span>Python Backend</span>
+          <span>Product Development</span>
+        </div>
+      </aside>
     </div>
   </section>
 
-  <script>
-    const stage = document.getElementById("stage");
-    const scene = document.querySelector(".scene");
-    const screen = document.querySelector(".screen");
-    const phoneButtons = document.querySelectorAll(".phone-button");
-    const actionButton = document.querySelector(".action-button");
-    const volumeUpButton = document.querySelector(".volume-up");
-    const volumeDownButton = document.querySelector(".volume-down");
-    const powerButton = document.querySelector(".power-button");
-    const volumeHud = document.getElementById("volumeHud");
-    const volumeFill = document.getElementById("volumeFill");
-    const volumeLabel = document.getElementById("volumeLabel");
-    const muteToast = document.getElementById("muteToast");
-
-    let audioCtx;
-    let lastToneAt = 0;
-    let volumeLevel = 0.58;
-    let isMuted = false;
-    let isPoweredOff = false;
-    let activeStep = "step-0";
-    let hudTimer;
-    let toastTimer;
-
-    const ensureAudioContext = async () => {
-      if (!audioCtx) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return null;
-        audioCtx = new AudioCtx();
-      }
-      if (audioCtx.state === "suspended") {
-        try {
-          await audioCtx.resume();
-        } catch (_) {
-          return null;
-        }
-      }
-      return audioCtx;
-    };
-
-    const playTone = async (type) => {
-      const now = performance.now();
-      if (now - lastToneAt < 28) return;
-      lastToneAt = now;
-
-      const ctx = await ensureAudioContext();
-      if (!ctx) return;
-
-      const t0 = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const gain2 = ctx.createGain();
-      const hp = ctx.createBiquadFilter();
-      const lp = ctx.createBiquadFilter();
-
-      let startFreq = 1320;
-      let endFreq = 820;
-      let peak = 0.06;
-      let length = 0.07;
-
-      if (type === "volume-up") {
-        startFreq = 720;
-        endFreq = 980;
-        peak = 0.055;
-        length = 0.085;
-      } else if (type === "volume-down") {
-        startFreq = 980;
-        endFreq = 660;
-        peak = 0.055;
-        length = 0.085;
-      } else if (type === "mute") {
-        startFreq = 740;
-        endFreq = 500;
-        peak = 0.05;
-        length = 0.09;
-      } else if (type === "unmute") {
-        startFreq = 500;
-        endFreq = 760;
-        peak = 0.05;
-        length = 0.09;
-      }
-
-      osc.type = "sine";
-      osc2.type = "triangle";
-      osc.frequency.setValueAtTime(startFreq, t0);
-      osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + length * 0.56);
-      osc2.frequency.setValueAtTime(startFreq * 2.02, t0);
-      osc2.frequency.exponentialRampToValueAtTime(endFreq * 2.05, t0 + length * 0.5);
-
-      hp.type = "highpass";
-      hp.frequency.setValueAtTime(280, t0);
-      lp.type = "lowpass";
-      lp.frequency.setValueAtTime(2600, t0);
-
-      gain.gain.setValueAtTime(0.0001, t0);
-      gain.gain.exponentialRampToValueAtTime(peak, t0 + 0.004);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + length);
-      gain2.gain.setValueAtTime(0.0001, t0);
-      gain2.gain.exponentialRampToValueAtTime(peak * 0.45, t0 + 0.005);
-      gain2.gain.exponentialRampToValueAtTime(0.0001, t0 + length);
-
-      osc.connect(hp);
-      osc2.connect(lp);
-      hp.connect(gain);
-      lp.connect(gain2);
-      gain.connect(ctx.destination);
-      gain2.connect(ctx.destination);
-
-      osc.start(t0);
-      osc2.start(t0);
-      osc.stop(t0 + length + 0.01);
-      osc2.stop(t0 + length + 0.01);
-    };
-
-    const pressButton = (button) => {
-      button.classList.add("is-pressed");
-      window.setTimeout(() => {
-        button.classList.remove("is-pressed");
-      }, 110);
-    };
-
-    const isInteractiveStep = () => activeStep === "step-4";
-
-    const setPowerState = (off) => {
-      isPoweredOff = off;
-      screen.classList.toggle("powered-off", isPoweredOff);
-    };
-
-    const showVolumeHud = () => {
-      volumeLabel.textContent = isMuted ? "Silent" : "Ringer";
-      volumeFill.style.width = `${Math.round(volumeLevel * 100)}%`;
-      volumeHud.classList.add("visible");
-      window.clearTimeout(hudTimer);
-      hudTimer = window.setTimeout(() => {
-        volumeHud.classList.remove("visible");
-      }, 820);
-    };
-
-    const showMuteToast = (silentOn) => {
-      muteToast.textContent = silentOn ? "Silent mode on" : "Silent mode off";
-      muteToast.classList.add("visible");
-      window.clearTimeout(toastTimer);
-      toastTimer = window.setTimeout(() => {
-        muteToast.classList.remove("visible");
-      }, 1200);
-    };
-
-    const handlePower = () => {
-      if (!isInteractiveStep()) return;
-      setPowerState(!isPoweredOff);
-      playTone("click");
-    };
-
-    const handleVolume = (up) => {
-      if (!isInteractiveStep() || isPoweredOff) return;
-      const delta = up ? 0.14 : -0.14;
-      volumeLevel = Math.max(0, Math.min(1, volumeLevel + delta));
-      if (volumeLevel > 0 && isMuted) {
-        isMuted = false;
-        showMuteToast(false);
-        playTone("unmute");
-      } else {
-        playTone(up ? "volume-up" : "volume-down");
-      }
-      if (volumeLevel === 0 && !isMuted) {
-        isMuted = true;
-        showMuteToast(true);
-        playTone("mute");
-      }
-      showVolumeHud();
-    };
-
-    const handleActionButton = () => {
-      if (!isInteractiveStep() || isPoweredOff) return;
-      isMuted = !isMuted;
-      if (isMuted) volumeLevel = Math.max(0, volumeLevel - 0.22);
-      showMuteToast(isMuted);
-      playTone(isMuted ? "mute" : "unmute");
-      showVolumeHud();
-    };
-
-    phoneButtons.forEach((button) => {
-      button.addEventListener("pointerdown", () => {
-        if (isInteractiveStep()) playTone("click");
-        pressButton(button);
-      });
-
-      button.addEventListener("click", () => {
-        pressButton(button);
-      });
-    });
-
-    powerButton.addEventListener("click", handlePower);
-    volumeUpButton.addEventListener("click", () => handleVolume(true));
-    volumeDownButton.addEventListener("click", () => handleVolume(false));
-    actionButton.addEventListener("click", handleActionButton);
-
-    const updateStep = () => {
-      const rect = scene.getBoundingClientRect();
-      const scrollable = scene.offsetHeight - window.innerHeight;
-      const traveled = Math.min(Math.max(-rect.top, 0), scrollable);
-      const p = scrollable > 0 ? traveled / scrollable : 0;
-
-      let step = "step-0";
-      if (p >= 0.14) step = "step-1";
-      if (p >= 0.3) step = "step-2";
-      if (p >= 0.5) step = "step-3";
-      if (p >= 0.72) step = "step-4";
-      activeStep = step;
-
-      if (activeStep !== "step-4") {
-        setPowerState(false);
-        volumeHud.classList.remove("visible");
-        muteToast.classList.remove("visible");
-      }
-
-      stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-4");
-      stage.classList.add(step);
-    };
-
-    window.addEventListener("scroll", updateStep, { passive: true });
-    window.addEventListener("resize", updateStep);
-    updateStep();
-  </script>
+  <script src="./src/scripts/main.js"></script>
 </body>
 
 </html>
