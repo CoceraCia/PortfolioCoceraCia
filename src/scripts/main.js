@@ -9,7 +9,12 @@ const stage = document.getElementById("stage");
     const volumeHud = document.getElementById("volumeHud");
     const volumeFill = document.getElementById("volumeFill");
     const volumeGlyph = document.getElementById("volumeGlyph");
-    const muteToast = document.getElementById("muteToast");
+    const statusLeft = document.querySelector(".status-left");
+    const islandFeedbackPill = document.getElementById("islandFeedbackPill");
+    const islandFeedbackIcon = document.getElementById("islandFeedbackIcon");
+    const islandFeedbackLabel = document.getElementById("islandFeedbackLabel");
+    const islandFeedbackCenter = document.getElementById("islandFeedbackCenter");
+    const islandFeedbackRight = document.querySelector(".island-feedback-right");
     const lockDate = document.getElementById("lockDate");
     const lockTime = document.getElementById("lockTime");
 
@@ -20,13 +25,21 @@ const stage = document.getElementById("stage");
     let isPoweredOff = false;
     let activeStep = "step-0";
     let hudTimer;
-    let toastTimer;
+    let islandFeedbackTimer;
+    let islandFeedbackRaf = 0;
+    let islandFeedbackStateTimer;
+    let islandFeedbackCloseTimer;
+    let islandFeedbackVisibilityTimer;
+    let statusFadeRaf = 0;
+    let statusFadeLoopRaf = 0;
     let lockClockTimer;
     let lastVolumePressAt = 0;
     let lastVolumeButton = "";
     let compactHudUntil = 0;
 
     const DOUBLE_PRESS_WINDOW_MS = 360;
+    const SILENT_ICON_PILL_WIDTH = 56;
+    const RING_ICON_PILL_WIDTH = 22;
 
     const dateFormatter = new Intl.DateTimeFormat("en-GB", {
       weekday: "short",
@@ -156,10 +169,13 @@ const stage = document.getElementById("stage");
     const setPowerState = (off) => {
       isPoweredOff = off;
       screen.classList.toggle("powered-off", isPoweredOff);
+      if (isPoweredOff) {
+        hideMuteIslandFeedback();
+      }
     };
 
     const getVolumeIcon = () => {
-      if (isMuted || volumeLevel <= 0) return "./assets/icons/muted.svg";
+      if (volumeLevel <= 0) return "./assets/icons/muted.svg";
       if (volumeLevel <= 0.25) return "./assets/icons/volume-low.svg";
       if (volumeLevel <= 0.5) return "./assets/icons/volume-mid.svg";
       if (volumeLevel <= 0.75) return "./assets/icons/volume-high.svg";
@@ -180,12 +196,171 @@ const stage = document.getElementById("stage");
       }, 820);
     };
 
-    const showMuteToast = (silentOn) => {
-      muteToast.textContent = silentOn ? "Silent mode on" : "Silent mode off";
-      muteToast.classList.add("visible");
-      window.clearTimeout(toastTimer);
-      toastTimer = window.setTimeout(() => {
-        muteToast.classList.remove("visible");
+    const setIslandFeedbackVisible = (visible) => {
+      screen.classList.toggle("island-feedback-visible", visible);
+    };
+
+    const clearStatusLeftFade = () => {
+      if (!statusLeft) return;
+      statusLeft.style.webkitMaskImage = "";
+      statusLeft.style.maskImage = "";
+    };
+
+    const updateStatusLeftFade = () => {
+      if (!statusLeft) return;
+
+      const pillRect = islandFeedbackPill.getBoundingClientRect();
+      const statusRect = statusLeft.getBoundingClientRect();
+      const statusWidth = statusRect.width;
+      if (statusWidth <= 0) return;
+
+      const overlap = statusRect.right - pillRect.left;
+      const fadePx = Math.max(0, Math.min(statusWidth, overlap + 12));
+      const fadeStartPx = Math.max(0, statusWidth - fadePx);
+      const fadeSoftPx = Math.max(8, Math.min(22, fadePx * 0.42));
+      const fadeStartPct = (fadeStartPx / statusWidth) * 100;
+      const fadeMidPct = (Math.min(statusWidth, fadeStartPx + fadeSoftPx) / statusWidth) * 100;
+
+      const mask = `linear-gradient(90deg, #000 0%, #000 ${fadeStartPct}%, rgba(0, 0, 0, 0.45) ${fadeMidPct}%, transparent 100%)`;
+      statusLeft.style.webkitMaskImage = mask;
+      statusLeft.style.maskImage = mask;
+    };
+
+    const animateStatusLeftFade = (duration = 340, clearAtEnd = false) => {
+      if (statusFadeRaf) {
+        window.cancelAnimationFrame(statusFadeRaf);
+        statusFadeRaf = 0;
+      }
+      if (statusFadeLoopRaf) {
+        window.cancelAnimationFrame(statusFadeLoopRaf);
+        statusFadeLoopRaf = 0;
+      }
+
+      const start = performance.now();
+      const tick = () => {
+        updateStatusLeftFade();
+        if (performance.now() - start < duration) {
+          statusFadeRaf = window.requestAnimationFrame(tick);
+        } else {
+          statusFadeRaf = 0;
+          if (clearAtEnd) clearStatusLeftFade();
+        }
+      };
+
+      statusFadeRaf = window.requestAnimationFrame(tick);
+    };
+
+    const hideMuteIslandFeedback = () => {
+      window.clearTimeout(islandFeedbackTimer);
+      window.clearTimeout(islandFeedbackStateTimer);
+      window.clearTimeout(islandFeedbackCloseTimer);
+      window.clearTimeout(islandFeedbackVisibilityTimer);
+      if (islandFeedbackRaf) {
+        window.cancelAnimationFrame(islandFeedbackRaf);
+        islandFeedbackRaf = 0;
+      }
+      if (statusFadeLoopRaf) {
+        window.cancelAnimationFrame(statusFadeLoopRaf);
+        statusFadeLoopRaf = 0;
+      }
+      islandFeedbackPill.classList.add("is-closing");
+      islandFeedbackPill.classList.remove("is-active");
+      islandFeedbackPill.style.setProperty("--feedback-pill-left", "50%");
+      animateStatusLeftFade(320, true);
+      islandFeedbackVisibilityTimer = window.setTimeout(() => {
+        setIslandFeedbackVisible(false);
+      }, 220);
+      islandFeedbackStateTimer = window.setTimeout(() => {
+        islandFeedbackPill.classList.remove("is-closing");
+        islandFeedbackPill.classList.remove("is-silent");
+        islandFeedbackPill.classList.remove("is-ring");
+      }, 210);
+    };
+
+    const showMuteIslandFeedback = (silentOn) => {
+      window.clearTimeout(islandFeedbackVisibilityTimer);
+      setIslandFeedbackVisible(true);
+      islandFeedbackIcon.src = silentOn ? "./assets/icons/bell-muted.svg" : "./assets/icons/bell.svg";
+      islandFeedbackLabel.textContent = silentOn ? "Silent" : "Ring";
+      window.clearTimeout(islandFeedbackStateTimer);
+      window.clearTimeout(islandFeedbackCloseTimer);
+      if (statusFadeLoopRaf) {
+        window.cancelAnimationFrame(statusFadeLoopRaf);
+        statusFadeLoopRaf = 0;
+      }
+      islandFeedbackPill.classList.remove("is-closing");
+      islandFeedbackPill.classList.toggle("is-silent", silentOn);
+      islandFeedbackPill.classList.toggle("is-ring", !silentOn);
+
+      window.clearTimeout(islandFeedbackTimer);
+      if (islandFeedbackRaf) {
+        window.cancelAnimationFrame(islandFeedbackRaf);
+        islandFeedbackRaf = 0;
+      }
+
+      islandFeedbackRaf = window.requestAnimationFrame(() => {
+        const screenRect = screen.getBoundingClientRect();
+        const rightRect = islandFeedbackRight.getBoundingClientRect();
+        const styles = getComputedStyle(islandFeedbackPill);
+
+        const isWideIslandStep = activeStep === "step-2" || activeStep === "step-3";
+        const baseWidthRatio = isWideIslandStep ? 0.415 : 0.268;
+        const baseWidth = screenRect.width * baseWidthRatio;
+        const gap = parseFloat(styles.getPropertyValue("--feedback-pill-gap")) || 12;
+        const padX = parseFloat(styles.getPropertyValue("--feedback-pill-pad-x")) || 8;
+        const padLeft = parseFloat(styles.getPropertyValue("--feedback-pill-pad-left")) || 6;
+        const iconWidth = silentOn ? SILENT_ICON_PILL_WIDTH : RING_ICON_PILL_WIDTH;
+        const leftPad = padLeft;
+        const rightPad = padX;
+
+        const leftSide = iconWidth + gap + leftPad;
+        const rightSide = rightRect.width + gap + rightPad;
+        const feedbackWidth = Math.ceil(baseWidth + leftSide + rightSide);
+        const centerShift = (rightSide - leftSide) / 2;
+        const feedbackLeft = Math.round(screenRect.width / 2 + centerShift);
+
+        islandFeedbackPill.style.setProperty("--feedback-pill-center-width", `${Math.ceil(baseWidth)}px`);
+        islandFeedbackCenter.style.width = `${Math.ceil(baseWidth)}px`;
+        islandFeedbackPill.style.setProperty("--feedback-pill-base-width", `${Math.ceil(baseWidth)}px`);
+        islandFeedbackPill.style.setProperty("--feedback-pill-expanded-width", `${feedbackWidth}px`);
+        islandFeedbackPill.style.setProperty("--feedback-pill-left", `${feedbackLeft}px`);
+
+        islandFeedbackPill.classList.remove("is-active");
+        islandFeedbackPill.offsetWidth;
+        islandFeedbackPill.classList.add("is-active");
+        animateStatusLeftFade(340, false);
+
+        const keepFadeSynced = () => {
+          if (!screen.classList.contains("island-feedback-visible")) {
+            statusFadeLoopRaf = 0;
+            return;
+          }
+          updateStatusLeftFade();
+          statusFadeLoopRaf = window.requestAnimationFrame(keepFadeSynced);
+        };
+        statusFadeLoopRaf = window.requestAnimationFrame(keepFadeSynced);
+        islandFeedbackRaf = 0;
+      });
+
+      islandFeedbackTimer = window.setTimeout(() => {
+        islandFeedbackPill.classList.add("is-closing");
+        islandFeedbackPill.classList.remove("is-active");
+        islandFeedbackPill.style.setProperty("--feedback-pill-left", "50%");
+        if (statusFadeLoopRaf) {
+          window.cancelAnimationFrame(statusFadeLoopRaf);
+          statusFadeLoopRaf = 0;
+        }
+        animateStatusLeftFade(320, true);
+        islandFeedbackCloseTimer = window.setTimeout(() => {
+          islandFeedbackPill.classList.remove("is-closing");
+        }, 220);
+        islandFeedbackVisibilityTimer = window.setTimeout(() => {
+          setIslandFeedbackVisible(false);
+        }, 220);
+        islandFeedbackStateTimer = window.setTimeout(() => {
+          islandFeedbackPill.classList.remove("is-silent");
+          islandFeedbackPill.classList.remove("is-ring");
+        }, 240);
       }, 1200);
     };
 
@@ -208,24 +383,14 @@ const stage = document.getElementById("stage");
 
       const delta = up ? 0.14 : -0.14;
       volumeLevel = Math.max(0, Math.min(1, volumeLevel + delta));
-      if (volumeLevel > 0 && isMuted) {
-        isMuted = false;
-        playTone("unmute");
-      } else {
-        playTone(up ? "volume-up" : "volume-down");
-      }
-      if (volumeLevel === 0 && !isMuted) {
-        isMuted = true;
-        playTone("mute");
-      }
+      playTone(up ? "volume-up" : "volume-down");
       showVolumeHud(shouldShowCompact);
     };
 
     const handleActionButton = () => {
       if (!isInteractiveStep() || isPoweredOff) return;
       isMuted = !isMuted;
-      if (isMuted) volumeLevel = Math.max(0, volumeLevel - 0.22);
-      showMuteToast(isMuted);
+      showMuteIslandFeedback(isMuted);
       playTone(isMuted ? "mute" : "unmute");
     };
 
@@ -262,7 +427,7 @@ const stage = document.getElementById("stage");
       if (activeStep !== "step-5") {
         setPowerState(false);
         volumeHud.classList.remove("visible");
-        muteToast.classList.remove("visible");
+        hideMuteIslandFeedback();
       }
 
       stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-4", "step-5", "step-6");
