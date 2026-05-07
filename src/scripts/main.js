@@ -434,6 +434,41 @@ const stage = document.getElementById("stage");
       stage.classList.add(step);
     };
 
+    const glassCard = document.getElementById("glassCard");
+    const displacementMap = document.querySelector("#glass-distortion feDisplacementMap");
+
+    if (glassCard && displacementMap) {
+      glassCard.addEventListener("mousemove", (e) => {
+        const rect = glassCard.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const scaleX = (x / rect.width) * 100;
+        const scaleY = (y / rect.height) * 100;
+        displacementMap.setAttribute("scale", Math.min(scaleX, scaleY));
+
+        const specular = glassCard.querySelector(".glass-specular");
+        if (specular) {
+          specular.style.background = `
+            radial-gradient(
+              circle at ${x}px ${y}px,
+              rgba(255, 255, 255, 0.22) 0%,
+              rgba(255, 255, 255, 0.08) 32%,
+              rgba(255, 255, 255, 0) 62%
+            )
+          `;
+        }
+      });
+
+      glassCard.addEventListener("mouseleave", () => {
+        displacementMap.setAttribute("scale", "77");
+        const specular = glassCard.querySelector(".glass-specular");
+        if (specular) {
+          specular.style.background = "none";
+        }
+      });
+    }
+
     window.addEventListener("scroll", updateStep, { passive: true });
     window.addEventListener("resize", updateStep);
     startLockClock();
