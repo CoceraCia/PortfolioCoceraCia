@@ -19,8 +19,10 @@ export function initPortfolioInteractions() {
   const lockDate = document.getElementById("lockDate");
   const lockTime = document.getElementById("lockTime");
   const dockApps = document.querySelectorAll(".dock-app");
+  const topNotification = document.querySelector(".liquid-glass-notification");
+  const projectsTerminalCode = document.getElementById("projectsTerminalCode");
 
-  if (!stage || !scene || !screen || !actionButton || !volumeUpButton || !volumeDownButton || !powerButton || !volumeHud || !volumeFill || !volumeGlyph || !statusLeft || !islandFeedbackPill || !islandFeedbackIcon || !islandFeedbackLabel || !islandFeedbackCenter || !islandFeedbackRight || !lockDate || !lockTime) {
+  if (!stage || !scene || !screen || !actionButton || !volumeUpButton || !volumeDownButton || !powerButton || !volumeHud || !volumeFill || !volumeGlyph || !statusLeft || !islandFeedbackPill || !islandFeedbackIcon || !islandFeedbackLabel || !islandFeedbackCenter || !islandFeedbackRight || !lockDate || !lockTime || !topNotification || !projectsTerminalCode) {
     return () => {};
   }
 
@@ -39,13 +41,50 @@ export function initPortfolioInteractions() {
   let statusFadeRaf = 0;
   let statusFadeLoopRaf = 0;
   let lockClockTimer;
+  let notificationTimer;
+  let notificationLongPressTimer;
+  let notificationPointerId = null;
+  let notificationStartY = 0;
+  let notificationDragY = 0;
+  let notificationIsDragging = false;
+  let notificationDismissed = false;
+  let terminalTimer = 0;
+  let terminalIsPlaying = false;
+  let terminalShouldLoop = false;
+  let terminalIsWaitingToReplay = false;
   let lastVolumePressAt = 0;
   let lastVolumeButton = "";
   let compactHudUntil = 0;
 
   const DOUBLE_PRESS_WINDOW_MS = 360;
+  const NOTIFICATION_LONG_PRESS_MS = 240;
+  const NOTIFICATION_DISMISS_Y = -56;
   const SILENT_ICON_PILL_WIDTH = 56;
   const RING_ICON_PILL_WIDTH = 22;
+
+  const TERMINAL_SCRIPT = [
+    { text: "$ kizamu search \"one piece\"\n", speed: 58, variance: 20 },
+    { pause: 620 },
+    { text: "\nFound 12 results\n", speed: 30, variance: 8 },
+    { text: "> Selecting source...\n", speed: 34, variance: 10 },
+    { pause: 520 },
+    { text: "\n$ kizamu download \"chapter-1100\" --format cbz\n", speed: 56, variance: 20 },
+    { pause: 640 },
+    { text: "\nDownloading pages...\n", speed: 30, variance: 8 },
+    { text: "[", speed: 18, variance: 4 },
+    { text: "██████████████████", speed: 13, variance: 3 },
+    { text: "] 100%\n", speed: 22, variance: 5 },
+    { pause: 420 },
+    { text: "\nProcessing images...\n", speed: 31, variance: 8 },
+    { text: "Creating CBZ archive...\n", speed: 33, variance: 9 },
+    { pause: 560 },
+    { text: "\nDone: One_Piece_1100.cbz", speed: 34, variance: 10 },
+  ];
+
+  const getTypingDelay = (base, variance = 0) => {
+    const jitter = variance > 0 ? (Math.random() * variance * 2 - variance) : 0;
+    return Math.max(10, Math.round(base + jitter));
+  };
 
   const dateFormatter = new Intl.DateTimeFormat("en-GB", {
     weekday: "short",
@@ -384,6 +423,186 @@ export function initPortfolioInteractions() {
     playTone(isMuted ? "mute" : "unmute");
   };
 
+  const hideTopNotification = () => {
+    window.clearTimeout(notificationTimer);
+    window.clearTimeout(notificationLongPressTimer);
+    notificationTimer = 0;
+    notificationLongPressTimer = 0;
+    notificationPointerId = null;
+    notificationIsDragging = false;
+    notificationDragY = 0;
+    notificationDismissed = false;
+    topNotification.style.removeProperty("--notification-drag-y");
+    topNotification.classList.remove("is-dragging");
+    topNotification.classList.remove("is-dismissed");
+    topNotification.classList.remove("is-visible");
+  };
+
+  const showTopNotificationWithDelay = () => {
+    window.clearTimeout(notificationTimer);
+    notificationTimer = 0;
+    if (notificationDismissed) return;
+    topNotification.style.removeProperty("--notification-drag-y");
+    topNotification.classList.remove("is-dragging");
+    topNotification.classList.remove("is-dismissed");
+    topNotification.classList.remove("is-visible");
+    notificationTimer = window.setTimeout(() => {
+      topNotification.classList.add("is-visible");
+      notificationTimer = 0;
+    }, 1000);
+  };
+
+  const tapTopNotification = () => {
+    topNotification.classList.remove("is-tapped");
+    void topNotification.offsetWidth;
+    topNotification.classList.add("is-tapped");
+  };
+
+  const beginNotificationDrag = () => {
+    notificationIsDragging = true;
+    topNotification.classList.add("is-dragging");
+    topNotification.classList.remove("is-tapped");
+  };
+
+  const endNotificationDrag = () => {
+    topNotification.classList.remove("is-dragging");
+    notificationIsDragging = false;
+    if (notificationDragY <= NOTIFICATION_DISMISS_Y) {
+      notificationDismissed = true;
+      topNotification.classList.add("is-dismissed");
+      topNotification.classList.remove("is-visible");
+      topNotification.style.removeProperty("--notification-drag-y");
+      notificationDragY = 0;
+      return;
+    }
+
+    topNotification.style.removeProperty("--notification-drag-y");
+    notificationDragY = 0;
+  };
+
+  const onNotificationPointerDown = (event) => {
+    if (activeStep !== "step-5") return;
+    if (!topNotification.classList.contains("is-visible")) return;
+    if (notificationDismissed) return;
+    notificationPointerId = event.pointerId;
+    notificationStartY = event.clientY;
+    notificationDragY = 0;
+    notificationIsDragging = false;
+    topNotification.setPointerCapture(event.pointerId);
+    window.clearTimeout(notificationLongPressTimer);
+    notificationLongPressTimer = window.setTimeout(() => {
+      beginNotificationDrag();
+      notificationLongPressTimer = 0;
+    }, NOTIFICATION_LONG_PRESS_MS);
+  };
+
+  const onNotificationPointerMove = (event) => {
+    if (event.pointerId !== notificationPointerId) return;
+    if (!notificationIsDragging) return;
+    const deltaY = event.clientY - notificationStartY;
+    notificationDragY = Math.min(12, Math.max(-140, deltaY));
+    topNotification.style.setProperty("--notification-drag-y", `${notificationDragY}px`);
+  };
+
+  const onNotificationPointerUp = (event) => {
+    if (event.pointerId !== notificationPointerId) return;
+    window.clearTimeout(notificationLongPressTimer);
+    notificationLongPressTimer = 0;
+
+    if (notificationIsDragging) {
+      endNotificationDrag();
+    } else {
+      tapTopNotification();
+    }
+
+    if (topNotification.hasPointerCapture(event.pointerId)) {
+      topNotification.releasePointerCapture(event.pointerId);
+    }
+    notificationPointerId = null;
+  };
+
+  const onNotificationPointerCancel = (event) => {
+    if (event.pointerId !== notificationPointerId) return;
+    window.clearTimeout(notificationLongPressTimer);
+    notificationLongPressTimer = 0;
+    if (notificationIsDragging) endNotificationDrag();
+    if (topNotification.hasPointerCapture(event.pointerId)) {
+      topNotification.releasePointerCapture(event.pointerId);
+    }
+    notificationPointerId = null;
+  };
+
+  const clearTerminalTimer = () => {
+    if (terminalTimer) {
+      window.clearTimeout(terminalTimer);
+      terminalTimer = 0;
+    }
+  };
+
+  const playProjectsTerminal = () => {
+    if (terminalIsPlaying || terminalIsWaitingToReplay) return;
+    terminalIsPlaying = true;
+    terminalShouldLoop = true;
+    projectsTerminalCode.textContent = "";
+
+    let stepIndex = 0;
+    const runStep = () => {
+      if (stepIndex >= TERMINAL_SCRIPT.length) {
+        terminalIsPlaying = false;
+        if (!terminalShouldLoop) {
+          terminalTimer = 0;
+          return;
+        }
+        terminalIsWaitingToReplay = true;
+        terminalTimer = window.setTimeout(() => {
+          terminalIsWaitingToReplay = false;
+          terminalTimer = 0;
+          playProjectsTerminal();
+        }, 10000);
+        return;
+      }
+
+      const step = TERMINAL_SCRIPT[stepIndex];
+      stepIndex += 1;
+
+      if (step.pause) {
+        terminalTimer = window.setTimeout(runStep, step.pause);
+        return;
+      }
+
+      const text = step.text || "";
+      const speed = step.speed || 18;
+      const variance = step.variance || 0;
+      let charIndex = 0;
+
+      const typeNext = () => {
+        if (charIndex >= text.length) {
+          runStep();
+          return;
+        }
+
+        projectsTerminalCode.textContent += text.charAt(charIndex);
+        charIndex += 1;
+        terminalTimer = window.setTimeout(typeNext, getTypingDelay(speed, variance));
+      };
+
+      typeNext();
+    };
+
+    runStep();
+  };
+
+  const stopProjectsTerminal = () => {
+    terminalShouldLoop = false;
+    terminalIsPlaying = false;
+    terminalIsWaitingToReplay = false;
+    clearTerminalTimer();
+  };
+
+  const shouldAutoplayTerminalOnMobile = () => {
+    return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+  };
+
   const onPointerDownByButton = new Map();
   const onClickByButton = new Map();
   phoneButtons.forEach((button) => {
@@ -404,6 +623,10 @@ export function initPortfolioInteractions() {
   volumeUpButton.addEventListener("click", onVolumeUpClick);
   volumeDownButton.addEventListener("click", onVolumeDownClick);
   actionButton.addEventListener("click", handleActionButton);
+  topNotification.addEventListener("pointerdown", onNotificationPointerDown);
+  topNotification.addEventListener("pointermove", onNotificationPointerMove);
+  topNotification.addEventListener("pointerup", onNotificationPointerUp);
+  topNotification.addEventListener("pointercancel", onNotificationPointerCancel);
 
   const updateStep = () => {
     const rect = scene.getBoundingClientRect();
@@ -412,10 +635,17 @@ export function initPortfolioInteractions() {
     const p = scrollable > 0 ? traveled / scrollable : 0;
 
     let step = "step-0";
-    if (p >= 0.12) step = "step-1";
-    if (p >= 0.29) step = "step-2";
-    if (p >= 0.47) step = "step-3";
-    if (p >= 0.62) step = "step-5";
+    if (p >= 0.06) step = "step-1";
+    if (p >= 0.14) step = "step-2";
+    if (p >= 0.19) step = "step-3";
+    if (p >= 0.31) step = "step-5";
+    if (p >= 0.53) step = "step-6";
+    if (p >= 0.67) step = "step-7";
+    if (p >= 0.79) step = "step-8";
+    if (p >= 0.89) step = "step-9";
+
+    const prevStep = activeStep;
+
     activeStep = step;
 
     if (activeStep !== "step-5") {
@@ -424,8 +654,24 @@ export function initPortfolioInteractions() {
       hideMuteIslandFeedback();
     }
 
-    stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-4", "step-5", "step-6");
-    stage.classList.add(step);
+    if (activeStep === "step-5") {
+      if (!topNotification.classList.contains("is-visible") && !notificationTimer) {
+        showTopNotificationWithDelay();
+      }
+    } else {
+      hideTopNotification();
+    }
+
+    if (activeStep === "step-9" || shouldAutoplayTerminalOnMobile()) {
+      playProjectsTerminal();
+    } else {
+      stopProjectsTerminal();
+    }
+
+    if (prevStep !== step) {
+      stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-5", "step-6", "step-7", "step-8", "step-9");
+      stage.classList.add(step);
+    }
   };
 
   window.addEventListener("scroll", updateStep, { passive: true });
@@ -460,6 +706,10 @@ export function initPortfolioInteractions() {
     volumeUpButton.removeEventListener("click", onVolumeUpClick);
     volumeDownButton.removeEventListener("click", onVolumeDownClick);
     actionButton.removeEventListener("click", handleActionButton);
+    topNotification.removeEventListener("pointerdown", onNotificationPointerDown);
+    topNotification.removeEventListener("pointermove", onNotificationPointerMove);
+    topNotification.removeEventListener("pointerup", onNotificationPointerUp);
+    topNotification.removeEventListener("pointercancel", onNotificationPointerCancel);
 
     dockApps.forEach((app) => {
       const onDockClick = onDockClickByApp.get(app);
@@ -471,6 +721,9 @@ export function initPortfolioInteractions() {
     window.clearTimeout(islandFeedbackStateTimer);
     window.clearTimeout(islandFeedbackCloseTimer);
     window.clearTimeout(islandFeedbackVisibilityTimer);
+    window.clearTimeout(notificationTimer);
+    window.clearTimeout(notificationLongPressTimer);
+    clearTerminalTimer();
     window.clearInterval(lockClockTimer);
     if (statusFadeRaf) window.cancelAnimationFrame(statusFadeRaf);
     if (statusFadeLoopRaf) window.cancelAnimationFrame(statusFadeLoopRaf);
