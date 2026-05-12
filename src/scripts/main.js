@@ -52,6 +52,7 @@ export function initPortfolioInteractions() {
   let terminalIsPlaying = false;
   let terminalShouldLoop = false;
   let terminalIsWaitingToReplay = false;
+  let terminalAutoPlayLocked = false;
   let lastVolumePressAt = 0;
   let lastVolumeButton = "";
   let compactHudUntil = 0;
@@ -599,6 +600,13 @@ export function initPortfolioInteractions() {
     clearTerminalTimer();
   };
 
+  const canPlayProjectsTerminal = () => {
+    if (activeStep === "step-9") return true;
+    if (shouldAutoplayTerminalOnMobile()) return true;
+    if (terminalAutoPlayLocked) return true;
+    return false;
+  };
+
   const shouldAutoplayTerminalOnMobile = () => {
     return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
   };
@@ -662,7 +670,15 @@ export function initPortfolioInteractions() {
       hideTopNotification();
     }
 
-    if (activeStep === "step-9" || shouldAutoplayTerminalOnMobile()) {
+    if (activeStep === "step-9") {
+      terminalAutoPlayLocked = true;
+    } else if (activeStep === "step-8" && terminalAutoPlayLocked) {
+      terminalAutoPlayLocked = true;
+    } else if (activeStep !== "step-8") {
+      terminalAutoPlayLocked = false;
+    }
+
+    if (canPlayProjectsTerminal()) {
       playProjectsTerminal();
     } else {
       stopProjectsTerminal();

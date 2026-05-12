@@ -1,4 +1,45 @@
+import { useState } from "react";
+
 export default function PortfolioScene() {
+  const experiences = [
+    {
+      id: "glofera",
+      date: "2025 - Present",
+      company: "Glofera",
+      logo: "/assets/images/Glofera-logo.svg",
+      logoAlt: "Glofera logo",
+      role: "AI Agents / Backend / Mobile Developer",
+      meta: "1 year · Intensive dual training and contract",
+      copy: "I work on real-world conversational AI solutions focused on WhatsApp and voice agents, combining product thinking with technical implementation in a production-oriented environment.",
+      points: "AI agents for WhatsApp · Voice agents · API integrations · Workflow automation · Backend logic for conversational systems · Business-focused AI solutions",
+    },
+    {
+      id: "track",
+      date: "2024 · SMIX Internship",
+      company: "Track Asistencia y Consulting SL",
+      logo: "/assets/images/track-logo.png",
+      logoAlt: "Track Asistencia y Consulting logo",
+      role: "IT Technician / Python Automations",
+      meta: "Internship period",
+      copy: "My first real contact with automation in a company setting, with a strong focus on technical support, incident resolution, and practical Python-based automations.",
+      points: "Technical support · Python automations · Incident resolution · Company environment learning · First real contact with automation",
+    },
+    {
+      id: "loterias",
+      date: "2023 · 2024-2025",
+      company: "Loterias y Apuestas del Estado",
+      logo: "/assets/images/loterias-logo.png",
+      logoAlt: "Loterias y Apuestas del Estado logo",
+      role: "Operations Support",
+      meta: "Caramel de la Sort (2023) · Anec Blau (2024-2025)",
+      copy: "Professional experience in real operational environments, contributing to daily workflows, customer-facing operations, responsibility, coordination, and service quality while strengthening reliability and execution under real constraints.",
+      points: "Operations support · Coordination · Service quality · Customer-facing execution · Reliability under real constraints",
+    },
+  ];
+
+  const [activeExperienceId, setActiveExperienceId] = useState(experiences[0].id);
+  const activeExperience = experiences.find((experience) => experience.id === activeExperienceId) || experiences[0];
+
   return (
     <section className="scene">
       <div className="stage" id="stage">
@@ -114,29 +155,35 @@ export default function PortfolioScene() {
           <p className="experience-kicker">Journey</p>
           <h2 className="experience-title">Professional Experience</h2>
           <p className="experience-note">For confidentiality reasons, some projects are described in general terms, focusing on my role, technologies, and key learnings.</p>
-          <div className="experience-timeline" aria-label="Experience timeline">
-            <article className="experience-item">
-              <p className="experience-date">2025 - Present</p>
-              <h3 className="experience-company">Glofera</h3>
-              <p className="experience-role">AI Agents / Backend / Mobile Developer</p>
-              <p className="experience-meta">1 year · Intensive dual training and contract</p>
-              <p className="experience-copy">I work on real-world conversational AI solutions focused on WhatsApp and voice agents, combining product thinking with technical implementation in a production-oriented environment.</p>
-              <p className="experience-points">AI agents for WhatsApp · Voice agents · API integrations · Workflow automation · Backend logic for conversational systems · Business-focused AI solutions · Real company environment</p>
-            </article>
-            <article className="experience-item">
-              <p className="experience-date">2024 · SMIX Internship</p>
-              <h3 className="experience-company">Track Asistencia y Consulting SL</h3>
-              <p className="experience-role">IT Technician / Python Automations</p>
-              <p className="experience-meta">Internship period</p>
-              <p className="experience-copy">My first real contact with automation in a company setting, with a strong focus on technical support, incident resolution, and practical Python-based automations.</p>
-              <p className="experience-points">Technical support · Python automations · Incident resolution · Company environment learning · First real contact with automation</p>
-            </article>
-            <article className="experience-item">
-              <p className="experience-date">2023 · 2024-2025</p>
-              <h3 className="experience-company">Loterias y Apuestas del Estado</h3>
-              <p className="experience-role">Operations Support</p>
-              <p className="experience-meta">Caramel de la Sort (2023) · Anec Blau (2024-2025)</p>
-              <p className="experience-copy">Professional experience in real operational environments, contributing to daily workflows, customer-facing operations, responsibility, coordination, and service quality while strengthening reliability and execution under real constraints.</p>
+          <div className="experience-layout">
+            <div className="experience-selector" role="tablist" aria-label="Experience timeline selector">
+              <div className="experience-path" aria-hidden="true"></div>
+              {experiences.map((experience) => {
+                const isActive = activeExperience.id === experience.id;
+
+                return (
+                  <button
+                    key={experience.id}
+                    className={`experience-node${isActive ? " is-active" : ""}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls="experience-detail"
+                    onClick={() => setActiveExperienceId(experience.id)}
+                  >
+                    <span className="experience-node-dot" aria-hidden="true"></span>
+                    <span className="experience-node-date">{experience.date}</span>
+                    <span className="experience-node-company">{experience.company}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <article key={activeExperience.id} id="experience-detail" className="experience-detail-content" role="tabpanel" aria-label={activeExperience.company}>
+              <img className="experience-work-logo" src={activeExperience.logo} alt={activeExperience.logoAlt} />
+              <p className="experience-role">{activeExperience.role}</p>
+              <p className="experience-meta">{activeExperience.meta}</p>
+              <p className="experience-copy">{activeExperience.copy}</p>
+              <p className="experience-points">{activeExperience.points}</p>
             </article>
           </div>
         </aside>
@@ -144,22 +191,65 @@ export default function PortfolioScene() {
           <p className="education-kicker">Foundation</p>
           <h2 className="education-title">Education</h2>
           <p className="education-copy">My education combines a strong technical foundation in systems, cross-platform development, and a clear evolution toward artificial intelligence and data.</p>
-          <div className="education-list" aria-label="Education timeline">
-            <article className="education-item">
-              <p className="education-label">CFGM SMIX</p>
-              <p className="education-detail">Microcomputer Systems and Networks at <a href="https://stucom.com/" target="_blank" rel="noreferrer">Stucom</a></p>
+          <div className="education-list" aria-label="Education wallet cards">
+            <article className="education-item education-item-systems">
+              <div className="education-pass-top">
+                <span className="education-pass-badge">SMIX</span>
+                <span className="education-pass-status">Systems</span>
+              </div>
+              <div className="education-pass-body">
+                <p className="education-label">CFGM SMIX</p>
+                <p className="education-detail">Microcomputer Systems and Networks at <a href="https://stucom.com/" target="_blank" rel="noreferrer">Stucom</a></p>
+              </div>
+              <div className="education-pass-tags" aria-label="SMIX highlights">
+                <span>Networks</span>
+                <span>Support</span>
+                <span>Hardware</span>
+              </div>
             </article>
-            <article className="education-item">
-              <p className="education-label">CFGS DAM</p>
-              <p className="education-detail">Cross-Platform Application Development at <a href="https://stucom.com/" target="_blank" rel="noreferrer">Stucom</a>, with the final year completed online at <a href="https://linkiafp.es/" target="_blank" rel="noreferrer">LinkiaFP</a></p>
+            <article className="education-item education-item-dev">
+              <div className="education-pass-top">
+                <span className="education-pass-badge">DAM</span>
+                <span className="education-pass-status">Development</span>
+              </div>
+              <div className="education-pass-body">
+                <p className="education-label">CFGS DAM</p>
+                <p className="education-detail">Cross-Platform Application Development at <a href="https://stucom.com/" target="_blank" rel="noreferrer">Stucom</a>, with the final year completed online at <a href="https://linkiafp.es/" target="_blank" rel="noreferrer">LinkiaFP</a></p>
+              </div>
+              <div className="education-pass-tags" aria-label="DAM highlights">
+                <span>Mobile</span>
+                <span>Backend</span>
+                <span>Apps</span>
+              </div>
             </article>
-            <article className="education-item">
-              <p className="education-label">B2 First</p>
-              <p className="education-detail">First Certificate in English at <a href="https://janets.es/" target="_blank" rel="noreferrer">Janet&apos;s</a></p>
+            <article className="education-item education-item-language">
+              <div className="education-pass-top">
+                <span className="education-pass-badge">B2</span>
+                <span className="education-pass-status">English</span>
+              </div>
+              <div className="education-pass-body">
+                <p className="education-label">B2 First</p>
+                <p className="education-detail">First Certificate in English at <a href="https://janets.es/" target="_blank" rel="noreferrer">Janet&apos;s</a></p>
+              </div>
+              <div className="education-pass-tags" aria-label="English certificate highlights">
+                <span>Communication</span>
+                <span>Certificate</span>
+              </div>
             </article>
-            <article className="education-item">
-              <p className="education-label">Upcoming</p>
-              <p className="education-detail">Master&apos;s Degree in AI and Big Data</p>
+            <article className="education-item education-item-ai">
+              <div className="education-pass-top">
+                <span className="education-pass-badge">AI</span>
+                <span className="education-pass-status">Next</span>
+              </div>
+              <div className="education-pass-body">
+                <p className="education-label">Upcoming</p>
+                <p className="education-detail">Master&apos;s Degree in AI and Big Data</p>
+              </div>
+              <div className="education-pass-tags" aria-label="Upcoming master highlights">
+                <span>AI</span>
+                <span>Big Data</span>
+                <span>Product</span>
+              </div>
             </article>
           </div>
         </aside>
@@ -188,13 +278,18 @@ export default function PortfolioScene() {
               <span>View on GitHub</span>
             </a>
           </div>
-          <div className="projects-terminal-shell" aria-hidden="true">
-            <div className="terminal-controls">
-              <span className="terminal-dot terminal-dot-red"></span>
-              <span className="terminal-dot terminal-dot-yellow"></span>
-              <span className="terminal-dot terminal-dot-green"></span>
+          <div className="projects-visual" aria-hidden="true">
+            <img className="projects-manga-panel" src="/assets/images/manga-panel.png" alt="" />
+            <div className="projects-terminal-shell">
+              <div className="terminal-controls">
+                <span className="terminal-dots">
+                  <span className="terminal-dot terminal-dot-red" aria-hidden="true"></span>
+                  <span className="terminal-dot terminal-dot-yellow"><img className="terminal-dot-icon" src="/assets/icons/minus-svgrepo-com.svg" alt="" /></span>
+                  <span className="terminal-dot terminal-dot-green"><img className="terminal-dot-icon" src="/assets/icons/plus-1512-svgrepo-com.svg" alt="" /></span>
+                </span>
+              </div>
+              <pre className="terminal-content"><code id="projectsTerminalCode"></code><span className="terminal-cursor" aria-hidden="true"></span></pre>
             </div>
-            <pre className="terminal-content"><code id="projectsTerminalCode"></code><span className="terminal-cursor" aria-hidden="true"></span></pre>
           </div>
         </aside>
       </div>
