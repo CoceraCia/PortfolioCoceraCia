@@ -23,9 +23,11 @@ export function initPortfolioInteractions() {
   const projectsCarouselRows = document.querySelectorAll(".projects-carousel-row");
   const projectsPanel = document.querySelector(".projects-panel");
   const projectsTerminalCode = document.getElementById("projectsTerminalCode");
+  const remoteLogPanel = document.querySelector(".remotelog-panel");
+  const remoteLogTerminalCode = document.getElementById("remoteLogTerminalCode");
   const revealTargets = document.querySelectorAll(".scroll-reveal");
 
-  if (!stage || !scene || !screen || !actionButton || !volumeUpButton || !volumeDownButton || !powerButton || !volumeHud || !volumeFill || !volumeGlyph || !statusLeft || !islandFeedbackPill || !islandFeedbackIcon || !islandFeedbackLabel || !islandFeedbackCenter || !islandFeedbackRight || !lockDate || !lockTime || !topNotification || !projectsPanel || !projectsTerminalCode) {
+  if (!stage || !scene || !screen || !actionButton || !volumeUpButton || !volumeDownButton || !powerButton || !volumeHud || !volumeFill || !volumeGlyph || !statusLeft || !islandFeedbackPill || !islandFeedbackIcon || !islandFeedbackLabel || !islandFeedbackCenter || !islandFeedbackRight || !lockDate || !lockTime || !topNotification || !projectsPanel || !projectsTerminalCode || !remoteLogPanel || !remoteLogTerminalCode) {
     return () => {};
   }
 
@@ -53,11 +55,7 @@ export function initPortfolioInteractions() {
   let notificationDragY = 0;
   let notificationIsDragging = false;
   let notificationDismissed = false;
-  let terminalTimer = 0;
-  let terminalIsPlaying = false;
-  let terminalShouldLoop = false;
-  let terminalIsWaitingToReplay = false;
-  let projectsTerminalIsInView = false;
+  const terminalStateById = new Map();
   let revealObserver = null;
   let lastVolumePressAt = 0;
   let lastVolumeButton = "";
@@ -68,9 +66,10 @@ export function initPortfolioInteractions() {
   const NOTIFICATION_DISMISS_Y = -56;
   const SILENT_ICON_PILL_WIDTH = 56;
   const RING_ICON_PILL_WIDTH = 22;
+  const PHONE_SOUND_ENABLED = false;
   const isCompactViewport = () => window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
 
-  const TERMINAL_SCRIPT = [
+  const KIZAMU_TERMINAL_SCRIPT = [
     { text: "$ kizamu search \"one piece\"\n", speed: 58, variance: 20 },
     { pause: 620 },
     { text: "\nFound 12 results\n", speed: 30, variance: 8 },
@@ -87,6 +86,41 @@ export function initPortfolioInteractions() {
     { text: "Creating CBZ archive...\n", speed: 33, variance: 9 },
     { pause: 560 },
     { text: "\nDone: One_Piece_1100.cbz", speed: 34, variance: 10 },
+  ];
+
+  const REMOTE_LOG_TERMINAL_SCRIPT = [
+    { text: "$ javac -d bin src/*.java\n", speed: 52, variance: 14 },
+    { pause: 520 },
+    { text: "$ java -cp bin Server\n\n", speed: 50, variance: 12 },
+    { pause: 360 },
+    { text: "Remote Log Server started on port 5000\n", speed: 28, variance: 8 },
+    { text: "Waiting for clients...\n\n", speed: 28, variance: 8 },
+    { pause: 420 },
+    { text: "New client connected: /127.0.0.1\n", speed: 32, variance: 10 },
+    { text: "Server -> Client: ENTER_NAME\n", speed: 30, variance: 9 },
+    { text: "Client -> Server: MobileApp\n", speed: 30, variance: 9 },
+    { text: "Server -> Client: WELCOME MobileApp\n\n", speed: 30, variance: 9 },
+    { pause: 420 },
+    { text: "Client -> Server: INFO Server started\n", speed: 32, variance: 10 },
+    { text: "Valid level: INFO\n", speed: 30, variance: 9 },
+    { text: "Formatting log entry...\n", speed: 30, variance: 9 },
+    { text: "[2026-04-01 14:30:25] (MobileApp) INFO Server started\n\n", speed: 28, variance: 8 },
+    { pause: 420 },
+    { text: "synchronized(FILE_LOCK)\n", speed: 32, variance: 10 },
+    { text: "Writing to logs.txt...\n", speed: 30, variance: 9 },
+    { text: "Server -> Client: LOG_RECEIVED\n\n", speed: 30, variance: 9 },
+    { pause: 420 },
+    { text: "Client -> Server: WARN High memory usage detected\n", speed: 30, variance: 9 },
+    { text: "Server -> Client: LOG_RECEIVED\n\n", speed: 30, variance: 9 },
+    { pause: 420 },
+    { text: "Client -> Server: SALIR\n", speed: 32, variance: 10 },
+    { text: "Server -> Client: GOODBYE\n", speed: 32, variance: 10 },
+    { text: "Client disconnected: MobileApp", speed: 32, variance: 10 },
+  ];
+
+  const terminalConfigs = [
+    { id: "kizamu-terminal", panelEl: projectsPanel, codeEl: projectsTerminalCode, script: KIZAMU_TERMINAL_SCRIPT },
+    { id: "remotelog-terminal", panelEl: remoteLogPanel, codeEl: remoteLogTerminalCode, script: REMOTE_LOG_TERMINAL_SCRIPT },
   ];
 
   const getTypingDelay = (base, variance = 0) => {
@@ -135,6 +169,8 @@ export function initPortfolioInteractions() {
   };
 
   const playTone = async (type) => {
+    if (!PHONE_SOUND_ENABLED) return;
+
     const now = performance.now();
     if (now - lastToneAt < 28) return;
     lastToneAt = now;
@@ -540,41 +576,55 @@ export function initPortfolioInteractions() {
     notificationPointerId = null;
   };
 
-  const clearTerminalTimer = () => {
-    if (terminalTimer) {
-      window.clearTimeout(terminalTimer);
-      terminalTimer = 0;
+  const ensureTerminalState = (id) => {
+    if (terminalStateById.has(id)) return terminalStateById.get(id);
+    const state = {
+      timer: 0,
+      isPlaying: false,
+      shouldLoop: false,
+      isWaitingToReplay: false,
+      isInView: false,
+    };
+    terminalStateById.set(id, state);
+    return state;
+  };
+
+  const clearTerminalTimer = (state) => {
+    if (state.timer) {
+      window.clearTimeout(state.timer);
+      state.timer = 0;
     }
   };
 
-  const playProjectsTerminal = () => {
-    if (terminalIsPlaying || terminalIsWaitingToReplay) return;
-    terminalIsPlaying = true;
-    terminalShouldLoop = true;
-    projectsTerminalCode.textContent = "";
+  const playTerminal = (config) => {
+    const state = ensureTerminalState(config.id);
+    if (state.isPlaying || state.isWaitingToReplay) return;
+    state.isPlaying = true;
+    state.shouldLoop = true;
+    config.codeEl.textContent = "";
 
     let stepIndex = 0;
     const runStep = () => {
-      if (stepIndex >= TERMINAL_SCRIPT.length) {
-        terminalIsPlaying = false;
-        if (!terminalShouldLoop) {
-          terminalTimer = 0;
+      if (stepIndex >= config.script.length) {
+        state.isPlaying = false;
+        if (!state.shouldLoop) {
+          state.timer = 0;
           return;
         }
-        terminalIsWaitingToReplay = true;
-        terminalTimer = window.setTimeout(() => {
-          terminalIsWaitingToReplay = false;
-          terminalTimer = 0;
-          playProjectsTerminal();
+        state.isWaitingToReplay = true;
+        state.timer = window.setTimeout(() => {
+          state.isWaitingToReplay = false;
+          state.timer = 0;
+          playTerminal(config);
         }, 10000);
         return;
       }
 
-      const step = TERMINAL_SCRIPT[stepIndex];
+      const step = config.script[stepIndex];
       stepIndex += 1;
 
       if (step.pause) {
-        terminalTimer = window.setTimeout(runStep, step.pause);
+        state.timer = window.setTimeout(runStep, step.pause);
         return;
       }
 
@@ -589,9 +639,9 @@ export function initPortfolioInteractions() {
           return;
         }
 
-        projectsTerminalCode.textContent += text.charAt(charIndex);
+        config.codeEl.textContent += text.charAt(charIndex);
         charIndex += 1;
-        terminalTimer = window.setTimeout(typeNext, getTypingDelay(speed, variance));
+        state.timer = window.setTimeout(typeNext, getTypingDelay(speed, variance));
       };
 
       typeNext();
@@ -600,33 +650,31 @@ export function initPortfolioInteractions() {
     runStep();
   };
 
-  const stopProjectsTerminal = () => {
-    terminalShouldLoop = false;
-    terminalIsPlaying = false;
-    terminalIsWaitingToReplay = false;
-    clearTerminalTimer();
+  const stopTerminal = (config) => {
+    const state = ensureTerminalState(config.id);
+    state.shouldLoop = false;
+    state.isPlaying = false;
+    state.isWaitingToReplay = false;
+    clearTerminalTimer(state);
   };
 
-  const canPlayProjectsTerminal = () => {
-    return projectsTerminalIsInView;
-  };
-
-  const updateProjectsTerminalPlayback = () => {
-    if (canPlayProjectsTerminal()) {
-      playProjectsTerminal();
-    } else {
-      stopProjectsTerminal();
-    }
-  };
-
-  const updateProjectsTerminalVisibility = () => {
-    const rect = projectsPanel.getBoundingClientRect();
+  const updateTerminalVisibility = (config) => {
+    const state = ensureTerminalState(config.id);
+    const rect = config.panelEl.getBoundingClientRect();
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
     const nextIsInView = rect.top < viewportHeight * 0.78 && rect.bottom > viewportHeight * 0.18;
 
-    if (projectsTerminalIsInView === nextIsInView) return;
-    projectsTerminalIsInView = nextIsInView;
-    updateProjectsTerminalPlayback();
+    if (state.isInView === nextIsInView) return;
+    state.isInView = nextIsInView;
+    if (state.isInView) {
+      playTerminal(config);
+    } else {
+      stopTerminal(config);
+    }
+  };
+
+  const updateTerminalsVisibility = () => {
+    terminalConfigs.forEach((config) => updateTerminalVisibility(config));
   };
 
   const setupScrollReveals = () => {
@@ -792,9 +840,9 @@ export function initPortfolioInteractions() {
   };
 
   window.addEventListener("scroll", updateStep, { passive: true });
-  window.addEventListener("scroll", updateProjectsTerminalVisibility, { passive: true });
+  window.addEventListener("scroll", updateTerminalsVisibility, { passive: true });
   window.addEventListener("resize", updateStep);
-  window.addEventListener("resize", updateProjectsTerminalVisibility);
+  window.addEventListener("resize", updateTerminalsVisibility);
   window.addEventListener("resize", updateProjectsCarouselMeasurements);
 
   const onDockClickByApp = new Map();
@@ -813,13 +861,13 @@ export function initPortfolioInteractions() {
   setupScrollReveals();
   carouselRaf = window.requestAnimationFrame(animateProjectsCarousel);
   updateStep();
-  updateProjectsTerminalVisibility();
+  updateTerminalsVisibility();
 
   return () => {
     window.removeEventListener("scroll", updateStep);
-    window.removeEventListener("scroll", updateProjectsTerminalVisibility);
+    window.removeEventListener("scroll", updateTerminalsVisibility);
     window.removeEventListener("resize", updateStep);
-    window.removeEventListener("resize", updateProjectsTerminalVisibility);
+    window.removeEventListener("resize", updateTerminalsVisibility);
     window.removeEventListener("resize", updateProjectsCarouselMeasurements);
 
     phoneButtons.forEach((button) => {
@@ -864,7 +912,7 @@ export function initPortfolioInteractions() {
     window.clearTimeout(islandFeedbackVisibilityTimer);
     window.clearTimeout(notificationTimer);
     window.clearTimeout(notificationLongPressTimer);
-    clearTerminalTimer();
+    terminalConfigs.forEach((config) => stopTerminal(config));
     window.clearInterval(lockClockTimer);
     if (carouselRaf) window.cancelAnimationFrame(carouselRaf);
     if (statusFadeRaf) window.cancelAnimationFrame(statusFadeRaf);

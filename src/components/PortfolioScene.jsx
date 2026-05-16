@@ -1,11 +1,4 @@
 import { useRef, useEffect, useState } from "react";
-import sanotesFirstImage from "../../assets/images/Sanotes-first.png";
-import sanotesSecondImage from "../../assets/images/Sanotes-second.png";
-import chillMealFirstImage from "../../assets/images/ChillMeal1.png";
-import chillMealSecondImage from "../../assets/images/ChillMeal2.png";
-import impostorFirstImage from "../../assets/images/Impostor.png";
-import impostorSecondImage from "../../assets/images/Impostor2.png";
-import mediaTrackerSecondImage from "../../assets/images/MediaTracker2.png";
 
 export default function PortfolioScene() {
   const trackRef = useRef(null);
@@ -74,18 +67,18 @@ export default function PortfolioScene() {
                 </span>
               </div>
               <div className="liquid-glass-bar" aria-hidden="true">
-                <span className="dock-app dock-linkedin">
+                <a className="dock-app dock-linkedin" href="https://www.linkedin.com/in/miguelcoceracia" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
                   <img className="dock-app-icon" src="/assets/icons/linkedin.svg" alt="" />
-                </span>
-                <span className="dock-app dock-github">
+                </a>
+                <a className="dock-app dock-github" href="https://github.com/CoceraCia" target="_blank" rel="noreferrer" aria-label="GitHub profile">
                   <img className="dock-app-icon" src="/assets/icons/github.svg" alt="" />
-                </span>
+                </a>
                 <span className="dock-app dock-appstore">
                   <img className="dock-app-icon" src="/assets/icons/app-store.svg" alt="" />
                 </span>
-                <span className="dock-app dock-mail">
+                <a className="dock-app dock-mail" href="mailto:coceraciamiguel@gmail.com" aria-label="Send email">
                   <img className="dock-app-icon" src="/assets/icons/mail.svg" alt="" />
-                </span>
+                </a>
               </div>
             </div>
             <div className="lock-screen-panel" aria-hidden="true">
@@ -142,7 +135,7 @@ export default function PortfolioScene() {
           </div>
           <div className="shadow" aria-hidden="true"></div>
         </main>
-        <aside className="portfolio-panel" aria-label="About me as a developer">
+        <aside className="portfolio-panel scroll-reveal" aria-label="About me as a developer">
           <h1 className="portfolio-title">Miguel Cocera Cia</h1>
           <p className="portfolio-role">Mobile &amp; Backend Developer | AI Agents Developer.</p>
           <p className="portfolio-intro">I am a cross-platform developer with experience in Kotlin, Swift, Python, Java, backend systems, automations, and AI agents. I currently work at Glofera, building conversational AI solutions for WhatsApp and voice.</p>
@@ -157,7 +150,7 @@ export default function PortfolioScene() {
             </a>
           </div>
         </aside>
-        <aside className="about-panel" id="about" aria-label="About me">
+        <aside className="about-panel scroll-reveal" id="about" aria-label="About me">
           <p className="about-kicker">Next</p>
           <h2 className="about-title">About Me</h2>
           <p className="about-story">I&apos;m 21, from Barcelona, and since I discovered programming, I&apos;ve been obsessed with building things. I started with systems computing through SMIX, continued with DAM to specialize in cross-platform development, and I currently work at Glofera creating AI agents for WhatsApp and voice.</p>
@@ -169,7 +162,7 @@ export default function PortfolioScene() {
             </button>
           </div>
         </aside>
-        <aside className="projects-intro-panel" aria-label="Selected projects introduction">
+        <aside className="projects-intro-panel scroll-reveal" aria-label="Selected projects introduction">
           <div className="projects-intro-header projects-carousel-header">
             <p className="projects-kicker">Project Space</p>
             <h2 className="projects-title">Selected Projects</h2>
@@ -205,13 +198,13 @@ export default function PortfolioScene() {
             <div className="sanotes-phone-stack">
               <div className="sanotes-iphone sanotes-iphone-back">
                 <div className="sanotes-screen">
-                  <img className="sanotes-img" src={sanotesSecondImage} alt="Sanotes secondary app screen" />
+                  <img className="sanotes-img" src="/assets/images/Sanotes-second.png" alt="Sanotes secondary app screen" />
                 </div>
                 <div className="sanotes-shadow"></div>
               </div>
               <div className="sanotes-iphone sanotes-iphone-front">
                 <div className="sanotes-screen">
-                  <img className="sanotes-img" src={sanotesFirstImage} alt="Sanotes main app screen" />
+                  <img className="sanotes-img" src="/assets/images/Sanotes-first.png" alt="Sanotes main app screen" />
                 </div>
                 <div className="sanotes-shadow"></div>
               </div>
@@ -280,10 +273,10 @@ export default function PortfolioScene() {
           <div className="chillmeal-visual">
             <div className="chillmeal-phone-stack">
               <div className="chillmeal-img-wrap chillmeal-img-wrap-back">
-                <img className="chillmeal-img" src={chillMealSecondImage} alt="ChillMeal secondary Android app screen" />
+                <img className="chillmeal-img" src="/assets/images/ChillMeal2.png" alt="ChillMeal secondary Android app screen" />
               </div>
               <div className="chillmeal-img-wrap chillmeal-img-wrap-front">
-                <img className="chillmeal-img" src={chillMealFirstImage} alt="ChillMeal main Android app screen" />
+                <img className="chillmeal-img" src="/assets/images/ChillMeal1.png" alt="ChillMeal main Android app screen" />
               </div>
             </div>
           </div>
@@ -312,38 +305,11 @@ export default function PortfolioScene() {
           <div className="weatherapp-visual">
             <div className="weatherapp-phone-stack">
               <div className="weatherapp-img-wrap weatherapp-img-wrap-back">
-                <img className="weatherapp-img" src={impostorSecondImage} alt="Impostor secondary Android app screen" />
+                <img className="weatherapp-img" src="/assets/images/Impostor2.png" alt="Impostor secondary Android app screen" />
               </div>
               <div className="weatherapp-img-wrap weatherapp-img-wrap-front">
-                <img className="weatherapp-img" src={impostorFirstImage} alt="Impostor main Android app screen" />
+                <img className="weatherapp-img" src="/assets/images/Impostor.png" alt="Impostor main Android app screen" />
               </div>
-            </div>
-          </div>
-        </aside>
-        <aside className="remotelog-panel scroll-reveal" id="remotelog" aria-label="Remote Log Server">
-          <div className="remotelog-content">
-            <p className="projects-kicker">Java Server</p>
-            <h2 className="projects-title">Remote Log Server</h2>
-            <p className="projects-type">Java · Sockets · Multithreading</p>
-            <p className="remotelog-description">A remote logging server built with Java using TCP/IP sockets. Accepts concurrent client connections, validates log levels, and persists synchronized records to a file.</p>
-            <p className="remotelog-technical">Implements a custom message protocol over TCP, thread-safe file I/O with explicit locking, and a multi-threaded client handler model. Demonstrates low-level networking, concurrency control, and synchronization primitives.</p>
-            <div className="remotelog-features">
-              <span className="project-tag">Java</span>
-              <span className="project-tag">TCP/IP Sockets</span>
-              <span className="project-tag">Multithreading</span>
-              <span className="project-tag">Synchronization</span>
-              <span className="project-tag">File I/O</span>
-              <span className="project-tag">Client-Server</span>
-              <span className="project-tag">Custom Protocol</span>
-            </div>
-            <a className="project-button" href="https://github.com/CoceraCia/Remote-Log-Server" target="_blank" rel="noreferrer">
-              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
-              <span>View on GitHub</span>
-            </a>
-          </div>
-          <div className="remotelog-visual">
-            <div className="remotelog-img-wrap">
-              <img className="remotelog-img" src="" alt="" />
             </div>
           </div>
         </aside>
@@ -351,7 +317,7 @@ export default function PortfolioScene() {
           <div className="app-tracker-visual">
             <div className="app-tracker-phone-stack">
               <div className="app-tracker-img-wrap app-tracker-img-wrap-back">
-                <img className="app-tracker-img" src={mediaTrackerSecondImage} alt="Media Tracker App secondary screen" />
+                <img className="app-tracker-img" src="/assets/images/MediaTracker2.png" alt="Media Tracker App secondary screen" />
               </div>
               <div className="app-tracker-img-wrap app-tracker-img-wrap-front">
                 <img className="app-tracker-img" src="/assets/images/MainPageTracker.png" alt="Media Tracker App Android home screen" />
@@ -380,6 +346,40 @@ export default function PortfolioScene() {
             <p className="app-tracker-status"><span className="app-tracker-status-dot"></span> The Android version is being finalized now. The iPhone version has not been developed yet, but the project is being built with long-term ambition and care.</p>
           </div>
         </aside>
+        <aside className="remotelog-panel scroll-reveal" id="remotelog" aria-label="Remote Log Server">
+          <div className="remotelog-content">
+            <p className="projects-kicker">Java Server</p>
+            <h2 className="projects-title">Remote Log Server</h2>
+            <p className="projects-type">Java · Sockets · Multithreading</p>
+            <p className="remotelog-description">A remote logging server built with Java using TCP/IP sockets. Accepts concurrent client connections, validates log levels, and persists synchronized records to a file.</p>
+            <p className="remotelog-technical">Implements a custom message protocol over TCP, thread-safe file I/O with explicit locking, and a multi-threaded client handler model. Demonstrates low-level networking, concurrency control, and synchronization primitives.</p>
+            <div className="remotelog-features">
+              <span className="project-tag">Java</span>
+              <span className="project-tag">TCP/IP Sockets</span>
+              <span className="project-tag">Multithreading</span>
+              <span className="project-tag">Synchronization</span>
+              <span className="project-tag">File I/O</span>
+              <span className="project-tag">Client-Server</span>
+              <span className="project-tag">Custom Protocol</span>
+            </div>
+            <a className="project-button" href="https://github.com/CoceraCia/Remote-Log-Server" target="_blank" rel="noreferrer">
+              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <span>View on GitHub</span>
+            </a>
+          </div>
+          <div className="remotelog-visual">
+            <div className="projects-terminal-shell remotelog-terminal-shell">
+              <div className="terminal-controls">
+                <span className="terminal-dots">
+                  <span className="terminal-dot terminal-dot-red" aria-hidden="true"></span>
+                  <span className="terminal-dot terminal-dot-yellow"><img className="terminal-dot-icon" src="/assets/icons/minus-svgrepo-com.svg" alt="" /></span>
+                  <span className="terminal-dot terminal-dot-green"><img className="terminal-dot-icon" src="/assets/icons/plus-1512-svgrepo-com.svg" alt="" /></span>
+                </span>
+              </div>
+              <pre className="terminal-content remotelog-terminal-content"><code id="remoteLogTerminalCode"></code><span className="terminal-cursor" aria-hidden="true"></span></pre>
+            </div>
+          </div>
+        </aside>
         <section className="skills-section scroll-reveal" id="skills" aria-label="Skills">
           <p className="skills-kicker">Technical Range</p>
           <h2 className="skills-title">Skills</h2>
@@ -392,7 +392,7 @@ export default function PortfolioScene() {
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/graphql-svgrepo-com.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">OOP</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/kotlin-svgrepo-com.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/logo-google-android-studio-2-svgrepo-com.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/android-studio-icon.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/swift-svgrepo-com.svg" alt="" /><span className="skill-item-label">Swift</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/jetpackcompose-original.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/sqlite-svgrepo-com.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
@@ -420,7 +420,7 @@ export default function PortfolioScene() {
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/graphql-svgrepo-com.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">OOP</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/kotlin-svgrepo-com.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/logo-google-android-studio-2-svgrepo-com.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/android-studio-icon.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/swift-svgrepo-com.svg" alt="" /><span className="skill-item-label">Swift</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/jetpackcompose-original.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
               <div className="skill-item"><img className="skill-icon" src="/assets/icons/sqlite-svgrepo-com.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
@@ -462,7 +462,7 @@ export default function PortfolioScene() {
                 <div className="experience-work-intro">
                   <p className="experience-segment-subtitle">Building real-world solutions through AI, product support and client-facing delivery.</p>
                   <p className="experience-segment-text">This section highlights my progression from early professional roles to my current work at Glofera, where I focus on applied AI, automation and real business workflows.</p>
-                  <a className="portfolio-button portfolio-button-primary experience-linkedin-button" href="https://www.linkedin.com/in/miguel-cocera-cia/" target="_blank" rel="noreferrer">
+                  <a className="portfolio-button portfolio-button-primary experience-linkedin-button" href="https://www.linkedin.com/in/miguelcoceracia" target="_blank" rel="noreferrer">
                     View LinkedIn profile
                   </a>
                 </div>
@@ -619,6 +619,11 @@ export default function PortfolioScene() {
             <li><a className="sidebar-link sidebar-link-sub" href="#media-tracker" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('media-tracker')); }}>Media Tracker</a></li>
             <li><a className="sidebar-link" href="#skills" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('skills')); }}>Skills</a></li>
             <li><a className="sidebar-link" href="#experience" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('experience')); }}>Experience</a></li>
+            <li className="sidebar-group-label">Socials</li>
+            <li><a className="sidebar-link sidebar-link-sub" href="https://www.linkedin.com/in/miguelcoceracia" target="_blank" rel="noreferrer" onClick={() => setNavOpen(false)}>LinkedIn</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="https://github.com/CoceraCia" target="_blank" rel="noreferrer" onClick={() => setNavOpen(false)}>GitHub</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="mailto:coceraciamiguel@gmail.com" onClick={() => setNavOpen(false)}>Mail</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#resume" onClick={(e) => { e.preventDefault(); setNavOpen(false); setResumeCardOpen(true); }}>Download Resume</a></li>
           </ul>
         </nav>
 

@@ -1219,37 +1219,26 @@
     }
 
     .remotelog-visual {
+      position: relative;
+      width: min(1040px, 82vw);
+      height: 540px;
       justify-self: end;
+      margin-right: calc(-1 * min(560px, 45vw));
       opacity: 0;
-      transform: translateX(48px);
+      transform: translateX(64px);
       transition: opacity 540ms ease, transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .remotelog-img-wrap {
-      width: clamp(244px, 28vw, 340px);
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      border-radius: clamp(28px, 3.2vw, 38px);
-      background: linear-gradient(155deg, #141416 0%, #101013 48%, #0c0c0e 100%);
-      border: 1.5px solid #1b1b1f;
-      box-shadow:
-        0 32px 64px rgba(15, 23, 42, 0.35),
-        0 12px 28px rgba(15, 23, 42, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-        inset 1px 0 0 rgba(255, 255, 255, 0.08),
-        inset -1px 0 0 rgba(0, 0, 0, 0.5);
+    .remotelog-terminal-shell {
+      width: min(1040px, 82vw);
+      height: 540px;
+      margin-top: 24px;
     }
 
-    .remotelog-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1080 / 2400;
-      object-fit: cover;
-      border-radius: clamp(14px, 1.8vw, 22px);
-      background: rgba(30, 30, 40, 0.3);
+    .remotelog-terminal-content {
+      font-size: clamp(12px, 0.95vw, 14px);
+      line-height: 1.45;
+      overflow: hidden;
     }
 
     .remotelog-features {
@@ -1394,8 +1383,8 @@
 
     .sanotes-iphone {
       width: clamp(244px, 28vw, 340px);
-      padding: 11px;
-      border-radius: 58px;
+      padding: 8px;
+      border-radius: 54px;
       aspect-ratio: 71.6 / 147.6;
       background: linear-gradient(155deg, #141416 0%, #101013 48%, #0c0c0e 100%);
       border: 1.5px solid #1b1b1f;
@@ -1411,7 +1400,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: 58px;
+      border-radius: 54px;
       pointer-events: none;
       box-shadow:
         inset 1.2px 0 1.6px rgba(255, 255, 255, 0.04),
@@ -1425,7 +1414,7 @@
       position: relative;
       width: 100%;
       height: 100%;
-      border-radius: 47px;
+      border-radius: 44px;
       background: linear-gradient(180deg, #070708 0%, #020203 100%);
       border: 2px solid #080809;
       box-shadow:
@@ -2831,32 +2820,38 @@
       pointer-events: none;
     }
 
-    .stage.step-12 .remotelog-panel {
+    .stage.step-12 .app-tracker-panel {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
       pointer-events: auto;
     }
 
-    .stage.step-12 .remotelog-content,
-    .stage.step-12 .remotelog-visual {
+    .stage.step-12 .app-tracker-content,
+    .stage.step-12 .app-tracker-visual {
       opacity: 1;
       transform: translateX(0);
     }
 
-    .stage.step-13 .remotelog-panel {
+    .stage.step-13 .app-tracker-panel {
       opacity: 0;
       transform: translateY(-50%) translateX(26px);
       pointer-events: none;
     }
 
-    .stage.step-13 .app-tracker-panel {
+    .stage.step-13 .remotelog-panel {
       opacity: 1;
       transform: translateY(-50%) translateX(0);
       pointer-events: auto;
     }
 
-    .stage.step-13 .app-tracker-content,
-    .stage.step-13 .app-tracker-visual {
+    .stage.step-12 .app-tracker-content,
+    .stage.step-12 .app-tracker-visual {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .stage.step-13 .remotelog-content,
+    .stage.step-13 .remotelog-visual {
       opacity: 1;
       transform: translateX(0);
     }
@@ -3391,6 +3386,56 @@
       font-weight: 650;
     }
 
+    .skills-section::before,
+    .skills-section::after {
+      content: "";
+      position: absolute;
+      top: -40px;
+      left: 0;
+      width: 100vw;
+      height: calc(100% + 80px);
+      margin-left: calc(-50vw + 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .skills-section::before {
+      background: #000;
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .skills-section::after {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        repeating-conic-gradient(from 45deg, rgba(255, 255, 255, 0.07) 0 25%, rgba(255, 255, 255, 0.018) 0 50%);
+      background-size: 34px 34px;
+      clip-path: inset(0 100% 0 0);
+      opacity: 0;
+      transition: clip-path 560ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms ease;
+    }
+
+    .skills-kicker,
+    .skills-title,
+    .skills-marquee {
+      position: relative;
+      z-index: 1;
+    }
+
+    .skills-section .skills-kicker {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .skills-section .skills-title {
+      color: #fff;
+    }
+
+    .skills-section .skill-item-label {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
     .skills-marquee {
       margin-top: clamp(24px, 3vw, 40px);
       overflow: hidden;
@@ -3435,6 +3480,56 @@
       object-fit: contain;
       display: block;
     }
+
+    .skill-icon[src="/assets/icons/fastapi-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/api-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/object-connection-round-1097-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/git-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/github-142-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/canva-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/web-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/robot-svgrepo-com.svg"],
+    .skill-icon[src="/assets/icons/server-client-svgrepo-com.svg"] {
+      filter: brightness(0) invert(1);
+    }
+
+    .skill-icon[src="/assets/icons/git-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(52%) sepia(76%) saturate(1750%) hue-rotate(356deg) brightness(104%) contrast(101%);
+    }
+
+    .skill-icon[src="/assets/icons/github-142-svgrepo-com.svg"] {
+      filter: brightness(0) invert(1);
+    }
+
+    .skill-icon[src="/assets/icons/canva-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(49%) sepia(97%) saturate(1820%) hue-rotate(183deg) brightness(97%) contrast(101%);
+    }
+
+    .skill-icon[src="/assets/icons/fastapi-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(63%) sepia(51%) saturate(530%) hue-rotate(79deg) brightness(97%) contrast(93%);
+    }
+
+    .skill-icon[src="/assets/icons/object-connection-round-1097-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(47%) sepia(88%) saturate(1550%) hue-rotate(183deg) brightness(96%) contrast(95%);
+    }
+
+    .skill-icon[src="/assets/icons/api-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(70%) sepia(27%) saturate(1005%) hue-rotate(171deg) brightness(102%) contrast(95%);
+    }
+
+    .skill-icon[src="/assets/icons/web-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(72%) sepia(24%) saturate(960%) hue-rotate(170deg) brightness(104%) contrast(96%);
+    }
+
+    .skill-icon[src="/assets/icons/robot-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(84%) sepia(83%) saturate(930%) hue-rotate(3deg) brightness(103%) contrast(98%);
+    }
+
+    .skill-icon[src="/assets/icons/server-client-svgrepo-com.svg"] {
+      filter: brightness(0) saturate(100%) invert(90%) sepia(40%) saturate(760%) hue-rotate(18deg) brightness(103%) contrast(97%);
+    }
+
+
 
     .experience-intro {
       max-width: 760px;
@@ -4020,6 +4115,11 @@
       height: 100%;
     }
 
+    .single-page-content .remotelog-terminal-shell {
+      width: min(720px, 54vw);
+      height: clamp(340px, 40vw, 500px);
+    }
+
     .single-page-content .projects-manga-panel {
       left: -72px;
       top: -48px;
@@ -4132,6 +4232,21 @@
     .reveal-ready .single-page-content .scroll-reveal.is-visible .experience-segment:nth-child(1) { transition-delay: 120ms; }
     .reveal-ready .single-page-content .scroll-reveal.is-visible .experience-segment:nth-child(2) { transition-delay: 200ms; }
     .reveal-ready .single-page-content .scroll-reveal.is-visible .experience-segment:nth-child(3) { transition-delay: 280ms; }
+
+    .reveal-ready .single-page-content .skills-section.scroll-reveal.is-visible::before {
+      transform: scaleX(1);
+    }
+
+    .reveal-ready .single-page-content .skills-section.scroll-reveal.is-visible::after {
+      clip-path: inset(0 0 0 0);
+      opacity: 0.42;
+      animation: skills-cube-fill 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes skills-cube-fill {
+      0% { background-position: -42px 0, -42px 0, -42px 0; }
+      100% { background-position: 0 0, 0 0, 0 0; }
+    }
 
     .reveal-ready .single-page-content .scroll-reveal .skills-kicker,
     .reveal-ready .single-page-content .scroll-reveal .skills-title,
@@ -4324,6 +4439,26 @@
         gap: 14px;
       }
 
+      .single-page-content .projects-intro-panel {
+        min-height: clamp(260px, 56vw, 360px);
+        padding: 36px 20px;
+        border-radius: 26px;
+        background: #000;
+      }
+
+      .single-page-content .projects-intro-header {
+        opacity: 1;
+        transform: none;
+      }
+
+      .single-page-content .projects-intro-panel .projects-title {
+        font-size: clamp(34px, 11vw, 50px);
+      }
+
+      .single-page-content .projects-intro-panel .projects-carousel-intro {
+        font-size: clamp(14px, 4vw, 16px);
+      }
+
       .single-page-content .projects-intro-terminal {
         grid-column: 1 / -1;
         grid-row: 1;
@@ -4365,6 +4500,42 @@
         flex-direction: column;
       }
 
+      .single-page-content .projects-intro-phone {
+        padding: 7px;
+        border-radius: clamp(24px, 8vw, 34px);
+      }
+
+      .single-page-content .projects-intro-phone-placeholder {
+        inset: 7px;
+        border-radius: clamp(18px, 6vw, 28px);
+      }
+
+      .single-page-content .app-tracker-img-wrap,
+      .single-page-content .chillmeal-img-wrap,
+      .single-page-content .weatherapp-img-wrap {
+        padding: 7px;
+        border-radius: clamp(22px, 7vw, 30px);
+      }
+
+      .single-page-content .app-tracker-img,
+      .single-page-content .chillmeal-img,
+      .single-page-content .weatherapp-img {
+        border-radius: clamp(14px, 5vw, 20px);
+      }
+
+      .single-page-content .sanotes-iphone {
+        padding: 6px;
+        border-radius: clamp(34px, 10vw, 42px);
+      }
+
+      .single-page-content .sanotes-iphone::before {
+        border-radius: inherit;
+      }
+
+      .single-page-content .sanotes-screen {
+        border-radius: clamp(28px, 8.5vw, 34px);
+      }
+
       .single-page-content .projects-panel {
         display: block;
       }
@@ -4395,9 +4566,56 @@
       .iphone {
         display: block;
         width: min(70vw, 300px);
+        padding: 8px;
+        border-radius: clamp(42px, 13vw, 50px);
         margin: 0 auto;
         transform: none;
         filter: none;
+        animation: mobile-hero-phone-in 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      @keyframes mobile-hero-phone-in {
+        0% {
+          opacity: 0;
+          transform: translateX(-54px) scale(0.955) rotate(-2deg);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateX(0) scale(1) rotate(0deg);
+        }
+      }
+
+      .rail {
+        border-radius: inherit;
+      }
+
+      .screen {
+        border-radius: clamp(34px, 10vw, 40px);
+      }
+
+      .home-screen,
+      .lock-screen-panel {
+        border-radius: clamp(31px, 9.5vw, 37px);
+      }
+
+      .island-camera {
+        transform: translate(21px, -50%);
+      }
+
+      .liquid-glass-bar {
+        bottom: 7px;
+        width: calc(100% - 14px);
+        height: clamp(72px, 23vw, 82px);
+        border-radius: 30px;
+        gap: 10px;
+        padding: 0 12px;
+      }
+
+      .dock-app {
+        width: clamp(48px, 15vw, 54px);
+        height: clamp(48px, 15vw, 54px);
+        border-radius: 15px;
       }
 
       .stage.step-5 .iphone,
@@ -4459,8 +4677,8 @@
       .weatherapp-panel,
       .stage.step-11 .weatherapp-panel,
       .remotelog-panel,
-      .stage.step-12 .remotelog-panel,
-      .stage.step-13 .app-tracker-panel {
+      .stage.step-13 .remotelog-panel,
+      .stage.step-12 .app-tracker-panel {
         position: relative;
         inset: auto;
         left: auto;
@@ -4555,18 +4773,72 @@
       }
 
       .projects-intro-panel {
-        min-height: auto;
+        width: calc(100% + 44px);
+        max-width: none;
+        margin-left: -22px;
+        margin-right: -22px;
+        min-height: clamp(360px, 74vw, 520px);
         display: flex;
         text-align: center;
-        padding: 56px 22px;
-        border-radius: 32px;
+        align-items: center;
+        justify-content: center;
+        padding: 64px 24px;
+        border-radius: 0;
         background: #000;
         overflow: hidden;
       }
 
-      .projects-intro-panel::before,
+      .projects-intro-panel::before {
+        display: block;
+        transform: translate(-50%, -50%) scaleX(0);
+      }
+
       .projects-intro-panel::after {
-        display: none;
+        display: block;
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
+        transform: translate(-50%, -50%);
+      }
+
+      .reveal-ready .stage .portfolio-panel.scroll-reveal {
+        opacity: 0;
+        transform: translateX(44px);
+        transition: opacity 560ms ease 90ms, transform 760ms cubic-bezier(0.16, 1, 0.3, 1) 90ms;
+      }
+
+      .reveal-ready .stage .about-panel.scroll-reveal,
+      .reveal-ready .stage .projects-intro-panel.scroll-reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        transition: opacity 520ms ease, transform 680ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .reveal-ready .stage .portfolio-panel.scroll-reveal.is-visible,
+      .reveal-ready .stage .about-panel.scroll-reveal.is-visible,
+      .reveal-ready .stage .projects-intro-panel.scroll-reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal-ready .stage .projects-intro-panel.scroll-reveal .projects-intro-header {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      .reveal-ready .stage .projects-intro-panel.scroll-reveal.is-visible::before {
+        transform: translate(-50%, -50%) scaleX(1);
+      }
+
+      .reveal-ready .stage .projects-intro-panel.scroll-reveal.is-visible::after {
+        clip-path: inset(0 0 0 0);
+        opacity: 0.42;
+        animation: projects-cube-fill 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .reveal-ready .stage .projects-intro-panel.scroll-reveal.is-visible .projects-intro-header {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 110ms;
       }
 
       .projects-intro-composition {
@@ -4807,8 +5079,10 @@
         order: 2;
       }
 
-      .remotelog-img-wrap {
-        width: min(230px, 64vw);
+      .remotelog-terminal-shell {
+        width: 100%;
+        max-width: 640px;
+        height: clamp(280px, 62vw, 400px);
       }
 
       .remotelog-content {
