@@ -5482,6 +5482,39 @@
         height: 292px;
       }
 
+      .phone-button:hover {
+        filter: none;
+        transform: none;
+      }
+
+      .projects-terminal-shell:hover {
+        transform: none;
+      }
+
+      .app-tracker-img-wrap-front:hover,
+      .chillmeal-img-wrap-front:hover,
+      .weatherapp-img-wrap-front:hover,
+      .sanotes-phone-stack .sanotes-iphone-front:hover {
+        transform: translateX(4px) rotate(-2.5deg);
+        filter: none;
+      }
+
+      .app-tracker-img-wrap-back:hover {
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
+      }
+
+      .chillmeal-phone-stack .chillmeal-img-wrap-back:hover {
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
+      }
+
+      .weatherapp-phone-stack .weatherapp-img-wrap-back:hover {
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
+      }
+
+      .sanotes-phone-stack .sanotes-iphone-back:hover {
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
+      }
+
       .terminal-content {
       font-size: 10px;
       }
