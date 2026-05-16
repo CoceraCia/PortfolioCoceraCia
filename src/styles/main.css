@@ -4419,7 +4419,7 @@
       .single-page-content .app-tracker-phone-stack {
         justify-self: center;
         margin-inline: auto;
-        transform: translateX(-16px);
+        transform: translateX(8px);
       }
 
     }
@@ -4447,6 +4447,11 @@
       .single-page-content .experience-panel {
         width: 100%;
         max-width: 640px;
+      }
+
+      .single-page-content .app-tracker-visual {
+        margin-right: 0;
+        justify-self: center;
       }
 
       .single-page-content .projects-intro-composition {
@@ -4583,7 +4588,7 @@
 
       .iphone {
         display: block;
-        width: min(70vw, 300px);
+        width: min(82vw, 350px);
         padding: 8px;
         border-radius: clamp(42px, 13vw, 50px);
         margin: 0 auto;
@@ -4928,7 +4933,7 @@
         width: auto;
         max-width: 100%;
         margin-inline: auto;
-        transform: translateX(-16px);
+        transform: translateX(8px);
       }
 
       .app-tracker-phone-stack .app-tracker-img-wrap {
@@ -4995,7 +5000,7 @@
         max-width: 100%;
         min-height: clamp(480px, 44vw, 610px);
         margin-inline: auto;
-        transform: translateX(-16px);
+        transform: translateX(8px);
       }
 
       .chillmeal-phone-stack .chillmeal-img-wrap {
@@ -5060,7 +5065,7 @@
         max-width: 100%;
         min-height: clamp(480px, 44vw, 610px);
         margin-inline: auto;
-        transform: translateX(-16px);
+        transform: translateX(8px);
       }
 
       .weatherapp-phone-stack .weatherapp-img-wrap {
@@ -5160,7 +5165,7 @@
         max-width: 100%;
         min-height: clamp(480px, 44vw, 610px);
         margin-inline: auto;
-        transform: translateX(-16px);
+        transform: translateX(8px);
       }
 
       .sanotes-phone-stack .sanotes-iphone {
@@ -5408,7 +5413,7 @@
       }
 
       .single-page-content .projects-manga-panel {
-        display: block;
+        display: none;
         left: auto;
         right: -44px;
         top: -88px;
