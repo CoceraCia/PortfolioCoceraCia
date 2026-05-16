@@ -1,48 +1,61 @@
-import { useState } from "react";
+import { useRef, useEffect, useState } from "react";
+import sanotesFirstImage from "../../assets/images/Sanotes-first.png";
+import sanotesSecondImage from "../../assets/images/Sanotes-second.png";
+import chillMealFirstImage from "../../assets/images/ChillMeal1.png";
+import chillMealSecondImage from "../../assets/images/ChillMeal2.png";
+import impostorFirstImage from "../../assets/images/Impostor.png";
+import impostorSecondImage from "../../assets/images/Impostor2.png";
+import mediaTrackerSecondImage from "../../assets/images/MediaTracker2.png";
 
 export default function PortfolioScene() {
-  const experiences = [
-    {
-      id: "glofera",
-      date: "2025 - Present",
-      company: "Glofera",
-      logo: "/assets/images/Glofera-logo.svg",
-      logoAlt: "Glofera logo",
-      role: "AI Agents / Backend / Mobile Developer",
-      meta: "1 year · Intensive dual training and contract",
-      copy: "I work on real-world conversational AI solutions focused on WhatsApp and voice agents, combining product thinking with technical implementation in a production-oriented environment.",
-      points: "AI agents for WhatsApp · Voice agents · API integrations · Workflow automation · Backend logic for conversational systems · Business-focused AI solutions",
-    },
-    {
-      id: "track",
-      date: "2024 · SMIX Internship",
-      company: "Track Asistencia y Consulting SL",
-      logo: "/assets/images/track-logo.png",
-      logoAlt: "Track Asistencia y Consulting logo",
-      role: "IT Technician / Python Automations",
-      meta: "Internship period",
-      copy: "My first real contact with automation in a company setting, with a strong focus on technical support, incident resolution, and practical Python-based automations.",
-      points: "Technical support · Python automations · Incident resolution · Company environment learning · First real contact with automation",
-    },
-    {
-      id: "loterias",
-      date: "2023 · 2024-2025",
-      company: "Loterias y Apuestas del Estado",
-      logo: "/assets/images/loterias-logo.png",
-      logoAlt: "Loterias y Apuestas del Estado logo",
-      role: "Operations Support",
-      meta: "Caramel de la Sort (2023) · Anec Blau (2024-2025)",
-      copy: "Professional experience in real operational environments, contributing to daily workflows, customer-facing operations, responsibility, coordination, and service quality while strengthening reliability and execution under real constraints.",
-      points: "Operations support · Coordination · Service quality · Customer-facing execution · Reliability under real constraints",
-    },
-  ];
+  const trackRef = useRef(null);
+  const [navOpen, setNavOpen] = useState(false);
+  const [resumeCardOpen, setResumeCardOpen] = useState(false);
 
-  const [activeExperienceId, setActiveExperienceId] = useState(experiences[0].id);
-  const activeExperience = experiences.find((experience) => experience.id === activeExperienceId) || experiences[0];
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let position = 0;
+    let rafId;
+
+    function animate() {
+      position -= 0.6;
+
+      if (Math.abs(position) >= track.scrollWidth / 2) {
+        position = 0;
+      }
+
+      track.style.transform = `translateX(${position}px)`;
+      rafId = requestAnimationFrame(animate);
+    }
+
+    rafId = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
+  function scrollToStep(threshold) {
+    const scene = document.querySelector(".scene");
+    if (!scene) return;
+    const scrollable = scene.offsetHeight - window.innerHeight;
+    if (scrollable <= 0) {
+      window.scrollTo({ top: window.innerHeight * 5, behavior: "smooth" });
+      return;
+    }
+    window.scrollTo({ top: scrollable * threshold, behavior: "smooth" });
+  }
+
+  function scrollToPanel(el) {
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
 
   return (
-    <section className="scene">
-      <div className="stage" id="stage">
+    <>
+      <section className="scene" id="hero">
+        <div className="stage" id="stage">
         <main className="iphone" aria-label="iPhone 15">
           <span className="rail" aria-hidden="true"></span>
           <button className="phone-button action-button" type="button" aria-label="Boton accion"></button>
@@ -144,120 +157,71 @@ export default function PortfolioScene() {
             </a>
           </div>
         </aside>
-        <aside className="about-panel" aria-label="About me">
+        <aside className="about-panel" id="about" aria-label="About me">
           <p className="about-kicker">Next</p>
           <h2 className="about-title">About Me</h2>
           <p className="about-story">I&apos;m 21, from Barcelona, and since I discovered programming, I&apos;ve been obsessed with building things. I started with systems computing through SMIX, continued with DAM to specialize in cross-platform development, and I currently work at Glofera creating AI agents for WhatsApp and voice.</p>
           <p className="about-story about-story-secondary">I enjoy building useful tools, automating processes, designing mobile experiences, and exploring how AI can become a real product.</p>
           <p className="about-values">Creativity. Genuine passion for programming. Fast learning. Future-focused interest in AI and Big Data. Product mindset, not just a code mindset.</p>
+          <div className="about-actions">
+            <button className="portfolio-button portfolio-button-primary about-resume-button" type="button" aria-haspopup="dialog" aria-expanded={resumeCardOpen} onClick={() => setResumeCardOpen(true)}>
+              Download Resume
+            </button>
+          </div>
         </aside>
-        <aside className="experience-panel" aria-label="Professional experience">
-          <p className="experience-kicker">Journey</p>
-          <h2 className="experience-title">Professional Experience</h2>
-          <p className="experience-note">For confidentiality reasons, some projects are described in general terms, focusing on my role, technologies, and key learnings.</p>
-          <div className="experience-layout">
-            <div className="experience-selector" role="tablist" aria-label="Experience timeline selector">
-              <div className="experience-path" aria-hidden="true"></div>
-              {experiences.map((experience) => {
-                const isActive = activeExperience.id === experience.id;
-
-                return (
-                  <button
-                    key={experience.id}
-                    className={`experience-node${isActive ? " is-active" : ""}`}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    aria-controls="experience-detail"
-                    onClick={() => setActiveExperienceId(experience.id)}
-                  >
-                    <span className="experience-node-dot" aria-hidden="true"></span>
-                    <span className="experience-node-date">{experience.date}</span>
-                    <span className="experience-node-company">{experience.company}</span>
-                  </button>
-                );
-              })}
+        <aside className="projects-intro-panel" aria-label="Selected projects introduction">
+          <div className="projects-intro-header projects-carousel-header">
+            <p className="projects-kicker">Project Space</p>
+            <h2 className="projects-title">Selected Projects</h2>
+            <p className="projects-carousel-intro">A curated set of mobile apps, backend systems, command-line tools, and experiments</p>
+          </div>
+        </aside>
+        </div>
+      </section>
+      <main className="single-page-content" aria-label="Portfolio content">
+        <aside className="sanotes-panel scroll-reveal" id="sanotes" aria-label="Sanotes">
+          <div className="sanotes-content">
+            <p className="projects-kicker">iOS &amp; Firebase</p>
+            <h2 className="projects-title">Sanotes</h2>
+            <p className="projects-type">Swift · Firebase · Python Cloud Functions</p>
+            <p className="sanotes-description">An iOS app for creating and sharing personalised lists of appreciation with your loved ones. Each item can include a photo, and lists are shared securely via unique generated IDs — no accounts needed.</p>
+            <p className="sanotes-technical">Built with an MVVM architecture in Swift/SwiftUI, backed by Firebase Cloud Functions written in Python. The backend handles secure note claiming, multi-threaded image uploads, device‑based rate limiting, and automatic temporary storage cleanup.</p>
+            <div className="sanotes-features">
+              <span className="project-tag">Swift / SwiftUI</span>
+              <span className="project-tag">Firebase</span>
+              <span className="project-tag">Cloud Functions</span>
+              <span className="project-tag">Python backend</span>
+              <span className="project-tag">MVVM architecture</span>
+              <span className="project-tag">Image processing</span>
+              <span className="project-tag">Secure sharing</span>
+              <span className="project-tag">Rate limiting</span>
             </div>
-            <article key={activeExperience.id} id="experience-detail" className="experience-detail-content" role="tabpanel" aria-label={activeExperience.company}>
-              <img className="experience-work-logo" src={activeExperience.logo} alt={activeExperience.logoAlt} />
-              <p className="experience-role">{activeExperience.role}</p>
-              <p className="experience-meta">{activeExperience.meta}</p>
-              <p className="experience-copy">{activeExperience.copy}</p>
-              <p className="experience-points">{activeExperience.points}</p>
-            </article>
+            <a className="project-button" href="https://github.com/CoceraCia/Sanotes" target="_blank" rel="noreferrer">
+              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <span>View on GitHub</span>
+            </a>
+          </div>
+          <div className="sanotes-visual">
+            <div className="sanotes-phone-stack">
+              <div className="sanotes-iphone sanotes-iphone-back">
+                <div className="sanotes-screen">
+                  <img className="sanotes-img" src={sanotesSecondImage} alt="Sanotes secondary app screen" />
+                </div>
+                <div className="sanotes-shadow"></div>
+              </div>
+              <div className="sanotes-iphone sanotes-iphone-front">
+                <div className="sanotes-screen">
+                  <img className="sanotes-img" src={sanotesFirstImage} alt="Sanotes main app screen" />
+                </div>
+                <div className="sanotes-shadow"></div>
+              </div>
+            </div>
           </div>
         </aside>
-        <aside className="education-panel" aria-label="Education">
-          <p className="education-kicker">Foundation</p>
-          <h2 className="education-title">Education</h2>
-          <p className="education-copy">My education combines a strong technical foundation in systems, cross-platform development, and a clear evolution toward artificial intelligence and data.</p>
-          <div className="education-list" aria-label="Education wallet cards">
-            <article className="education-item education-item-systems">
-              <div className="education-pass-top">
-                <span className="education-pass-badge">SMIX</span>
-                <span className="education-pass-status">Systems</span>
-              </div>
-              <div className="education-pass-body">
-                <p className="education-label">CFGM SMIX</p>
-                <p className="education-detail">Microcomputer Systems and Networks at <a href="https://stucom.com/" target="_blank" rel="noreferrer">Stucom</a></p>
-              </div>
-              <div className="education-pass-tags" aria-label="SMIX highlights">
-                <span>Networks</span>
-                <span>Support</span>
-                <span>Hardware</span>
-              </div>
-            </article>
-            <article className="education-item education-item-dev">
-              <div className="education-pass-top">
-                <span className="education-pass-badge">DAM</span>
-                <span className="education-pass-status">Development</span>
-              </div>
-              <div className="education-pass-body">
-                <p className="education-label">CFGS DAM</p>
-                <p className="education-detail">Cross-Platform Application Development at <a href="https://stucom.com/" target="_blank" rel="noreferrer">Stucom</a>, with the final year completed online at <a href="https://linkiafp.es/" target="_blank" rel="noreferrer">LinkiaFP</a></p>
-              </div>
-              <div className="education-pass-tags" aria-label="DAM highlights">
-                <span>Mobile</span>
-                <span>Backend</span>
-                <span>Apps</span>
-              </div>
-            </article>
-            <article className="education-item education-item-language">
-              <div className="education-pass-top">
-                <span className="education-pass-badge">B2</span>
-                <span className="education-pass-status">English</span>
-              </div>
-              <div className="education-pass-body">
-                <p className="education-label">B2 First</p>
-                <p className="education-detail">First Certificate in English at <a href="https://janets.es/" target="_blank" rel="noreferrer">Janet&apos;s</a></p>
-              </div>
-              <div className="education-pass-tags" aria-label="English certificate highlights">
-                <span>Communication</span>
-                <span>Certificate</span>
-              </div>
-            </article>
-            <article className="education-item education-item-ai">
-              <div className="education-pass-top">
-                <span className="education-pass-badge">AI</span>
-                <span className="education-pass-status">Next</span>
-              </div>
-              <div className="education-pass-body">
-                <p className="education-label">Upcoming</p>
-                <p className="education-detail">Master&apos;s Degree in AI and Big Data</p>
-              </div>
-              <div className="education-pass-tags" aria-label="Upcoming master highlights">
-                <span>AI</span>
-                <span>Big Data</span>
-                <span>Product</span>
-              </div>
-            </article>
-          </div>
-        </aside>
-        <aside className="projects-panel" aria-label="Selected projects">
+        <aside className="projects-panel scroll-reveal" id="kizamu" aria-label="Selected projects">
           <div className="projects-content">
             <p className="projects-kicker">Featured Project</p>
-            <h2 className="projects-title">Selected Projects</h2>
-            <h3 className="projects-name">KizamuManga</h3>
+            <h2 className="projects-title">KizamuManga</h2>
             <p className="projects-type">Python CLI · Scraping · Automation</p>
             <p className="projects-description">A command-line tool to search, download, and convert manga chapters into CBZ files from multiple online sources.</p>
             <p className="projects-technical">The project includes asynchronous downloads with concurrency control, automatic CBZ export, temporary file cleanup, image processing, multi-source support, and an extensible scraping architecture using Playwright.</p>
@@ -292,7 +256,392 @@ export default function PortfolioScene() {
             </div>
           </div>
         </aside>
-      </div>
-    </section>
+        <aside className="chillmeal-panel scroll-reveal" id="chillmeal" aria-label="ChillMeal">
+          <div className="chillmeal-content">
+            <p className="projects-kicker">Android App</p>
+            <h2 className="projects-title">ChillMeal</h2>
+            <p className="projects-type">Kotlin · Jetpack Compose · MVVM</p>
+            <p className="chillmeal-description">A recipe recommendation app for Android built with Kotlin and Jetpack Compose. Uses simplified MVVM architecture with clean layer separation, reusable components, and unidirectional data flow.</p>
+            <p className="chillmeal-technical">The project follows a data/model/ui layer structure with component-based UI composition, declarative navigation, and collaborative Git workflow through issues, branches, and pull requests.</p>
+            <div className="chillmeal-features">
+              <span className="project-tag">Kotlin</span>
+              <span className="project-tag">Jetpack Compose</span>
+              <span className="project-tag">MVVM</span>
+              <span className="project-tag">Clean Architecture</span>
+              <span className="project-tag">UI Components</span>
+              <span className="project-tag">Unidirectional Data Flow</span>
+              <span className="project-tag">Git Collaborative Workflow</span>
+            </div>
+            <a className="project-button" href="https://github.com/CoceraCia/ChillMeal" target="_blank" rel="noreferrer">
+              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <span>View on GitHub</span>
+            </a>
+          </div>
+          <div className="chillmeal-visual">
+            <div className="chillmeal-phone-stack">
+              <div className="chillmeal-img-wrap chillmeal-img-wrap-back">
+                <img className="chillmeal-img" src={chillMealSecondImage} alt="ChillMeal secondary Android app screen" />
+              </div>
+              <div className="chillmeal-img-wrap chillmeal-img-wrap-front">
+                <img className="chillmeal-img" src={chillMealFirstImage} alt="ChillMeal main Android app screen" />
+              </div>
+            </div>
+          </div>
+        </aside>
+        <aside className="weatherapp-panel scroll-reveal" id="impostor" aria-label="Impostor">
+          <div className="weatherapp-content">
+            <p className="projects-kicker">Android App</p>
+            <h2 className="projects-title">Impostor</h2>
+            <p className="projects-type">Kotlin · Jetpack Compose · First Compose Project</p>
+            <p className="weatherapp-description">A small Android game inspired by social deduction mechanics, built as my first project using Jetpack Compose. It was an early experiment to understand declarative UI, screen state, and interactive mobile flows in Kotlin.</p>
+            <p className="weatherapp-technical">The project focuses on Compose fundamentals: composable screens, state-driven UI, simple navigation between game steps, and a clean Kotlin structure. It marks the point where I started moving from traditional Android layouts into modern Compose-based development.</p>
+            <div className="weatherapp-features">
+              <span className="project-tag">Kotlin</span>
+              <span className="project-tag">Jetpack Compose</span>
+              <span className="project-tag">First Compose project</span>
+              <span className="project-tag">Android UI</span>
+              <span className="project-tag">Game flow</span>
+              <span className="project-tag">State-driven screens</span>
+              <span className="project-tag">Declarative UI</span>
+            </div>
+            <a className="project-button" href="https://github.com/CoceraCia/Impostor" target="_blank" rel="noreferrer">
+              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <span>View on GitHub</span>
+            </a>
+          </div>
+          <div className="weatherapp-visual">
+            <div className="weatherapp-phone-stack">
+              <div className="weatherapp-img-wrap weatherapp-img-wrap-back">
+                <img className="weatherapp-img" src={impostorSecondImage} alt="Impostor secondary Android app screen" />
+              </div>
+              <div className="weatherapp-img-wrap weatherapp-img-wrap-front">
+                <img className="weatherapp-img" src={impostorFirstImage} alt="Impostor main Android app screen" />
+              </div>
+            </div>
+          </div>
+        </aside>
+        <aside className="remotelog-panel scroll-reveal" id="remotelog" aria-label="Remote Log Server">
+          <div className="remotelog-content">
+            <p className="projects-kicker">Java Server</p>
+            <h2 className="projects-title">Remote Log Server</h2>
+            <p className="projects-type">Java · Sockets · Multithreading</p>
+            <p className="remotelog-description">A remote logging server built with Java using TCP/IP sockets. Accepts concurrent client connections, validates log levels, and persists synchronized records to a file.</p>
+            <p className="remotelog-technical">Implements a custom message protocol over TCP, thread-safe file I/O with explicit locking, and a multi-threaded client handler model. Demonstrates low-level networking, concurrency control, and synchronization primitives.</p>
+            <div className="remotelog-features">
+              <span className="project-tag">Java</span>
+              <span className="project-tag">TCP/IP Sockets</span>
+              <span className="project-tag">Multithreading</span>
+              <span className="project-tag">Synchronization</span>
+              <span className="project-tag">File I/O</span>
+              <span className="project-tag">Client-Server</span>
+              <span className="project-tag">Custom Protocol</span>
+            </div>
+            <a className="project-button" href="https://github.com/CoceraCia/Remote-Log-Server" target="_blank" rel="noreferrer">
+              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <span>View on GitHub</span>
+            </a>
+          </div>
+          <div className="remotelog-visual">
+            <div className="remotelog-img-wrap">
+              <img className="remotelog-img" src="" alt="" />
+            </div>
+          </div>
+        </aside>
+        <aside className="app-tracker-panel scroll-reveal" id="media-tracker" aria-label="Media Tracker App">
+          <div className="app-tracker-visual">
+            <div className="app-tracker-phone-stack">
+              <div className="app-tracker-img-wrap app-tracker-img-wrap-back">
+                <img className="app-tracker-img" src={mediaTrackerSecondImage} alt="Media Tracker App secondary screen" />
+              </div>
+              <div className="app-tracker-img-wrap app-tracker-img-wrap-front">
+                <img className="app-tracker-img" src="/assets/images/MainPageTracker.png" alt="Media Tracker App Android home screen" />
+              </div>
+            </div>
+          </div>
+          <div className="app-tracker-content">
+            <p className="projects-kicker">Current Project</p>
+            <h2 className="projects-title">Media Tracker App</h2>
+            <p className="projects-type app-tracker-type">Kotlin Multiplatform · GraphQL API · OAuth · Stremio Addon Bridge</p>
+            <p className="app-tracker-description">A real app currently in development, built to combine AniList and TrackTech into one unified catalog and tracking experience. The goal is to give users a more flexible place to organize what they want to watch, follow, and manage across different content sources.</p>
+            <div className="app-tracker-highlights" aria-label="Media Tracker App highlights">
+              <p>Built with Kotlin Multiplatform so the Android foundation can evolve toward iPhone support later.</p>
+              <p>Uses APIs and authentication to connect tracking data, catalog discovery, and user-specific state.</p>
+              <p>Designed to become compatible with Stremio addons, eventually acting as a bridge for community-created extensions.</p>
+            </div>
+            <div className="app-tracker-features">
+              <span className="project-tag">Kotlin Multiplatform</span>
+              <span className="project-tag">AniList + TrackTech unified</span>
+              <span className="project-tag">APIs</span>
+              <span className="project-tag">Authentication</span>
+              <span className="project-tag">Stremio Addon Support</span>
+              <span className="project-tag">Android in progress</span>
+              <span className="project-tag">iPhone planned</span>
+            </div>
+            <p className="app-tracker-status"><span className="app-tracker-status-dot"></span> The Android version is being finalized now. The iPhone version has not been developed yet, but the project is being built with long-term ambition and care.</p>
+          </div>
+        </aside>
+        <section className="skills-section scroll-reveal" id="skills" aria-label="Skills">
+          <p className="skills-kicker">Technical Range</p>
+          <h2 className="skills-title">Skills</h2>
+          <div className="skills-marquee">
+            <div className="skills-marquee-track" ref={trackRef}>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/java-svgrepo-com.svg" alt="" /><span className="skill-item-label">Java</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/python-svgrepo-com.svg" alt="" /><span className="skill-item-label">Python</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/fastapi-svgrepo-com.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/api-svgrepo-com.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/graphql-svgrepo-com.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">OOP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/kotlin-svgrepo-com.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/logo-google-android-studio-2-svgrepo-com.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/swift-svgrepo-com.svg" alt="" /><span className="skill-item-label">Swift</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/jetpackcompose-original.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/sqlite-svgrepo-com.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mysql-svgrepo-com.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mariadb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mongodb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/firebase-svgrepo-com.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/git-svgrepo-com.svg" alt="" /><span className="skill-item-label">Git</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/github-142-svgrepo-com.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/netbeans-svgrepo-com.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/visual-studio-code-svgrepo-com.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/figma-svgrepo-com.svg" alt="" /><span className="skill-item-label">Figma</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/canva-svgrepo-com.svg" alt="" /><span className="skill-item-label">Canva</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/gimp-svgrepo-com.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/cli-command-root-svgrepo-com.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/web-svgrepo-com.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/robot-svgrepo-com.svg" alt="" /><span className="skill-item-label">Automation</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/server-client-svgrepo-com.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/php-svgrepo-com.svg" alt="" /><span className="skill-item-label">PHP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/java-svgrepo-com.svg" alt="" /><span className="skill-item-label">Java</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/python-svgrepo-com.svg" alt="" /><span className="skill-item-label">Python</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/fastapi-svgrepo-com.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/api-svgrepo-com.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/graphql-svgrepo-com.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">OOP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/kotlin-svgrepo-com.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/logo-google-android-studio-2-svgrepo-com.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/swift-svgrepo-com.svg" alt="" /><span className="skill-item-label">Swift</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/jetpackcompose-original.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/sqlite-svgrepo-com.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mysql-svgrepo-com.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mariadb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mongodb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/firebase-svgrepo-com.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/git-svgrepo-com.svg" alt="" /><span className="skill-item-label">Git</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/github-142-svgrepo-com.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/netbeans-svgrepo-com.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/visual-studio-code-svgrepo-com.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/figma-svgrepo-com.svg" alt="" /><span className="skill-item-label">Figma</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/canva-svgrepo-com.svg" alt="" /><span className="skill-item-label">Canva</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/gimp-svgrepo-com.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/cli-command-root-svgrepo-com.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/web-svgrepo-com.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/robot-svgrepo-com.svg" alt="" /><span className="skill-item-label">Automation</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/server-client-svgrepo-com.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/php-svgrepo-com.svg" alt="" /><span className="skill-item-label">PHP</span></div>
+            </div>
+          </div>
+        </section>
+        <aside className="experience-panel scroll-reveal" id="experience" aria-label="Experience and Background">
+          <p className="experience-kicker">Personal Journey</p>
+          <h2 className="experience-title">Experience &amp; Background</h2>
+          <p className="experience-intro">A visual look at the real work environment, studies and personal projects shaping how I learn, build and grow as a developer.</p>
+          <section className="experience-bento" aria-label="Experience and background segments">
+            <article className="experience-segment experience-segment-work">
+              <div className="experience-segment-visual" aria-hidden="true">
+                <span className="experience-visual-window"></span>
+                <span className="experience-visual-node experience-visual-node-one"></span>
+                <span className="experience-visual-node experience-visual-node-two"></span>
+                <span className="experience-visual-line"></span>
+              </div>
+              <div className="experience-segment-copy">
+                <span className="experience-segment-badge">Currently Working</span>
+                <h3 className="experience-segment-title">Work Experience</h3>
+                <div className="experience-work-intro">
+                  <p className="experience-segment-subtitle">Building real-world solutions through AI, product support and client-facing delivery.</p>
+                  <p className="experience-segment-text">This section highlights my progression from early professional roles to my current work at Glofera, where I focus on applied AI, automation and real business workflows.</p>
+                  <a className="portfolio-button portfolio-button-primary experience-linkedin-button" href="https://www.linkedin.com/in/miguel-cocera-cia/" target="_blank" rel="noreferrer">
+                    View LinkedIn profile
+                  </a>
+                </div>
+                <div className="experience-history" aria-label="Previous experience">
+                  <div className="experience-history-entry">
+                    <div className="experience-history-head">
+                      <div>
+                        <h4 className="experience-history-title">Glofera</h4>
+                        <p className="experience-history-subtitle">AI Agent Developer</p>
+                      </div>
+                      <span className="experience-history-date">2025–Present</span>
+                    </div>
+                    <p className="experience-history-text">Leading the creation and implementation of AI agents, with a strong focus on voice AI and WhatsApp AI agents. My day-to-day work includes understanding agent behavior, applying LLMs effectively, structuring prompts, and turning business needs into practical AI solutions.</p>
+                    <p className="experience-history-text">I also work directly with real clients: explaining product behavior, handling incidents, managing requests, and providing clear technical support. This role has strengthened my communication, problem-solving, product understanding, and real-world delivery skills, including CRM and ERP-related workflows.</p>
+                    <div className="experience-history-tags" aria-label="Glofera technologies and skills">
+                      <span>AI Agents</span>
+                      <span>Voice AI</span>
+                      <span>WhatsApp AI</span>
+                      <span>LLMs</span>
+                      <span>Prompt Engineering</span>
+                      <span>Client Communication</span>
+                      <span>Incident Resolution</span>
+                      <span>Technical Support</span>
+                      <span>CRM</span>
+                      <span>ERP</span>
+                      <span>Automation</span>
+                      <span>Problem Solving</span>
+                    </div>
+                  </div>
+                  <div className="experience-history-entry">
+                    <div className="experience-history-head">
+                      <div>
+                        <h4 className="experience-history-title">Track Asistencia y Consulting S.L.</h4>
+                        <p className="experience-history-subtitle">IT Internship</p>
+                      </div>
+                      <span className="experience-history-date">2024</span>
+                    </div>
+                    <p className="experience-history-text">I discovered programming and started learning Python on my own. I built a CLI tool to automate an internal WireGuard VPN process: generating each client configuration, creating the required keys, producing QR codes and keeping the data organized and controlled.</p>
+                    <div className="experience-history-tags" aria-label="Internship technologies and concepts">
+                      <span>Python</span>
+                      <span>WireGuard VPN</span>
+                      <span>CLI</span>
+                      <span>QR generation</span>
+                      <span>Configuration management</span>
+                    </div>
+                  </div>
+                  <div className="experience-history-entry">
+                    <div className="experience-history-head">
+                      <div>
+                        <h4 className="experience-history-title">Loterías y Apuestas del Estado</h4>
+                        <p className="experience-history-subtitle">Customer Service</p>
+                      </div>
+                      <span className="experience-history-date">2024–2025</span>
+                    </div>
+                    <p className="experience-history-text">A customer-facing role focused on selling lottery tickets, assisting customers and handling daily point-of-sale tasks. It helped me strengthen communication, responsibility, organization and customer service skills.</p>
+                    <div className="experience-history-tags" aria-label="Customer service skills">
+                      <span>Communication</span>
+                      <span>Responsibility</span>
+                      <span>Organization</span>
+                      <span>Customer Service</span>
+                      <span>POS</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+            <article className="experience-segment experience-segment-education">
+              <div className="experience-segment-copy">
+                <span className="experience-segment-badge">Academic Path</span>
+                <h3 className="experience-segment-title">Education</h3>
+                <p className="experience-segment-subtitle">From systems and networks to software development</p>
+                <p className="experience-segment-text">My studies show a clear progression from IT infrastructure into software development, combining technical foundations with a more application-focused profile.</p>
+                <div className="experience-education-list" aria-label="Academic background">
+                  <article className="experience-education-item">
+                    <div className="experience-history-head">
+                      <div>
+                        <h4 className="experience-history-title">Multiplatform Application Development</h4>
+                        <p className="experience-history-subtitle">2024–2026</p>
+                      </div>
+                      <span className="experience-history-date">Finishing soon</span>
+                    </div>
+                    <p className="experience-history-text">Currently completing this vocational training, focused on programming, databases, application design and multiplatform solutions. It represents my transition from IT systems into a more development-oriented profile.</p>
+                    <div className="experience-history-tags" aria-label="Multiplatform development skills">
+                      <span>Software development</span>
+                      <span>Programming</span>
+                      <span>Databases</span>
+                      <span>Application design</span>
+                      <span>Multiplatform development</span>
+                      <span>Problem solving</span>
+                    </div>
+                  </article>
+                  <article className="experience-education-item">
+                    <div className="experience-history-head">
+                      <div>
+                        <h4 className="experience-history-title">Microcomputer Systems and Networks</h4>
+                        <p className="experience-history-subtitle">2022–2024</p>
+                      </div>
+                      <span className="experience-history-date">Completed</span>
+                    </div>
+                    <p className="experience-history-text">Vocational training focused on computer systems, networks, hardware, operating systems, technical support and basic IT infrastructure.</p>
+                    <div className="experience-history-tags" aria-label="Systems and networks skills">
+                      <span>Computer systems</span>
+                      <span>Networking</span>
+                      <span>Hardware</span>
+                      <span>Operating systems</span>
+                      <span>Technical support</span>
+                      <span>IT infrastructure</span>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </article>
+            <article className="experience-segment experience-segment-background">
+              <div className="experience-segment-copy">
+                <span className="experience-segment-badge">Learning by Building</span>
+                <h3 className="experience-segment-title">Background</h3>
+                <p className="experience-segment-subtitle">Personal Journey</p>
+                <p className="experience-segment-text">Passionate about learning by building. My background is shaped by personal projects focused on backend development, mobile apps, automation, APIs and useful software tools. I enjoy creating practical solutions, experimenting and improving through real projects.</p>
+                <p className="experience-segment-text">Outside formal work and studies, I treat every project as a chance to improve both technical quality and product thinking: cleaner architecture, better usability, and more practical results.</p>
+                <div className="experience-background-points" aria-label="Background development focus">
+                  <p className="experience-background-heading">How I approach projects</p>
+                  <ul className="experience-background-list">
+                    <li><span>Builder mindset:</span> turn ideas into working tools quickly, then iterate.</li>
+                    <li><span>Product thinking:</span> prioritize usefulness, clarity and real outcomes.</li>
+                    <li><span>Continuous growth:</span> learn through experimentation, feedback and consistency.</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+          </section>
+        </aside>
+      </main>
+
+      <label className={`hamburger ${navOpen ? "hamburger-open" : ""}`}>
+        <input type="checkbox" checked={navOpen} onChange={() => setNavOpen(!navOpen)} />
+        <svg viewBox="0 0 32 32">
+          <path className="line line-top-bottom" d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
+          <path className="line" d="M7 16 27 16" />
+        </svg>
+      </label>
+
+      <aside className={`sidebar-overlay ${navOpen ? "sidebar-overlay-visible" : ""}`} onClick={() => setNavOpen(false)} />
+
+        <nav className={`sidebar ${navOpen ? "sidebar-open" : ""}`}>
+          <ul className="sidebar-links">
+            <li><a className="sidebar-link" href="#hero" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToStep(0.68); }}>Hero</a></li>
+            <li><a className="sidebar-link" href="#about" onClick={(e) => { e.preventDefault(); scrollToStep(0.74); setNavOpen(false); }}>About</a></li>
+            <li className="sidebar-group-label">Projects</li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#sanotes" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('sanotes')); }}>Sanotes</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#kizamu" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('kizamu')); }}>KizamuManga</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#chillmeal" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('chillmeal')); }}>ChillMeal</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#impostor" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('impostor')); }}>Impostor</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#remotelog" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('remotelog')); }}>Remote Log</a></li>
+            <li><a className="sidebar-link sidebar-link-sub" href="#media-tracker" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('media-tracker')); }}>Media Tracker</a></li>
+            <li><a className="sidebar-link" href="#skills" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('skills')); }}>Skills</a></li>
+            <li><a className="sidebar-link" href="#experience" onClick={(e) => { e.preventDefault(); setNavOpen(false); scrollToPanel(document.getElementById('experience')); }}>Experience</a></li>
+          </ul>
+        </nav>
+
+      <aside className={`resume-overlay ${resumeCardOpen ? "resume-overlay-visible" : ""}`} onClick={() => setResumeCardOpen(false)} />
+      <aside className={`resume-card ${resumeCardOpen ? "resume-card-open" : ""}`} role="dialog" aria-modal="true" aria-hidden={!resumeCardOpen} aria-labelledby="resume-card-heading">
+        <button className="resume-card-close" type="button" aria-label="Close resume language options" onClick={() => setResumeCardOpen(false)}>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <h3 className="resume-card-heading" id="resume-card-heading">Choose Language</h3>
+        <div className="resume-card-options">
+          <a className="resume-card-option" href="/assets/resume/CV-Miguel-Cocera-Cia-EN.pdf" download onClick={() => setResumeCardOpen(false)}>
+            <span className="resume-card-lang">English</span>
+            <span className="resume-card-desc">Download resume in English</span>
+          </a>
+          <a className="resume-card-option" href="/assets/resume/CV-Miguel-Cocera-Cia-ES.pdf" download onClick={() => setResumeCardOpen(false)}>
+            <span className="resume-card-lang">Español</span>
+            <span className="resume-card-desc">Descargar currículum en español</span>
+          </a>
+        </div>
+      </aside>
+    </>
   );
 }

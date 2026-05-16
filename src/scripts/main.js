@@ -20,9 +20,12 @@ export function initPortfolioInteractions() {
   const lockTime = document.getElementById("lockTime");
   const dockApps = document.querySelectorAll(".dock-app");
   const topNotification = document.querySelector(".liquid-glass-notification");
+  const projectsCarouselRows = document.querySelectorAll(".projects-carousel-row");
+  const projectsPanel = document.querySelector(".projects-panel");
   const projectsTerminalCode = document.getElementById("projectsTerminalCode");
+  const revealTargets = document.querySelectorAll(".scroll-reveal");
 
-  if (!stage || !scene || !screen || !actionButton || !volumeUpButton || !volumeDownButton || !powerButton || !volumeHud || !volumeFill || !volumeGlyph || !statusLeft || !islandFeedbackPill || !islandFeedbackIcon || !islandFeedbackLabel || !islandFeedbackCenter || !islandFeedbackRight || !lockDate || !lockTime || !topNotification || !projectsTerminalCode) {
+  if (!stage || !scene || !screen || !actionButton || !volumeUpButton || !volumeDownButton || !powerButton || !volumeHud || !volumeFill || !volumeGlyph || !statusLeft || !islandFeedbackPill || !islandFeedbackIcon || !islandFeedbackLabel || !islandFeedbackCenter || !islandFeedbackRight || !lockDate || !lockTime || !topNotification || !projectsPanel || !projectsTerminalCode) {
     return () => {};
   }
 
@@ -40,6 +43,8 @@ export function initPortfolioInteractions() {
   let islandFeedbackVisibilityTimer;
   let statusFadeRaf = 0;
   let statusFadeLoopRaf = 0;
+  let carouselRaf = 0;
+  let carouselLastFrameAt = 0;
   let lockClockTimer;
   let notificationTimer;
   let notificationLongPressTimer;
@@ -52,7 +57,8 @@ export function initPortfolioInteractions() {
   let terminalIsPlaying = false;
   let terminalShouldLoop = false;
   let terminalIsWaitingToReplay = false;
-  let terminalAutoPlayLocked = false;
+  let projectsTerminalIsInView = false;
+  let revealObserver = null;
   let lastVolumePressAt = 0;
   let lastVolumeButton = "";
   let compactHudUntil = 0;
@@ -62,6 +68,7 @@ export function initPortfolioInteractions() {
   const NOTIFICATION_DISMISS_Y = -56;
   const SILENT_ICON_PILL_WIDTH = 56;
   const RING_ICON_PILL_WIDTH = 22;
+  const isCompactViewport = () => window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
 
   const TERMINAL_SCRIPT = [
     { text: "$ kizamu search \"one piece\"\n", speed: 58, variance: 20 },
@@ -209,7 +216,7 @@ export function initPortfolioInteractions() {
     }, 110);
   };
 
-  const isInteractiveStep = () => activeStep === "step-5";
+  const isInteractiveStep = () => activeStep === "step-5" || isCompactViewport();
 
   const setPowerState = (off) => {
     isPoweredOff = off;
@@ -601,18 +608,57 @@ export function initPortfolioInteractions() {
   };
 
   const canPlayProjectsTerminal = () => {
-    if (activeStep === "step-9") return true;
-    if (shouldAutoplayTerminalOnMobile()) return true;
-    if (terminalAutoPlayLocked) return true;
-    return false;
+    return projectsTerminalIsInView;
   };
 
-  const shouldAutoplayTerminalOnMobile = () => {
-    return window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+  const updateProjectsTerminalPlayback = () => {
+    if (canPlayProjectsTerminal()) {
+      playProjectsTerminal();
+    } else {
+      stopProjectsTerminal();
+    }
+  };
+
+  const updateProjectsTerminalVisibility = () => {
+    const rect = projectsPanel.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const nextIsInView = rect.top < viewportHeight * 0.78 && rect.bottom > viewportHeight * 0.18;
+
+    if (projectsTerminalIsInView === nextIsInView) return;
+    projectsTerminalIsInView = nextIsInView;
+    updateProjectsTerminalPlayback();
+  };
+
+  const setupScrollReveals = () => {
+    if (!revealTargets.length) return;
+
+    document.documentElement.classList.add("reveal-ready");
+
+    if (!("IntersectionObserver" in window)) {
+      revealTargets.forEach((target) => target.classList.add("is-visible"));
+      return;
+    }
+
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.18,
+      rootMargin: "0px 0px -12% 0px",
+    });
+
+    revealTargets.forEach((target, index) => {
+      target.style.setProperty("--reveal-index", index % 4);
+      revealObserver.observe(target);
+    });
   };
 
   const onPointerDownByButton = new Map();
   const onClickByButton = new Map();
+  const carouselRowStates = [];
   phoneButtons.forEach((button) => {
     const onPointerDown = () => {
       if (isInteractiveStep()) playTone("click");
@@ -636,6 +682,76 @@ export function initPortfolioInteractions() {
   topNotification.addEventListener("pointerup", onNotificationPointerUp);
   topNotification.addEventListener("pointercancel", onNotificationPointerCancel);
 
+  const setupProjectsCarousel = () => {
+    projectsCarouselRows.forEach((row, index) => {
+      const track = row.querySelector(".projects-carousel-track");
+      const group = row.querySelector(".projects-carousel-group");
+      if (!track || !group) return;
+
+      const direction = index % 2 === 0 ? -1 : 1;
+      const baseSpeed = window.matchMedia && window.matchMedia("(max-width: 900px)").matches ? 24 : 34;
+      const slowSpeed = 7;
+      const state = {
+        row,
+        track,
+        group,
+        direction,
+        offset: 0,
+        speed: baseSpeed,
+        targetSpeed: baseSpeed,
+        baseSpeed,
+        slowSpeed,
+        distance: group.getBoundingClientRect().width,
+        cardHandlers: [],
+      };
+
+      const onPointerEnter = () => {
+        state.targetSpeed = state.slowSpeed;
+      };
+      const onPointerLeave = () => {
+        state.targetSpeed = state.baseSpeed;
+      };
+
+      row.querySelectorAll(".projects-carousel-card").forEach((card) => {
+        card.addEventListener("pointerenter", onPointerEnter);
+        card.addEventListener("pointerleave", onPointerLeave);
+        state.cardHandlers.push({ card, onPointerEnter, onPointerLeave });
+      });
+      carouselRowStates.push(state);
+    });
+  };
+
+  const updateProjectsCarouselMeasurements = () => {
+    carouselRowStates.forEach((state) => {
+      state.distance = state.group.getBoundingClientRect().width;
+      const baseSpeed = window.matchMedia && window.matchMedia("(max-width: 900px)").matches ? 24 : 34;
+      state.baseSpeed = baseSpeed;
+      if (state.targetSpeed !== state.slowSpeed) state.targetSpeed = baseSpeed;
+    });
+  };
+
+  const animateProjectsCarousel = (now) => {
+    if (!carouselLastFrameAt) carouselLastFrameAt = now;
+    const delta = Math.min(0.05, (now - carouselLastFrameAt) / 1000);
+    carouselLastFrameAt = now;
+
+    carouselRowStates.forEach((state) => {
+      if (state.distance <= 0) return;
+      state.speed += (state.targetSpeed - state.speed) * Math.min(1, delta * 5.8);
+      state.offset += state.direction * state.speed * delta;
+
+      if (state.direction < 0) {
+        while (state.offset <= -state.distance) state.offset += state.distance;
+      } else {
+        while (state.offset >= 0) state.offset -= state.distance;
+      }
+
+      state.track.style.transform = `translate3d(${state.offset}px, 0, 0)`;
+    });
+
+    carouselRaf = window.requestAnimationFrame(animateProjectsCarousel);
+  };
+
   const updateStep = () => {
     const rect = scene.getBoundingClientRect();
     const scrollable = scene.offsetHeight - window.innerHeight;
@@ -643,14 +759,13 @@ export function initPortfolioInteractions() {
     const p = scrollable > 0 ? traveled / scrollable : 0;
 
     let step = "step-0";
-    if (p >= 0.06) step = "step-1";
-    if (p >= 0.14) step = "step-2";
-    if (p >= 0.19) step = "step-3";
-    if (p >= 0.31) step = "step-5";
-    if (p >= 0.53) step = "step-6";
-    if (p >= 0.67) step = "step-7";
-    if (p >= 0.79) step = "step-8";
-    if (p >= 0.89) step = "step-9";
+    if (p >= 0.12) step = "step-1";
+    if (p >= 0.28) step = "step-2";
+    if (p >= 0.42) step = "step-3";
+    if (p >= 0.53) step = "step-5";
+    if (p >= 0.68) step = "step-6";
+    if (p >= 0.82) step = "step-7";
+    if (isCompactViewport()) step = "step-5";
 
     const prevStep = activeStep;
 
@@ -670,28 +785,17 @@ export function initPortfolioInteractions() {
       hideTopNotification();
     }
 
-    if (activeStep === "step-9") {
-      terminalAutoPlayLocked = true;
-    } else if (activeStep === "step-8" && terminalAutoPlayLocked) {
-      terminalAutoPlayLocked = true;
-    } else if (activeStep !== "step-8") {
-      terminalAutoPlayLocked = false;
-    }
-
-    if (canPlayProjectsTerminal()) {
-      playProjectsTerminal();
-    } else {
-      stopProjectsTerminal();
-    }
-
     if (prevStep !== step) {
-      stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-5", "step-6", "step-7", "step-8", "step-9");
+      stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-5", "step-6", "step-7", "step-8", "step-9", "step-10", "step-11", "step-12", "step-13");
       stage.classList.add(step);
     }
   };
 
   window.addEventListener("scroll", updateStep, { passive: true });
+  window.addEventListener("scroll", updateProjectsTerminalVisibility, { passive: true });
   window.addEventListener("resize", updateStep);
+  window.addEventListener("resize", updateProjectsTerminalVisibility);
+  window.addEventListener("resize", updateProjectsCarouselMeasurements);
 
   const onDockClickByApp = new Map();
   dockApps.forEach((app) => {
@@ -705,11 +809,18 @@ export function initPortfolioInteractions() {
   });
 
   startLockClock();
+  setupProjectsCarousel();
+  setupScrollReveals();
+  carouselRaf = window.requestAnimationFrame(animateProjectsCarousel);
   updateStep();
+  updateProjectsTerminalVisibility();
 
   return () => {
     window.removeEventListener("scroll", updateStep);
+    window.removeEventListener("scroll", updateProjectsTerminalVisibility);
     window.removeEventListener("resize", updateStep);
+    window.removeEventListener("resize", updateProjectsTerminalVisibility);
+    window.removeEventListener("resize", updateProjectsCarouselMeasurements);
 
     phoneButtons.forEach((button) => {
       const onPointerDown = onPointerDownByButton.get(button);
@@ -732,6 +843,20 @@ export function initPortfolioInteractions() {
       if (onDockClick) app.removeEventListener("click", onDockClick);
     });
 
+    carouselRowStates.forEach((state) => {
+      state.cardHandlers.forEach(({ card, onPointerEnter, onPointerLeave }) => {
+        card.removeEventListener("pointerenter", onPointerEnter);
+        card.removeEventListener("pointerleave", onPointerLeave);
+      });
+    });
+
+    if (revealObserver) revealObserver.disconnect();
+    revealTargets.forEach((target) => {
+      target.classList.remove("is-visible");
+      target.style.removeProperty("--reveal-index");
+    });
+    document.documentElement.classList.remove("reveal-ready");
+
     window.clearTimeout(hudTimer);
     window.clearTimeout(islandFeedbackTimer);
     window.clearTimeout(islandFeedbackStateTimer);
@@ -741,6 +866,7 @@ export function initPortfolioInteractions() {
     window.clearTimeout(notificationLongPressTimer);
     clearTerminalTimer();
     window.clearInterval(lockClockTimer);
+    if (carouselRaf) window.cancelAnimationFrame(carouselRaf);
     if (statusFadeRaf) window.cancelAnimationFrame(statusFadeRaf);
     if (statusFadeLoopRaf) window.cancelAnimationFrame(statusFadeLoopRaf);
     if (islandFeedbackRaf) window.cancelAnimationFrame(islandFeedbackRaf);
