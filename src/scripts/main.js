@@ -261,11 +261,11 @@ export function initPortfolioInteractions() {
   };
 
   const getVolumeIcon = () => {
-    if (volumeLevel <= 0) return "/assets/icons/muted.svg";
-    if (volumeLevel <= 0.25) return "/assets/icons/volume-low.svg";
-    if (volumeLevel <= 0.5) return "/assets/icons/volume-mid.svg";
-    if (volumeLevel <= 0.75) return "/assets/icons/volume-high.svg";
-    return "/assets/icons/volume-veryhigh.svg";
+    if (volumeLevel <= 0) return "/assets/icons/device/muted.svg";
+    if (volumeLevel <= 0.25) return "/assets/icons/device/volume-low.svg";
+    if (volumeLevel <= 0.5) return "/assets/icons/device/volume-medium.svg";
+    if (volumeLevel <= 0.75) return "/assets/icons/device/volume-high.svg";
+    return "/assets/icons/device/volume-very-high.svg";
   };
 
   const showVolumeHud = (compact = false) => {
@@ -358,7 +358,7 @@ export function initPortfolioInteractions() {
   const showMuteIslandFeedback = (silentOn) => {
     window.clearTimeout(islandFeedbackVisibilityTimer);
     setIslandFeedbackVisible(true);
-    islandFeedbackIcon.src = silentOn ? "/assets/icons/bell-muted.svg" : "/assets/icons/bell.svg";
+    islandFeedbackIcon.src = silentOn ? "/assets/icons/device/bell-muted.svg" : "/assets/icons/device/bell.svg";
     islandFeedbackLabel.textContent = silentOn ? "Silent" : "Ring";
     window.clearTimeout(islandFeedbackStateTimer);
     window.clearTimeout(islandFeedbackCloseTimer);

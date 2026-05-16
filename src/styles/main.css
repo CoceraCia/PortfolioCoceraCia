@@ -1221,7 +1221,7 @@
     .remotelog-visual {
       position: relative;
       width: min(1040px, 82vw);
-      height: 540px;
+      height: 650px;
       justify-self: end;
       margin-right: calc(-1 * min(560px, 45vw));
       opacity: 0;
@@ -1231,14 +1231,22 @@
 
     .remotelog-terminal-shell {
       width: min(1040px, 82vw);
-      height: 540px;
-      margin-top: 24px;
+      height: 650px;
+      margin-top: 0;
     }
 
     .remotelog-terminal-content {
-      font-size: clamp(12px, 0.95vw, 14px);
+      font-size: clamp(10px, 0.78vw, 12px);
       line-height: 1.45;
       overflow: hidden;
+    }
+
+    @media (min-width: 901px) {
+      .remotelog-terminal-content,
+      .remotelog-terminal-content code {
+        font-size: 11px;
+        line-height: 1.4;
+      }
     }
 
     .remotelog-features {
@@ -1655,7 +1663,7 @@
       z-index: 1;
       pointer-events: auto;
       cursor: pointer;
-      transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), left 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease;
+      transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1), left 360ms cubic-bezier(0.22, 1, 0.36, 1), right 360ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease;
     }
 
     .projects-manga-panel:hover {
@@ -1745,8 +1753,8 @@
       width: 6px;
       height: 6px;
       background: rgba(20, 20, 20, 0.82);
-      -webkit-mask: url("/assets/icons/cross-svgrepo-com.svg") center / contain no-repeat;
-      mask: url("/assets/icons/cross-svgrepo-com.svg") center / contain no-repeat;
+      -webkit-mask: url("/assets/icons/terminal/window-close.svg") center / contain no-repeat;
+      mask: url("/assets/icons/terminal/window-close.svg") center / contain no-repeat;
       opacity: 0;
       transform: scale(0.92);
       transform-origin: center;
@@ -2137,7 +2145,7 @@
     }
 
     .home-screen {
-      background-image: url("/assets/images/wallpaperiphone.jpeg");
+      background-image: url("/assets/images/wallpapers/iphone-wallpaper.jpeg");
       background-size: cover;
       background-position: center;
       opacity: 0;
@@ -2509,7 +2517,7 @@
       inset: 0;
       padding: 8px;
       border-radius: 44px;
-      background-image: url("/assets/images/wallpaperiphone.jpeg");
+      background-image: url("/assets/images/wallpapers/iphone-wallpaper.jpeg");
       background-size: 118% 118%;
       background-position: center;
       opacity: 0;
@@ -2526,7 +2534,7 @@
     .wallpaper {
       position: absolute;
       inset: 0;
-      background-image: url("/assets/images/wallpaperiphone.jpeg");
+      background-image: url("/assets/images/wallpapers/iphone-wallpaper.jpeg");
       background-size: cover;
       background-position: center;
       opacity: 1;
@@ -3481,51 +3489,51 @@
       display: block;
     }
 
-    .skill-icon[src="/assets/icons/fastapi-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/api-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/object-connection-round-1097-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/git-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/github-142-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/canva-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/web-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/robot-svgrepo-com.svg"],
-    .skill-icon[src="/assets/icons/server-client-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/fastapi.svg"],
+    .skill-icon[src="/assets/icons/skills/rest-api.svg"],
+    .skill-icon[src="/assets/icons/skills/oop-mvvm.svg"],
+    .skill-icon[src="/assets/icons/skills/git.svg"],
+    .skill-icon[src="/assets/icons/skills/github.svg"],
+    .skill-icon[src="/assets/icons/skills/canva.svg"],
+    .skill-icon[src="/assets/icons/skills/web-scraping.svg"],
+    .skill-icon[src="/assets/icons/skills/automation.svg"],
+    .skill-icon[src="/assets/icons/skills/client-server.svg"] {
       filter: brightness(0) invert(1);
     }
 
-    .skill-icon[src="/assets/icons/git-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/git.svg"] {
       filter: brightness(0) saturate(100%) invert(52%) sepia(76%) saturate(1750%) hue-rotate(356deg) brightness(104%) contrast(101%);
     }
 
-    .skill-icon[src="/assets/icons/github-142-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/github.svg"] {
       filter: brightness(0) invert(1);
     }
 
-    .skill-icon[src="/assets/icons/canva-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/canva.svg"] {
       filter: brightness(0) saturate(100%) invert(49%) sepia(97%) saturate(1820%) hue-rotate(183deg) brightness(97%) contrast(101%);
     }
 
-    .skill-icon[src="/assets/icons/fastapi-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/fastapi.svg"] {
       filter: brightness(0) saturate(100%) invert(63%) sepia(51%) saturate(530%) hue-rotate(79deg) brightness(97%) contrast(93%);
     }
 
-    .skill-icon[src="/assets/icons/object-connection-round-1097-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/oop-mvvm.svg"] {
       filter: brightness(0) saturate(100%) invert(47%) sepia(88%) saturate(1550%) hue-rotate(183deg) brightness(96%) contrast(95%);
     }
 
-    .skill-icon[src="/assets/icons/api-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/rest-api.svg"] {
       filter: brightness(0) saturate(100%) invert(70%) sepia(27%) saturate(1005%) hue-rotate(171deg) brightness(102%) contrast(95%);
     }
 
-    .skill-icon[src="/assets/icons/web-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/web-scraping.svg"] {
       filter: brightness(0) saturate(100%) invert(72%) sepia(24%) saturate(960%) hue-rotate(170deg) brightness(104%) contrast(96%);
     }
 
-    .skill-icon[src="/assets/icons/robot-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/automation.svg"] {
       filter: brightness(0) saturate(100%) invert(84%) sepia(83%) saturate(930%) hue-rotate(3deg) brightness(103%) contrast(98%);
     }
 
-    .skill-icon[src="/assets/icons/server-client-svgrepo-com.svg"] {
+    .skill-icon[src="/assets/icons/skills/client-server.svg"] {
       filter: brightness(0) saturate(100%) invert(90%) sepia(40%) saturate(760%) hue-rotate(18deg) brightness(103%) contrast(97%);
     }
 
@@ -4104,9 +4112,9 @@
     }
 
     .single-page-content .projects-visual {
-      width: min(720px, 54vw);
-      height: clamp(360px, 42vw, 500px);
-      margin-right: clamp(-120px, -8vw, -56px);
+      width: min(1040px, 82vw);
+      height: 540px;
+      margin-right: calc(-1 * min(560px, 45vw));
       justify-self: end;
     }
 
@@ -4116,12 +4124,13 @@
     }
 
     .single-page-content .remotelog-terminal-shell {
-      width: min(720px, 54vw);
-      height: clamp(340px, 40vw, 500px);
+      width: 100%;
+      height: 100%;
     }
 
     .single-page-content .projects-manga-panel {
       left: -72px;
+      right: auto;
       top: -48px;
       width: clamp(210px, 19vw, 300px);
     }
@@ -4402,6 +4411,15 @@
       .single-page-content .weatherapp-phone-stack {
         width: min(100%, 370px);
         min-height: clamp(450px, 76vw, 570px);
+      }
+
+      .single-page-content .sanotes-phone-stack,
+      .single-page-content .chillmeal-phone-stack,
+      .single-page-content .weatherapp-phone-stack,
+      .single-page-content .app-tracker-phone-stack {
+        justify-self: center;
+        margin-inline: auto;
+        transform: translateX(-16px);
       }
 
     }
@@ -4909,6 +4927,8 @@
       .app-tracker-phone-stack {
         width: auto;
         max-width: 100%;
+        margin-inline: auto;
+        transform: translateX(-16px);
       }
 
       .app-tracker-phone-stack .app-tracker-img-wrap {
@@ -4916,12 +4936,15 @@
       }
 
       .app-tracker-img-wrap-back {
-        right: -12px;
-        transform: translateX(18px) rotate(6deg) scale(0.88);
+        right: 14px;
+        bottom: 0;
+        opacity: 1;
+        filter: none;
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
       }
 
       .app-tracker-img-wrap-back:hover {
-        transform: translateX(28px) translateY(-10px) rotate(8deg) scale(0.88);
+        transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
       }
 
       .app-tracker-content {
@@ -4959,7 +4982,7 @@
       .chillmeal-visual {
         width: 100%;
         height: auto;
-        margin: 20px 0 0;
+        margin: 24px 0 0;
         opacity: 1;
         transform: none;
         display: grid;
@@ -4968,22 +4991,27 @@
       }
 
       .chillmeal-phone-stack {
-        width: min(100%, 300px);
-        min-height: 400px;
+        width: auto;
+        max-width: 100%;
+        min-height: clamp(480px, 44vw, 610px);
+        margin-inline: auto;
+        transform: translateX(-16px);
       }
 
       .chillmeal-phone-stack .chillmeal-img-wrap {
-        width: min(68vw, 230px);
+        width: min(230px, 64vw);
       }
 
       .chillmeal-phone-stack .chillmeal-img-wrap-back {
-        right: -18px;
+        right: 14px;
         bottom: 0;
-        transform: translateX(24px) rotate(6deg) scale(0.88);
+        opacity: 1;
+        filter: none;
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
       }
 
       .chillmeal-phone-stack .chillmeal-img-wrap-back:hover {
-        transform: translateX(30px) translateY(-8px) rotate(8deg) scale(0.88);
+        transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
       }
 
       .chillmeal-img-wrap {
@@ -5015,7 +5043,7 @@
       .weatherapp-visual {
         width: 100%;
         height: auto;
-        margin: 20px 0 0;
+        margin: 24px 0 0;
         opacity: 1;
         transform: none;
         display: grid;
@@ -5028,22 +5056,27 @@
       }
 
       .weatherapp-phone-stack {
-        width: min(100%, 300px);
-        min-height: 400px;
+        width: auto;
+        max-width: 100%;
+        min-height: clamp(480px, 44vw, 610px);
+        margin-inline: auto;
+        transform: translateX(-16px);
       }
 
       .weatherapp-phone-stack .weatherapp-img-wrap {
-        width: min(68vw, 230px);
+        width: min(230px, 64vw);
       }
 
       .weatherapp-phone-stack .weatherapp-img-wrap-back {
-        right: -18px;
+        right: 14px;
         bottom: 0;
-        transform: translateX(24px) rotate(6deg) scale(0.88);
+        opacity: 1;
+        filter: none;
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
       }
 
       .weatherapp-phone-stack .weatherapp-img-wrap-back:hover {
-        transform: translateX(30px) translateY(-8px) rotate(8deg) scale(0.88);
+        transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
       }
 
       .weatherapp-content {
@@ -5070,10 +5103,10 @@
 
       .remotelog-visual {
         width: 100%;
-        height: auto;
-        margin: 20px 0 0;
+        height: clamp(480px, 96vw, 620px);
+        margin: 0;
         opacity: 1;
-        transform: none;
+        transform: translateX(-12px);
         display: grid;
         place-items: center;
         order: 2;
@@ -5081,8 +5114,12 @@
 
       .remotelog-terminal-shell {
         width: 100%;
-        max-width: 640px;
-        height: clamp(280px, 62vw, 400px);
+        max-width: none;
+        height: 100%;
+      }
+
+      .remotelog-terminal-content {
+        overflow-y: auto;
       }
 
       .remotelog-content {
@@ -5110,7 +5147,7 @@
       .sanotes-visual {
         width: 100%;
         height: auto;
-        margin: 20px 0 0;
+        margin: 24px 0 0;
         opacity: 1;
         transform: none;
         display: grid;
@@ -5119,22 +5156,27 @@
       }
 
       .sanotes-phone-stack {
-        width: min(100%, 300px);
-        min-height: 400px;
+        width: auto;
+        max-width: 100%;
+        min-height: clamp(480px, 44vw, 610px);
+        margin-inline: auto;
+        transform: translateX(-16px);
       }
 
       .sanotes-phone-stack .sanotes-iphone {
-        width: min(68vw, 230px);
+        width: min(230px, 64vw);
       }
 
       .sanotes-phone-stack .sanotes-iphone-back {
-        right: -18px;
+        right: 14px;
         bottom: 0;
-        transform: translateX(24px) rotate(6deg) scale(0.88);
+        opacity: 1;
+        filter: none;
+        transform: translateX(-6px) rotate(3deg) scale(0.95);
       }
 
       .sanotes-phone-stack .sanotes-iphone-back:hover {
-        transform: translateX(30px) translateY(-8px) rotate(8deg) scale(0.88);
+        transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
       }
 
       .sanotes-iphone {
@@ -5181,13 +5223,28 @@
       }
 
       .projects-manga-panel {
-        left: -44px;
-        top: 18px;
+        left: auto;
+        right: -44px;
+        top: -88px;
+        width: clamp(170px, 34vw, 250px);
+      }
+
+      .single-page-content .projects-manga-panel {
+        left: auto;
+        right: -44px;
+        top: -88px;
         width: clamp(170px, 34vw, 250px);
       }
 
       .projects-manga-panel:hover {
-        left: -68px;
+        left: auto;
+        right: -68px;
+        transform: rotate(-12deg) translateY(-6px);
+      }
+
+      .single-page-content .projects-manga-panel:hover {
+        left: auto;
+        right: -68px;
         transform: rotate(-12deg) translateY(-6px);
       }
 
@@ -5351,7 +5408,11 @@
       }
 
       .single-page-content .projects-manga-panel {
-        display: none;
+        display: block;
+        left: auto;
+        right: -44px;
+        top: -88px;
+        width: clamp(170px, 34vw, 250px);
       }
 
       .single-page-content .projects-visual {

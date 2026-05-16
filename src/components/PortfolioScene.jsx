@@ -59,7 +59,7 @@ export default function PortfolioScene() {
             <div className="home-screen" aria-hidden="true">
               <div className="liquid-glass-notification" aria-hidden="true">
                 <span className="notification-app-logo">
-                  <img className="notification-app-logo-icon" src="/assets/icons/happy-face.svg" alt="" />
+                  <img className="notification-app-logo-icon" src="/assets/icons/app/happy-face.svg" alt="" />
                 </span>
                 <span className="notification-content">
                   <span className="notification-title">Hi! Play with me!</span>
@@ -68,16 +68,16 @@ export default function PortfolioScene() {
               </div>
               <div className="liquid-glass-bar" aria-hidden="true">
                 <a className="dock-app dock-linkedin" href="https://www.linkedin.com/in/miguelcoceracia" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
-                  <img className="dock-app-icon" src="/assets/icons/linkedin.svg" alt="" />
+                  <img className="dock-app-icon" src="/assets/icons/social/linkedin.svg" alt="" />
                 </a>
                 <a className="dock-app dock-github" href="https://github.com/CoceraCia" target="_blank" rel="noreferrer" aria-label="GitHub profile">
-                  <img className="dock-app-icon" src="/assets/icons/github.svg" alt="" />
+                  <img className="dock-app-icon" src="/assets/icons/social/github.svg" alt="" />
                 </a>
                 <span className="dock-app dock-appstore">
-                  <img className="dock-app-icon" src="/assets/icons/app-store.svg" alt="" />
+                  <img className="dock-app-icon" src="/assets/icons/app/app-store.svg" alt="" />
                 </span>
                 <a className="dock-app dock-mail" href="mailto:coceraciamiguel@gmail.com" aria-label="Send email">
-                  <img className="dock-app-icon" src="/assets/icons/mail.svg" alt="" />
+                  <img className="dock-app-icon" src="/assets/icons/social/mail.svg" alt="" />
                 </a>
               </div>
             </div>
@@ -89,10 +89,10 @@ export default function PortfolioScene() {
               </div>
               <div className="lock-actions" aria-hidden="true">
                 <div className="lock-action-btn">
-                  <img className="lock-action-icon lantern-icon" src="/assets/icons/flashlight.svg" alt="" />
+                  <img className="lock-action-icon lantern-icon" src="/assets/icons/device/flashlight.svg" alt="" />
                 </div>
                 <div className="lock-action-btn">
-                  <img className="lock-action-icon camera-icon" src="/assets/icons/camera.svg" alt="" />
+                  <img className="lock-action-icon camera-icon" src="/assets/icons/device/camera.svg" alt="" />
                 </div>
               </div>
               <div className="unlock-indicator" aria-hidden="true"></div>
@@ -101,16 +101,16 @@ export default function PortfolioScene() {
             <div className="status-bar" aria-hidden="true">
               <div className="status-left">CoceraCia</div>
               <div className="status-right">
-                <img className="status-icon signal-icon" src="/assets/icons/signal-custom.svg" alt="" />
-                <img className="status-icon" src="/assets/icons/wifi.svg" alt="" />
+                <img className="status-icon signal-icon" src="/assets/icons/device/signal.svg" alt="" />
+                <img className="status-icon" src="/assets/icons/device/wifi.svg" alt="" />
                 <div className="battery-wrap">
-                  <img className="status-icon battery-icon" src="/assets/icons/battery-empty.svg" alt="" />
+                  <img className="status-icon battery-icon" src="/assets/icons/device/battery-empty.svg" alt="" />
                 </div>
               </div>
             </div>
             <div className="island-feedback-pill" id="islandFeedbackPill" aria-hidden="true">
               <span className="island-feedback-side island-feedback-left">
-                <img className="island-feedback-icon" id="islandFeedbackIcon" src="/assets/icons/bell-muted.svg" alt="" />
+                <img className="island-feedback-icon" id="islandFeedbackIcon" src="/assets/icons/device/bell-muted.svg" alt="" />
               </span>
               <span className="island-feedback-center" id="islandFeedbackCenter" aria-hidden="true"></span>
               <span className="island-feedback-side island-feedback-right">
@@ -119,8 +119,8 @@ export default function PortfolioScene() {
             </div>
             <div className="dynamic-island">
               <div className="island-lock" aria-hidden="true">
-                <img className="island-lock-icon lock-closed" src="/assets/icons/padlock_close.svg" alt="" />
-                <img className="island-lock-icon lock-open" src="/assets/icons/padlock_open.svg" alt="" />
+                <img className="island-lock-icon lock-closed" src="/assets/icons/device/lock-closed.svg" alt="" />
+                <img className="island-lock-icon lock-open" src="/assets/icons/device/lock-open.svg" alt="" />
               </div>
             </div>
             <div className="island-camera" aria-hidden="true"></div>
@@ -129,7 +129,7 @@ export default function PortfolioScene() {
                 <div className="volume-bar-track">
                   <div className="volume-bar-fill" id="volumeFill"></div>
                 </div>
-                <img className="volume-glyph" id="volumeGlyph" src="/assets/icons/volume-low.svg" alt="" />
+                <img className="volume-glyph" id="volumeGlyph" src="/assets/icons/device/volume-low.svg" alt="" />
               </div>
             </div>
           </div>
@@ -141,11 +141,11 @@ export default function PortfolioScene() {
           <p className="portfolio-intro">I am a cross-platform developer with experience in Kotlin, Swift, Python, Java, backend systems, automations, and AI agents. I currently work at Glofera, building conversational AI solutions for WhatsApp and voice.</p>
           <div className="portfolio-actions" aria-label="Profile links">
             <a className="portfolio-button portfolio-button-primary" href="https://github.com/CoceraCia" target="_blank" rel="noreferrer">
-              <img className="portfolio-button-icon" src="/assets/icons/github.svg" alt="" />
+              <img className="portfolio-button-icon" src="/assets/icons/social/github.svg" alt="" />
               <span>GitHub</span>
             </a>
             <a className="portfolio-button portfolio-button-secondary" href="mailto:coceraciamiguel@gmail.com">
-              <img className="portfolio-button-icon" src="/assets/icons/mail.svg" alt="" />
+              <img className="portfolio-button-icon" src="/assets/icons/social/mail.svg" alt="" />
               <span>Contact me</span>
             </a>
           </div>
@@ -190,7 +190,7 @@ export default function PortfolioScene() {
               <span className="project-tag">Rate limiting</span>
             </div>
             <a className="project-button" href="https://github.com/CoceraCia/Sanotes" target="_blank" rel="noreferrer">
-              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <img className="project-button-icon" src="/assets/icons/social/github.svg" alt="" />
               <span>View on GitHub</span>
             </a>
           </div>
@@ -198,13 +198,13 @@ export default function PortfolioScene() {
             <div className="sanotes-phone-stack">
               <div className="sanotes-iphone sanotes-iphone-back">
                 <div className="sanotes-screen">
-                  <img className="sanotes-img" src="/assets/images/Sanotes-second.png" alt="Sanotes secondary app screen" />
+                  <img className="sanotes-img" src="/assets/images/projects/sanotes/secondary-screen.png" alt="Sanotes secondary app screen" />
                 </div>
                 <div className="sanotes-shadow"></div>
               </div>
               <div className="sanotes-iphone sanotes-iphone-front">
                 <div className="sanotes-screen">
-                  <img className="sanotes-img" src="/assets/images/Sanotes-first.png" alt="Sanotes main app screen" />
+                  <img className="sanotes-img" src="/assets/images/projects/sanotes/main-screen.png" alt="Sanotes main app screen" />
                 </div>
                 <div className="sanotes-shadow"></div>
               </div>
@@ -231,18 +231,18 @@ export default function PortfolioScene() {
               <span className="project-tag">Multi-source support</span>
             </div>
             <a className="project-button" href="https://github.com/CoceraCia/KizamuManga" target="_blank" rel="noreferrer">
-              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <img className="project-button-icon" src="/assets/icons/social/github.svg" alt="" />
               <span>View on GitHub</span>
             </a>
           </div>
           <div className="projects-visual" aria-hidden="true">
-            <img className="projects-manga-panel" src="/assets/images/manga-panel.png" alt="" />
+            <img className="projects-manga-panel" src="/assets/images/projects/kizamu/manga-panel.png" alt="" />
             <div className="projects-terminal-shell">
               <div className="terminal-controls">
                 <span className="terminal-dots">
                   <span className="terminal-dot terminal-dot-red" aria-hidden="true"></span>
-                  <span className="terminal-dot terminal-dot-yellow"><img className="terminal-dot-icon" src="/assets/icons/minus-svgrepo-com.svg" alt="" /></span>
-                  <span className="terminal-dot terminal-dot-green"><img className="terminal-dot-icon" src="/assets/icons/plus-1512-svgrepo-com.svg" alt="" /></span>
+                  <span className="terminal-dot terminal-dot-yellow"><img className="terminal-dot-icon" src="/assets/icons/terminal/window-minimize.svg" alt="" /></span>
+                  <span className="terminal-dot terminal-dot-green"><img className="terminal-dot-icon" src="/assets/icons/terminal/window-maximize.svg" alt="" /></span>
                 </span>
               </div>
               <pre className="terminal-content"><code id="projectsTerminalCode"></code><span className="terminal-cursor" aria-hidden="true"></span></pre>
@@ -266,17 +266,17 @@ export default function PortfolioScene() {
               <span className="project-tag">Git Collaborative Workflow</span>
             </div>
             <a className="project-button" href="https://github.com/CoceraCia/ChillMeal" target="_blank" rel="noreferrer">
-              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <img className="project-button-icon" src="/assets/icons/social/github.svg" alt="" />
               <span>View on GitHub</span>
             </a>
           </div>
           <div className="chillmeal-visual">
             <div className="chillmeal-phone-stack">
               <div className="chillmeal-img-wrap chillmeal-img-wrap-back">
-                <img className="chillmeal-img" src="/assets/images/ChillMeal2.png" alt="ChillMeal secondary Android app screen" />
+                <img className="chillmeal-img" src="/assets/images/projects/chillmeal/secondary-screen.png" alt="ChillMeal secondary Android app screen" />
               </div>
               <div className="chillmeal-img-wrap chillmeal-img-wrap-front">
-                <img className="chillmeal-img" src="/assets/images/ChillMeal1.png" alt="ChillMeal main Android app screen" />
+                <img className="chillmeal-img" src="/assets/images/projects/chillmeal/main-screen.png" alt="ChillMeal main Android app screen" />
               </div>
             </div>
           </div>
@@ -298,29 +298,29 @@ export default function PortfolioScene() {
               <span className="project-tag">Declarative UI</span>
             </div>
             <a className="project-button" href="https://github.com/CoceraCia/Impostor" target="_blank" rel="noreferrer">
-              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <img className="project-button-icon" src="/assets/icons/social/github.svg" alt="" />
               <span>View on GitHub</span>
             </a>
           </div>
           <div className="weatherapp-visual">
             <div className="weatherapp-phone-stack">
               <div className="weatherapp-img-wrap weatherapp-img-wrap-back">
-                <img className="weatherapp-img" src="/assets/images/Impostor2.png" alt="Impostor secondary Android app screen" />
+                <img className="weatherapp-img" src="/assets/images/projects/impostor/secondary-screen.png" alt="Impostor secondary Android app screen" />
               </div>
               <div className="weatherapp-img-wrap weatherapp-img-wrap-front">
-                <img className="weatherapp-img" src="/assets/images/Impostor.png" alt="Impostor main Android app screen" />
+                <img className="weatherapp-img" src="/assets/images/projects/impostor/main-screen.png" alt="Impostor main Android app screen" />
               </div>
             </div>
           </div>
         </aside>
         <aside className="app-tracker-panel scroll-reveal" id="media-tracker" aria-label="Media Tracker App">
           <div className="app-tracker-visual">
-            <div className="app-tracker-phone-stack">
-              <div className="app-tracker-img-wrap app-tracker-img-wrap-back">
-                <img className="app-tracker-img" src="/assets/images/MediaTracker2.png" alt="Media Tracker App secondary screen" />
+            <div className="weatherapp-phone-stack">
+              <div className="weatherapp-img-wrap weatherapp-img-wrap-back">
+                <img className="weatherapp-img" src="/assets/images/projects/media-tracker/secondary-screen.png" alt="Media Tracker App secondary screen" />
               </div>
-              <div className="app-tracker-img-wrap app-tracker-img-wrap-front">
-                <img className="app-tracker-img" src="/assets/images/MainPageTracker.png" alt="Media Tracker App Android home screen" />
+              <div className="weatherapp-img-wrap weatherapp-img-wrap-front">
+                <img className="weatherapp-img" src="/assets/images/projects/media-tracker/main-screen.png" alt="Media Tracker App Android home screen" />
               </div>
             </div>
           </div>
@@ -363,7 +363,7 @@ export default function PortfolioScene() {
               <span className="project-tag">Custom Protocol</span>
             </div>
             <a className="project-button" href="https://github.com/CoceraCia/Remote-Log-Server" target="_blank" rel="noreferrer">
-              <img className="project-button-icon" src="/assets/icons/github.svg" alt="" />
+              <img className="project-button-icon" src="/assets/icons/social/github.svg" alt="" />
               <span>View on GitHub</span>
             </a>
           </div>
@@ -372,8 +372,8 @@ export default function PortfolioScene() {
               <div className="terminal-controls">
                 <span className="terminal-dots">
                   <span className="terminal-dot terminal-dot-red" aria-hidden="true"></span>
-                  <span className="terminal-dot terminal-dot-yellow"><img className="terminal-dot-icon" src="/assets/icons/minus-svgrepo-com.svg" alt="" /></span>
-                  <span className="terminal-dot terminal-dot-green"><img className="terminal-dot-icon" src="/assets/icons/plus-1512-svgrepo-com.svg" alt="" /></span>
+                  <span className="terminal-dot terminal-dot-yellow"><img className="terminal-dot-icon" src="/assets/icons/terminal/window-minimize.svg" alt="" /></span>
+                  <span className="terminal-dot terminal-dot-green"><img className="terminal-dot-icon" src="/assets/icons/terminal/window-maximize.svg" alt="" /></span>
                 </span>
               </div>
               <pre className="terminal-content remotelog-terminal-content"><code id="remoteLogTerminalCode"></code><span className="terminal-cursor" aria-hidden="true"></span></pre>
@@ -385,62 +385,62 @@ export default function PortfolioScene() {
           <h2 className="skills-title">Skills</h2>
           <div className="skills-marquee">
             <div className="skills-marquee-track" ref={trackRef}>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/java-svgrepo-com.svg" alt="" /><span className="skill-item-label">Java</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/python-svgrepo-com.svg" alt="" /><span className="skill-item-label">Python</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/fastapi-svgrepo-com.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/api-svgrepo-com.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/graphql-svgrepo-com.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">OOP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/kotlin-svgrepo-com.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/android-studio-icon.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/swift-svgrepo-com.svg" alt="" /><span className="skill-item-label">Swift</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/jetpackcompose-original.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/sqlite-svgrepo-com.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mysql-svgrepo-com.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mariadb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mongodb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/firebase-svgrepo-com.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/git-svgrepo-com.svg" alt="" /><span className="skill-item-label">Git</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/github-142-svgrepo-com.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/netbeans-svgrepo-com.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/visual-studio-code-svgrepo-com.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/figma-svgrepo-com.svg" alt="" /><span className="skill-item-label">Figma</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/canva-svgrepo-com.svg" alt="" /><span className="skill-item-label">Canva</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/gimp-svgrepo-com.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/cli-command-root-svgrepo-com.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/web-svgrepo-com.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/robot-svgrepo-com.svg" alt="" /><span className="skill-item-label">Automation</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/server-client-svgrepo-com.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/php-svgrepo-com.svg" alt="" /><span className="skill-item-label">PHP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/java-svgrepo-com.svg" alt="" /><span className="skill-item-label">Java</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/python-svgrepo-com.svg" alt="" /><span className="skill-item-label">Python</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/fastapi-svgrepo-com.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/api-svgrepo-com.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/graphql-svgrepo-com.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">OOP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/kotlin-svgrepo-com.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/android-studio-icon.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/swift-svgrepo-com.svg" alt="" /><span className="skill-item-label">Swift</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/jetpackcompose-original.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/sqlite-svgrepo-com.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/object-connection-round-1097-svgrepo-com.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mysql-svgrepo-com.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mariadb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/mongodb-svgrepo-com.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/firebase-svgrepo-com.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/git-svgrepo-com.svg" alt="" /><span className="skill-item-label">Git</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/github-142-svgrepo-com.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/netbeans-svgrepo-com.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/visual-studio-code-svgrepo-com.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/figma-svgrepo-com.svg" alt="" /><span className="skill-item-label">Figma</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/canva-svgrepo-com.svg" alt="" /><span className="skill-item-label">Canva</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/gimp-svgrepo-com.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/cli-command-root-svgrepo-com.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/web-svgrepo-com.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/robot-svgrepo-com.svg" alt="" /><span className="skill-item-label">Automation</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/server-client-svgrepo-com.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/php-svgrepo-com.svg" alt="" /><span className="skill-item-label">PHP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/java.svg" alt="" /><span className="skill-item-label">Java</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/python.svg" alt="" /><span className="skill-item-label">Python</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/fastapi.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/rest-api.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/graphql.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">OOP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/kotlin.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/android-studio.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/swift.svg" alt="" /><span className="skill-item-label">Swift</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/jetpack-compose.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/sqlite.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mysql.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mariadb.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mongodb.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/firebase.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/git.svg" alt="" /><span className="skill-item-label">Git</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/github.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/netbeans.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/vs-code.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/figma.svg" alt="" /><span className="skill-item-label">Figma</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/canva.svg" alt="" /><span className="skill-item-label">Canva</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/gimp.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/cli-tools.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/web-scraping.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/automation.svg" alt="" /><span className="skill-item-label">Automation</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/client-server.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/php.svg" alt="" /><span className="skill-item-label">PHP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/java.svg" alt="" /><span className="skill-item-label">Java</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/python.svg" alt="" /><span className="skill-item-label">Python</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/fastapi.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/rest-api.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/graphql.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">OOP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/kotlin.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/android-studio.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/swift.svg" alt="" /><span className="skill-item-label">Swift</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/jetpack-compose.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/sqlite.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mysql.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mariadb.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mongodb.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/firebase.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/git.svg" alt="" /><span className="skill-item-label">Git</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/github.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/netbeans.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/vs-code.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/figma.svg" alt="" /><span className="skill-item-label">Figma</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/canva.svg" alt="" /><span className="skill-item-label">Canva</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/gimp.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/cli-tools.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/web-scraping.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/automation.svg" alt="" /><span className="skill-item-label">Automation</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/client-server.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
+              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/php.svg" alt="" /><span className="skill-item-label">PHP</span></div>
             </div>
           </div>
         </section>
@@ -637,11 +637,11 @@ export default function PortfolioScene() {
         </button>
         <h3 className="resume-card-heading" id="resume-card-heading">Choose Language</h3>
         <div className="resume-card-options">
-          <a className="resume-card-option" href="/assets/resume/CV-Miguel-Cocera-Cia-EN.pdf" download onClick={() => setResumeCardOpen(false)}>
+          <a className="resume-card-option" href="/assets/resume/CV_MiguelCoceraCia_EN.pdf" download onClick={() => setResumeCardOpen(false)}>
             <span className="resume-card-lang">English</span>
             <span className="resume-card-desc">Download resume in English</span>
           </a>
-          <a className="resume-card-option" href="/assets/resume/CV-Miguel-Cocera-Cia-ES.pdf" download onClick={() => setResumeCardOpen(false)}>
+          <a className="resume-card-option" href="/assets/resume/CV_MiguelCoceraCia_ES.pdf" download onClick={() => setResumeCardOpen(false)}>
             <span className="resume-card-lang">Español</span>
             <span className="resume-card-desc">Descargar currículum en español</span>
           </a>
