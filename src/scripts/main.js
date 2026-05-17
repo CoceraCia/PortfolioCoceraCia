@@ -1,3 +1,13 @@
+import { KIZAMU_TERMINAL_SCRIPT, REMOTE_LOG_TERMINAL_SCRIPT } from "./portfolio/terminalScripts";
+import { createTerminalPlaybackController } from "./portfolio/terminalPlayback";
+import { createScrollRevealController } from "./portfolio/scrollReveal";
+import { createStageStepController } from "./portfolio/stageSteps";
+import { createNotificationController } from "./portfolio/notificationController";
+import { createIslandFeedbackController } from "./portfolio/islandFeedbackController";
+import { createPhoneControlsController } from "./portfolio/phoneControlsController";
+import { createLockClockController } from "./portfolio/lockClockController";
+import { createDockTapController } from "./portfolio/dockTapController";
+
 export function initPortfolioInteractions() {
   const stage = document.getElementById("stage");
   const scene = document.querySelector(".scene");
@@ -20,7 +30,6 @@ export function initPortfolioInteractions() {
   const lockTime = document.getElementById("lockTime");
   const dockApps = document.querySelectorAll(".dock-app");
   const topNotification = document.querySelector(".liquid-glass-notification");
-  const projectsCarouselRows = document.querySelectorAll(".projects-carousel-row");
   const projectsPanel = document.querySelector(".projects-panel");
   const projectsTerminalCode = document.getElementById("projectsTerminalCode");
   const remoteLogPanel = document.querySelector(".remotelog-panel");
@@ -31,835 +40,87 @@ export function initPortfolioInteractions() {
     return () => {};
   }
 
-  let audioCtx;
-  let lastToneAt = 0;
-  let volumeLevel = 0.58;
-  let isMuted = false;
-  let isPoweredOff = false;
   let activeStep = "step-0";
-  let hudTimer;
-  let islandFeedbackTimer;
-  let islandFeedbackRaf = 0;
-  let islandFeedbackStateTimer;
-  let islandFeedbackCloseTimer;
-  let islandFeedbackVisibilityTimer;
-  let statusFadeRaf = 0;
-  let statusFadeLoopRaf = 0;
-  let carouselRaf = 0;
-  let carouselLastFrameAt = 0;
-  let lockClockTimer;
-  let notificationTimer;
-  let notificationLongPressTimer;
-  let notificationPointerId = null;
-  let notificationStartY = 0;
-  let notificationDragY = 0;
-  let notificationIsDragging = false;
-  let notificationDismissed = false;
-  const terminalStateById = new Map();
-  let revealObserver = null;
-  let lastVolumePressAt = 0;
-  let lastVolumeButton = "";
-  let compactHudUntil = 0;
 
-  const DOUBLE_PRESS_WINDOW_MS = 360;
-  const NOTIFICATION_LONG_PRESS_MS = 240;
-  const NOTIFICATION_DISMISS_Y = -56;
   const SILENT_ICON_PILL_WIDTH = 56;
   const RING_ICON_PILL_WIDTH = 22;
-  const PHONE_SOUND_ENABLED = false;
   const isCompactViewport = () => window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
-
-  const KIZAMU_TERMINAL_SCRIPT = [
-    { text: "$ kizamu search \"one piece\"\n", speed: 58, variance: 20 },
-    { pause: 620 },
-    { text: "\nFound 12 results\n", speed: 30, variance: 8 },
-    { text: "> Selecting source...\n", speed: 34, variance: 10 },
-    { pause: 520 },
-    { text: "\n$ kizamu download \"chapter-1100\" --format cbz\n", speed: 56, variance: 20 },
-    { pause: 640 },
-    { text: "\nDownloading pages...\n", speed: 30, variance: 8 },
-    { text: "[", speed: 18, variance: 4 },
-    { text: "██████████████████", speed: 13, variance: 3 },
-    { text: "] 100%\n", speed: 22, variance: 5 },
-    { pause: 420 },
-    { text: "\nProcessing images...\n", speed: 31, variance: 8 },
-    { text: "Creating CBZ archive...\n", speed: 33, variance: 9 },
-    { pause: 560 },
-    { text: "\nDone: One_Piece_1100.cbz", speed: 34, variance: 10 },
-  ];
-
-  const REMOTE_LOG_TERMINAL_SCRIPT = [
-    { text: "$ javac -d bin src/*.java\n", speed: 52, variance: 14 },
-    { pause: 520 },
-    { text: "$ java -cp bin Server\n\n", speed: 50, variance: 12 },
-    { pause: 360 },
-    { text: "Remote Log Server started on port 5000\n", speed: 28, variance: 8 },
-    { text: "Waiting for clients...\n\n", speed: 28, variance: 8 },
-    { pause: 420 },
-    { text: "New client connected: /127.0.0.1\n", speed: 32, variance: 10 },
-    { text: "Server -> Client: ENTER_NAME\n", speed: 30, variance: 9 },
-    { text: "Client -> Server: MobileApp\n", speed: 30, variance: 9 },
-    { text: "Server -> Client: WELCOME MobileApp\n\n", speed: 30, variance: 9 },
-    { pause: 420 },
-    { text: "Client -> Server: INFO Server started\n", speed: 32, variance: 10 },
-    { text: "Valid level: INFO\n", speed: 30, variance: 9 },
-    { text: "Formatting log entry...\n", speed: 30, variance: 9 },
-    { text: "[2026-04-01 14:30:25] (MobileApp) INFO Server started\n\n", speed: 28, variance: 8 },
-    { pause: 420 },
-    { text: "synchronized(FILE_LOCK)\n", speed: 32, variance: 10 },
-    { text: "Writing to logs.txt...\n", speed: 30, variance: 9 },
-    { text: "Server -> Client: LOG_RECEIVED\n\n", speed: 30, variance: 9 },
-    { pause: 420 },
-    { text: "Client -> Server: WARN High memory usage detected\n", speed: 30, variance: 9 },
-    { text: "Server -> Client: LOG_RECEIVED\n\n", speed: 30, variance: 9 },
-    { pause: 420 },
-    { text: "Client -> Server: SALIR\n", speed: 32, variance: 10 },
-    { text: "Server -> Client: GOODBYE\n", speed: 32, variance: 10 },
-    { text: "Client disconnected: MobileApp", speed: 32, variance: 10 },
-  ];
 
   const terminalConfigs = [
     { id: "kizamu-terminal", panelEl: projectsPanel, codeEl: projectsTerminalCode, script: KIZAMU_TERMINAL_SCRIPT },
     { id: "remotelog-terminal", panelEl: remoteLogPanel, codeEl: remoteLogTerminalCode, script: REMOTE_LOG_TERMINAL_SCRIPT },
   ];
-
-  const getTypingDelay = (base, variance = 0) => {
-    const jitter = variance > 0 ? (Math.random() * variance * 2 - variance) : 0;
-    return Math.max(10, Math.round(base + jitter));
-  };
-
-  const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
+  const terminalPlayback = createTerminalPlaybackController(terminalConfigs);
+  const scrollReveal = createScrollRevealController(revealTargets);
+  const islandFeedback = createIslandFeedbackController({
+    screen,
+    statusLeft,
+    islandFeedbackPill,
+    islandFeedbackIcon,
+    islandFeedbackLabel,
+    islandFeedbackCenter,
+    islandFeedbackRight,
+    getActiveStep: () => activeStep,
+    silentIconPillWidth: SILENT_ICON_PILL_WIDTH,
+    ringIconPillWidth: RING_ICON_PILL_WIDTH,
   });
-
-  const timeFormatter = new Intl.DateTimeFormat("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
+  const notification = createNotificationController({
+    topNotification,
+    getActiveStep: () => activeStep,
   });
+  const phoneControls = createPhoneControlsController({
+    screen,
+    phoneButtons,
+    actionButton,
+    volumeUpButton,
+    volumeDownButton,
+    powerButton,
+    volumeHud,
+    volumeFill,
+    volumeGlyph,
+    islandFeedback,
+    getIsInteractiveStep: () => activeStep === "step-5" || isCompactViewport(),
+    phoneSoundEnabled: false,
+  });
+  const lockClock = createLockClockController({ lockDate, lockTime });
+  const dockTap = createDockTapController(dockApps);
+  const stageStep = createStageStepController({
+    scene,
+    stage,
+    isCompactViewport,
+    initialStep: activeStep,
+    onStepChange: ({ nextStep }) => {
+      activeStep = nextStep;
 
-  const updateLockClock = () => {
-    const now = new Date();
-    lockDate.textContent = dateFormatter.format(now);
-    lockTime.textContent = timeFormatter.format(now);
-  };
-
-  const startLockClock = () => {
-    updateLockClock();
-    if (lockClockTimer) window.clearInterval(lockClockTimer);
-    lockClockTimer = window.setInterval(updateLockClock, 1000);
-  };
-
-  const ensureAudioContext = async () => {
-    if (!audioCtx) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return null;
-      audioCtx = new AudioCtx();
-    }
-    if (audioCtx.state === "suspended") {
-      try {
-        await audioCtx.resume();
-      } catch (_) {
-        return null;
+      if (activeStep !== "step-5") {
+        phoneControls.resetForNonInteractiveStep();
       }
-    }
-    return audioCtx;
-  };
 
-  const playTone = async (type) => {
-    if (!PHONE_SOUND_ENABLED) return;
-
-    const now = performance.now();
-    if (now - lastToneAt < 28) return;
-    lastToneAt = now;
-
-    const ctx = await ensureAudioContext();
-    if (!ctx) return;
-
-    const t0 = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const gain2 = ctx.createGain();
-    const hp = ctx.createBiquadFilter();
-    const lp = ctx.createBiquadFilter();
-
-    let startFreq = 1320;
-    let endFreq = 820;
-    let peak = 0.06;
-    let length = 0.07;
-
-    if (type === "volume-up") {
-      startFreq = 720;
-      endFreq = 980;
-      peak = 0.055;
-      length = 0.085;
-    } else if (type === "volume-down") {
-      startFreq = 980;
-      endFreq = 660;
-      peak = 0.055;
-      length = 0.085;
-    } else if (type === "mute") {
-      startFreq = 740;
-      endFreq = 500;
-      peak = 0.05;
-      length = 0.09;
-    } else if (type === "unmute") {
-      startFreq = 500;
-      endFreq = 760;
-      peak = 0.05;
-      length = 0.09;
-    }
-
-    osc.type = "sine";
-    osc2.type = "triangle";
-    osc.frequency.setValueAtTime(startFreq, t0);
-    osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + length * 0.56);
-    osc2.frequency.setValueAtTime(startFreq * 2.02, t0);
-    osc2.frequency.exponentialRampToValueAtTime(endFreq * 2.05, t0 + length * 0.5);
-
-    hp.type = "highpass";
-    hp.frequency.setValueAtTime(280, t0);
-    lp.type = "lowpass";
-    lp.frequency.setValueAtTime(2600, t0);
-
-    gain.gain.setValueAtTime(0.0001, t0);
-    gain.gain.exponentialRampToValueAtTime(peak, t0 + 0.004);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + length);
-    gain2.gain.setValueAtTime(0.0001, t0);
-    gain2.gain.exponentialRampToValueAtTime(peak * 0.45, t0 + 0.005);
-    gain2.gain.exponentialRampToValueAtTime(0.0001, t0 + length);
-
-    osc.connect(hp);
-    osc2.connect(lp);
-    hp.connect(gain);
-    lp.connect(gain2);
-    gain.connect(ctx.destination);
-    gain2.connect(ctx.destination);
-
-    osc.start(t0);
-    osc2.start(t0);
-    osc.stop(t0 + length + 0.01);
-    osc2.stop(t0 + length + 0.01);
-  };
-
-  const pressButton = (button) => {
-    button.classList.add("is-pressed");
-    window.setTimeout(() => {
-      button.classList.remove("is-pressed");
-    }, 110);
-  };
-
-  const isInteractiveStep = () => activeStep === "step-5" || isCompactViewport();
-
-  const setPowerState = (off) => {
-    isPoweredOff = off;
-    screen.classList.toggle("powered-off", isPoweredOff);
-    if (isPoweredOff) hideMuteIslandFeedback();
-  };
-
-  const getVolumeIcon = () => {
-    if (volumeLevel <= 0) return "/assets/icons/device/muted.svg";
-    if (volumeLevel <= 0.25) return "/assets/icons/device/volume-low.svg";
-    if (volumeLevel <= 0.5) return "/assets/icons/device/volume-medium.svg";
-    if (volumeLevel <= 0.75) return "/assets/icons/device/volume-high.svg";
-    return "/assets/icons/device/volume-very-high.svg";
-  };
-
-  const showVolumeHud = (compact = false) => {
-    volumeFill.style.height = `${Math.round(volumeLevel * 100)}%`;
-    volumeGlyph.src = getVolumeIcon();
-    volumeHud.classList.toggle("compact", compact);
-    volumeHud.classList.add("visible");
-    window.clearTimeout(hudTimer);
-    hudTimer = window.setTimeout(() => {
-      volumeHud.classList.remove("visible");
-      volumeHud.classList.remove("compact");
-    }, 820);
-  };
-
-  const setIslandFeedbackVisible = (visible) => {
-    screen.classList.toggle("island-feedback-visible", visible);
-  };
-
-  const clearStatusLeftFade = () => {
-    statusLeft.style.webkitMaskImage = "";
-    statusLeft.style.maskImage = "";
-  };
-
-  const updateStatusLeftFade = () => {
-    const pillRect = islandFeedbackPill.getBoundingClientRect();
-    const statusRect = statusLeft.getBoundingClientRect();
-    const statusWidth = statusRect.width;
-    if (statusWidth <= 0) return;
-
-    const overlap = statusRect.right - pillRect.left;
-    const fadePx = Math.max(0, Math.min(statusWidth, overlap + 12));
-    const fadeStartPx = Math.max(0, statusWidth - fadePx);
-    const fadeSoftPx = Math.max(8, Math.min(22, fadePx * 0.42));
-    const fadeStartPct = (fadeStartPx / statusWidth) * 100;
-    const fadeMidPct = (Math.min(statusWidth, fadeStartPx + fadeSoftPx) / statusWidth) * 100;
-
-    const mask = `linear-gradient(90deg, #000 0%, #000 ${fadeStartPct}%, rgba(0, 0, 0, 0.45) ${fadeMidPct}%, transparent 100%)`;
-    statusLeft.style.webkitMaskImage = mask;
-    statusLeft.style.maskImage = mask;
-  };
-
-  const animateStatusLeftFade = (duration = 340, clearAtEnd = false) => {
-    if (statusFadeRaf) {
-      window.cancelAnimationFrame(statusFadeRaf);
-      statusFadeRaf = 0;
-    }
-    if (statusFadeLoopRaf) {
-      window.cancelAnimationFrame(statusFadeLoopRaf);
-      statusFadeLoopRaf = 0;
-    }
-
-    const start = performance.now();
-    const tick = () => {
-      updateStatusLeftFade();
-      if (performance.now() - start < duration) {
-        statusFadeRaf = window.requestAnimationFrame(tick);
+      if (activeStep === "step-5") {
+        if (!topNotification.classList.contains("is-visible") && !notification.isShowPending()) {
+          notification.showWithDelay();
+        }
       } else {
-        statusFadeRaf = 0;
-        if (clearAtEnd) clearStatusLeftFade();
+        notification.hide();
       }
-    };
-    statusFadeRaf = window.requestAnimationFrame(tick);
-  };
-
-  const hideMuteIslandFeedback = () => {
-    window.clearTimeout(islandFeedbackTimer);
-    window.clearTimeout(islandFeedbackStateTimer);
-    window.clearTimeout(islandFeedbackCloseTimer);
-    window.clearTimeout(islandFeedbackVisibilityTimer);
-    if (islandFeedbackRaf) {
-      window.cancelAnimationFrame(islandFeedbackRaf);
-      islandFeedbackRaf = 0;
-    }
-    if (statusFadeLoopRaf) {
-      window.cancelAnimationFrame(statusFadeLoopRaf);
-      statusFadeLoopRaf = 0;
-    }
-    islandFeedbackPill.classList.add("is-closing");
-    islandFeedbackPill.classList.remove("is-active");
-    islandFeedbackPill.style.setProperty("--feedback-pill-left", "50%");
-    animateStatusLeftFade(320, true);
-    islandFeedbackVisibilityTimer = window.setTimeout(() => setIslandFeedbackVisible(false), 220);
-    islandFeedbackStateTimer = window.setTimeout(() => {
-      islandFeedbackPill.classList.remove("is-closing");
-      islandFeedbackPill.classList.remove("is-silent");
-      islandFeedbackPill.classList.remove("is-ring");
-    }, 210);
-  };
-
-  const showMuteIslandFeedback = (silentOn) => {
-    window.clearTimeout(islandFeedbackVisibilityTimer);
-    setIslandFeedbackVisible(true);
-    islandFeedbackIcon.src = silentOn ? "/assets/icons/device/bell-muted.svg" : "/assets/icons/device/bell.svg";
-    islandFeedbackLabel.textContent = silentOn ? "Silent" : "Ring";
-    window.clearTimeout(islandFeedbackStateTimer);
-    window.clearTimeout(islandFeedbackCloseTimer);
-    if (statusFadeLoopRaf) {
-      window.cancelAnimationFrame(statusFadeLoopRaf);
-      statusFadeLoopRaf = 0;
-    }
-    islandFeedbackPill.classList.remove("is-closing");
-    islandFeedbackPill.classList.toggle("is-silent", silentOn);
-    islandFeedbackPill.classList.toggle("is-ring", !silentOn);
-
-    window.clearTimeout(islandFeedbackTimer);
-    if (islandFeedbackRaf) {
-      window.cancelAnimationFrame(islandFeedbackRaf);
-      islandFeedbackRaf = 0;
-    }
-
-    islandFeedbackRaf = window.requestAnimationFrame(() => {
-      const screenRect = screen.getBoundingClientRect();
-      const rightRect = islandFeedbackRight.getBoundingClientRect();
-      const styles = getComputedStyle(islandFeedbackPill);
-
-      const isWideIslandStep = activeStep === "step-2" || activeStep === "step-3";
-      const baseWidthRatio = isWideIslandStep ? 0.415 : 0.268;
-      const baseWidth = screenRect.width * baseWidthRatio;
-      const gap = parseFloat(styles.getPropertyValue("--feedback-pill-gap")) || 12;
-      const padX = parseFloat(styles.getPropertyValue("--feedback-pill-pad-x")) || 8;
-      const padLeft = parseFloat(styles.getPropertyValue("--feedback-pill-pad-left")) || 6;
-      const iconWidth = silentOn ? SILENT_ICON_PILL_WIDTH : RING_ICON_PILL_WIDTH;
-
-      const leftSide = iconWidth + gap + padLeft;
-      const rightSide = rightRect.width + gap + padX;
-      const feedbackWidth = Math.ceil(baseWidth + leftSide + rightSide);
-      const centerShift = (rightSide - leftSide) / 2;
-      const feedbackLeft = Math.round(screenRect.width / 2 + centerShift);
-
-      islandFeedbackPill.style.setProperty("--feedback-pill-center-width", `${Math.ceil(baseWidth)}px`);
-      islandFeedbackCenter.style.width = `${Math.ceil(baseWidth)}px`;
-      islandFeedbackPill.style.setProperty("--feedback-pill-base-width", `${Math.ceil(baseWidth)}px`);
-      islandFeedbackPill.style.setProperty("--feedback-pill-expanded-width", `${feedbackWidth}px`);
-      islandFeedbackPill.style.setProperty("--feedback-pill-left", `${feedbackLeft}px`);
-
-      islandFeedbackPill.classList.remove("is-active");
-      islandFeedbackPill.offsetWidth;
-      islandFeedbackPill.classList.add("is-active");
-      animateStatusLeftFade(340, false);
-
-      const keepFadeSynced = () => {
-        if (!screen.classList.contains("island-feedback-visible")) {
-          statusFadeLoopRaf = 0;
-          return;
-        }
-        updateStatusLeftFade();
-        statusFadeLoopRaf = window.requestAnimationFrame(keepFadeSynced);
-      };
-
-      statusFadeLoopRaf = window.requestAnimationFrame(keepFadeSynced);
-      islandFeedbackRaf = 0;
-    });
-
-    islandFeedbackTimer = window.setTimeout(() => {
-      islandFeedbackPill.classList.add("is-closing");
-      islandFeedbackPill.classList.remove("is-active");
-      islandFeedbackPill.style.setProperty("--feedback-pill-left", "50%");
-      if (statusFadeLoopRaf) {
-        window.cancelAnimationFrame(statusFadeLoopRaf);
-        statusFadeLoopRaf = 0;
-      }
-      animateStatusLeftFade(320, true);
-      islandFeedbackCloseTimer = window.setTimeout(() => {
-        islandFeedbackPill.classList.remove("is-closing");
-      }, 220);
-      islandFeedbackVisibilityTimer = window.setTimeout(() => setIslandFeedbackVisible(false), 220);
-      islandFeedbackStateTimer = window.setTimeout(() => {
-        islandFeedbackPill.classList.remove("is-silent");
-        islandFeedbackPill.classList.remove("is-ring");
-      }, 240);
-    }, 1200);
-  };
-
-  const handlePower = () => {
-    if (!isInteractiveStep()) return;
-    setPowerState(!isPoweredOff);
-    playTone("click");
-  };
-
-  const handleVolume = (up) => {
-    if (!isInteractiveStep() || isPoweredOff) return;
-    const now = performance.now();
-    const buttonKey = up ? "up" : "down";
-    const isDoublePress = buttonKey === lastVolumeButton && now - lastVolumePressAt <= DOUBLE_PRESS_WINDOW_MS;
-    lastVolumePressAt = now;
-    lastVolumeButton = buttonKey;
-    if (isDoublePress) compactHudUntil = now + 1200;
-    const shouldShowCompact = now < compactHudUntil;
-
-    volumeLevel = Math.max(0, Math.min(1, volumeLevel + (up ? 0.14 : -0.14)));
-    playTone(up ? "volume-up" : "volume-down");
-    showVolumeHud(shouldShowCompact);
-  };
-
-  const handleActionButton = () => {
-    if (!isInteractiveStep() || isPoweredOff) return;
-    isMuted = !isMuted;
-    showMuteIslandFeedback(isMuted);
-    playTone(isMuted ? "mute" : "unmute");
-  };
-
-  const hideTopNotification = () => {
-    window.clearTimeout(notificationTimer);
-    window.clearTimeout(notificationLongPressTimer);
-    notificationTimer = 0;
-    notificationLongPressTimer = 0;
-    notificationPointerId = null;
-    notificationIsDragging = false;
-    notificationDragY = 0;
-    notificationDismissed = false;
-    topNotification.style.removeProperty("--notification-drag-y");
-    topNotification.classList.remove("is-dragging");
-    topNotification.classList.remove("is-dismissed");
-    topNotification.classList.remove("is-visible");
-  };
-
-  const showTopNotificationWithDelay = () => {
-    window.clearTimeout(notificationTimer);
-    notificationTimer = 0;
-    if (notificationDismissed) return;
-    topNotification.style.removeProperty("--notification-drag-y");
-    topNotification.classList.remove("is-dragging");
-    topNotification.classList.remove("is-dismissed");
-    topNotification.classList.remove("is-visible");
-    notificationTimer = window.setTimeout(() => {
-      topNotification.classList.add("is-visible");
-      notificationTimer = 0;
-    }, 1000);
-  };
-
-  const tapTopNotification = () => {
-    topNotification.classList.remove("is-tapped");
-    void topNotification.offsetWidth;
-    topNotification.classList.add("is-tapped");
-  };
-
-  const beginNotificationDrag = () => {
-    notificationIsDragging = true;
-    topNotification.classList.add("is-dragging");
-    topNotification.classList.remove("is-tapped");
-  };
-
-  const endNotificationDrag = () => {
-    topNotification.classList.remove("is-dragging");
-    notificationIsDragging = false;
-    if (notificationDragY <= NOTIFICATION_DISMISS_Y) {
-      notificationDismissed = true;
-      topNotification.classList.add("is-dismissed");
-      topNotification.classList.remove("is-visible");
-      topNotification.style.removeProperty("--notification-drag-y");
-      notificationDragY = 0;
-      return;
-    }
-
-    topNotification.style.removeProperty("--notification-drag-y");
-    notificationDragY = 0;
-  };
-
-  const onNotificationPointerDown = (event) => {
-    if (activeStep !== "step-5") return;
-    if (!topNotification.classList.contains("is-visible")) return;
-    if (notificationDismissed) return;
-    notificationPointerId = event.pointerId;
-    notificationStartY = event.clientY;
-    notificationDragY = 0;
-    notificationIsDragging = false;
-    topNotification.setPointerCapture(event.pointerId);
-    window.clearTimeout(notificationLongPressTimer);
-    notificationLongPressTimer = window.setTimeout(() => {
-      beginNotificationDrag();
-      notificationLongPressTimer = 0;
-    }, NOTIFICATION_LONG_PRESS_MS);
-  };
-
-  const onNotificationPointerMove = (event) => {
-    if (event.pointerId !== notificationPointerId) return;
-    if (!notificationIsDragging) return;
-    const deltaY = event.clientY - notificationStartY;
-    notificationDragY = Math.min(12, Math.max(-140, deltaY));
-    topNotification.style.setProperty("--notification-drag-y", `${notificationDragY}px`);
-  };
-
-  const onNotificationPointerUp = (event) => {
-    if (event.pointerId !== notificationPointerId) return;
-    window.clearTimeout(notificationLongPressTimer);
-    notificationLongPressTimer = 0;
-
-    if (notificationIsDragging) {
-      endNotificationDrag();
-    } else {
-      tapTopNotification();
-    }
-
-    if (topNotification.hasPointerCapture(event.pointerId)) {
-      topNotification.releasePointerCapture(event.pointerId);
-    }
-    notificationPointerId = null;
-  };
-
-  const onNotificationPointerCancel = (event) => {
-    if (event.pointerId !== notificationPointerId) return;
-    window.clearTimeout(notificationLongPressTimer);
-    notificationLongPressTimer = 0;
-    if (notificationIsDragging) endNotificationDrag();
-    if (topNotification.hasPointerCapture(event.pointerId)) {
-      topNotification.releasePointerCapture(event.pointerId);
-    }
-    notificationPointerId = null;
-  };
-
-  const ensureTerminalState = (id) => {
-    if (terminalStateById.has(id)) return terminalStateById.get(id);
-    const state = {
-      timer: 0,
-      isPlaying: false,
-      shouldLoop: false,
-      isWaitingToReplay: false,
-      isInView: false,
-    };
-    terminalStateById.set(id, state);
-    return state;
-  };
-
-  const clearTerminalTimer = (state) => {
-    if (state.timer) {
-      window.clearTimeout(state.timer);
-      state.timer = 0;
-    }
-  };
-
-  const playTerminal = (config) => {
-    const state = ensureTerminalState(config.id);
-    if (state.isPlaying || state.isWaitingToReplay) return;
-    state.isPlaying = true;
-    state.shouldLoop = true;
-    config.codeEl.textContent = "";
-
-    let stepIndex = 0;
-    const runStep = () => {
-      if (stepIndex >= config.script.length) {
-        state.isPlaying = false;
-        if (!state.shouldLoop) {
-          state.timer = 0;
-          return;
-        }
-        state.isWaitingToReplay = true;
-        state.timer = window.setTimeout(() => {
-          state.isWaitingToReplay = false;
-          state.timer = 0;
-          playTerminal(config);
-        }, 10000);
-        return;
-      }
-
-      const step = config.script[stepIndex];
-      stepIndex += 1;
-
-      if (step.pause) {
-        state.timer = window.setTimeout(runStep, step.pause);
-        return;
-      }
-
-      const text = step.text || "";
-      const speed = step.speed || 18;
-      const variance = step.variance || 0;
-      let charIndex = 0;
-
-      const typeNext = () => {
-        if (charIndex >= text.length) {
-          runStep();
-          return;
-        }
-
-        config.codeEl.textContent += text.charAt(charIndex);
-        charIndex += 1;
-        state.timer = window.setTimeout(typeNext, getTypingDelay(speed, variance));
-      };
-
-      typeNext();
-    };
-
-    runStep();
-  };
-
-  const stopTerminal = (config) => {
-    const state = ensureTerminalState(config.id);
-    state.shouldLoop = false;
-    state.isPlaying = false;
-    state.isWaitingToReplay = false;
-    clearTerminalTimer(state);
-  };
-
-  const updateTerminalVisibility = (config) => {
-    const state = ensureTerminalState(config.id);
-    const rect = config.panelEl.getBoundingClientRect();
-    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-    const nextIsInView = rect.top < viewportHeight * 0.78 && rect.bottom > viewportHeight * 0.18;
-
-    if (state.isInView === nextIsInView) return;
-    state.isInView = nextIsInView;
-    if (state.isInView) {
-      playTerminal(config);
-    } else {
-      stopTerminal(config);
-    }
-  };
-
-  const updateTerminalsVisibility = () => {
-    terminalConfigs.forEach((config) => updateTerminalVisibility(config));
-  };
-
-  const setupScrollReveals = () => {
-    if (!revealTargets.length) return;
-
-    document.documentElement.classList.add("reveal-ready");
-
-    if (!("IntersectionObserver" in window)) {
-      revealTargets.forEach((target) => target.classList.add("is-visible"));
-      return;
-    }
-
-    revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
-      });
-    }, {
-      threshold: 0.18,
-      rootMargin: "0px 0px -12% 0px",
-    });
-
-    revealTargets.forEach((target, index) => {
-      target.style.setProperty("--reveal-index", index % 4);
-      revealObserver.observe(target);
-    });
-  };
-
-  const onPointerDownByButton = new Map();
-  const onClickByButton = new Map();
-  const carouselRowStates = [];
-  phoneButtons.forEach((button) => {
-    const onPointerDown = () => {
-      if (isInteractiveStep()) playTone("click");
-      pressButton(button);
-    };
-    const onClick = () => pressButton(button);
-    onPointerDownByButton.set(button, onPointerDown);
-    onClickByButton.set(button, onClick);
-    button.addEventListener("pointerdown", onPointerDown);
-    button.addEventListener("click", onClick);
+    },
   });
 
-  powerButton.addEventListener("click", handlePower);
-  const onVolumeUpClick = () => handleVolume(true);
-  const onVolumeDownClick = () => handleVolume(false);
-  volumeUpButton.addEventListener("click", onVolumeUpClick);
-  volumeDownButton.addEventListener("click", onVolumeDownClick);
-  actionButton.addEventListener("click", handleActionButton);
-  topNotification.addEventListener("pointerdown", onNotificationPointerDown);
-  topNotification.addEventListener("pointermove", onNotificationPointerMove);
-  topNotification.addEventListener("pointerup", onNotificationPointerUp);
-  topNotification.addEventListener("pointercancel", onNotificationPointerCancel);
+  const updateTerminalsVisibility = () => terminalPlayback.updateVisibility();
+  topNotification.addEventListener("pointerdown", notification.onPointerDown);
+  topNotification.addEventListener("pointermove", notification.onPointerMove);
+  topNotification.addEventListener("pointerup", notification.onPointerUp);
+  topNotification.addEventListener("pointercancel", notification.onPointerCancel);
 
-  const setupProjectsCarousel = () => {
-    projectsCarouselRows.forEach((row, index) => {
-      const track = row.querySelector(".projects-carousel-track");
-      const group = row.querySelector(".projects-carousel-group");
-      if (!track || !group) return;
-
-      const direction = index % 2 === 0 ? -1 : 1;
-      const baseSpeed = window.matchMedia && window.matchMedia("(max-width: 900px)").matches ? 24 : 34;
-      const slowSpeed = 7;
-      const state = {
-        row,
-        track,
-        group,
-        direction,
-        offset: 0,
-        speed: baseSpeed,
-        targetSpeed: baseSpeed,
-        baseSpeed,
-        slowSpeed,
-        distance: group.getBoundingClientRect().width,
-        cardHandlers: [],
-      };
-
-      const onPointerEnter = () => {
-        state.targetSpeed = state.slowSpeed;
-      };
-      const onPointerLeave = () => {
-        state.targetSpeed = state.baseSpeed;
-      };
-
-      row.querySelectorAll(".projects-carousel-card").forEach((card) => {
-        card.addEventListener("pointerenter", onPointerEnter);
-        card.addEventListener("pointerleave", onPointerLeave);
-        state.cardHandlers.push({ card, onPointerEnter, onPointerLeave });
-      });
-      carouselRowStates.push(state);
-    });
-  };
-
-  const updateProjectsCarouselMeasurements = () => {
-    carouselRowStates.forEach((state) => {
-      state.distance = state.group.getBoundingClientRect().width;
-      const baseSpeed = window.matchMedia && window.matchMedia("(max-width: 900px)").matches ? 24 : 34;
-      state.baseSpeed = baseSpeed;
-      if (state.targetSpeed !== state.slowSpeed) state.targetSpeed = baseSpeed;
-    });
-  };
-
-  const animateProjectsCarousel = (now) => {
-    if (!carouselLastFrameAt) carouselLastFrameAt = now;
-    const delta = Math.min(0.05, (now - carouselLastFrameAt) / 1000);
-    carouselLastFrameAt = now;
-
-    carouselRowStates.forEach((state) => {
-      if (state.distance <= 0) return;
-      state.speed += (state.targetSpeed - state.speed) * Math.min(1, delta * 5.8);
-      state.offset += state.direction * state.speed * delta;
-
-      if (state.direction < 0) {
-        while (state.offset <= -state.distance) state.offset += state.distance;
-      } else {
-        while (state.offset >= 0) state.offset -= state.distance;
-      }
-
-      state.track.style.transform = `translate3d(${state.offset}px, 0, 0)`;
-    });
-
-    carouselRaf = window.requestAnimationFrame(animateProjectsCarousel);
-  };
-
-  const updateStep = () => {
-    const rect = scene.getBoundingClientRect();
-    const scrollable = scene.offsetHeight - window.innerHeight;
-    const traveled = Math.min(Math.max(-rect.top, 0), scrollable);
-    const p = scrollable > 0 ? traveled / scrollable : 0;
-
-    let step = "step-0";
-    if (p >= 0.12) step = "step-1";
-    if (p >= 0.28) step = "step-2";
-    if (p >= 0.42) step = "step-3";
-    if (p >= 0.53) step = "step-5";
-    if (p >= 0.68) step = "step-6";
-    if (p >= 0.82) step = "step-7";
-    if (isCompactViewport()) step = "step-5";
-
-    const prevStep = activeStep;
-
-    activeStep = step;
-
-    if (activeStep !== "step-5") {
-      setPowerState(false);
-      volumeHud.classList.remove("visible");
-      hideMuteIslandFeedback();
-    }
-
-    if (activeStep === "step-5") {
-      if (!topNotification.classList.contains("is-visible") && !notificationTimer) {
-        showTopNotificationWithDelay();
-      }
-    } else {
-      hideTopNotification();
-    }
-
-    if (prevStep !== step) {
-      stage.classList.remove("step-0", "step-1", "step-2", "step-3", "step-5", "step-6", "step-7", "step-8", "step-9", "step-10", "step-11", "step-12", "step-13");
-      stage.classList.add(step);
-    }
-  };
+  const updateStep = () => stageStep.update();
 
   window.addEventListener("scroll", updateStep, { passive: true });
   window.addEventListener("scroll", updateTerminalsVisibility, { passive: true });
   window.addEventListener("resize", updateStep);
   window.addEventListener("resize", updateTerminalsVisibility);
-  window.addEventListener("resize", updateProjectsCarouselMeasurements);
 
-  const onDockClickByApp = new Map();
-  dockApps.forEach((app) => {
-    const onDockClick = () => {
-      app.classList.remove("is-tapped");
-      void app.offsetWidth;
-      app.classList.add("is-tapped");
-    };
-    onDockClickByApp.set(app, onDockClick);
-    app.addEventListener("click", onDockClick);
-  });
-
-  startLockClock();
-  setupProjectsCarousel();
-  setupScrollReveals();
-  carouselRaf = window.requestAnimationFrame(animateProjectsCarousel);
+  lockClock.start();
+  scrollReveal.setup();
   updateStep();
   updateTerminalsVisibility();
 
@@ -868,55 +129,19 @@ export function initPortfolioInteractions() {
     window.removeEventListener("scroll", updateTerminalsVisibility);
     window.removeEventListener("resize", updateStep);
     window.removeEventListener("resize", updateTerminalsVisibility);
-    window.removeEventListener("resize", updateProjectsCarouselMeasurements);
 
-    phoneButtons.forEach((button) => {
-      const onPointerDown = onPointerDownByButton.get(button);
-      const onClick = onClickByButton.get(button);
-      if (onPointerDown) button.removeEventListener("pointerdown", onPointerDown);
-      if (onClick) button.removeEventListener("click", onClick);
-    });
+    topNotification.removeEventListener("pointerdown", notification.onPointerDown);
+    topNotification.removeEventListener("pointermove", notification.onPointerMove);
+    topNotification.removeEventListener("pointerup", notification.onPointerUp);
+    topNotification.removeEventListener("pointercancel", notification.onPointerCancel);
 
-    powerButton.removeEventListener("click", handlePower);
-    volumeUpButton.removeEventListener("click", onVolumeUpClick);
-    volumeDownButton.removeEventListener("click", onVolumeDownClick);
-    actionButton.removeEventListener("click", handleActionButton);
-    topNotification.removeEventListener("pointerdown", onNotificationPointerDown);
-    topNotification.removeEventListener("pointermove", onNotificationPointerMove);
-    topNotification.removeEventListener("pointerup", onNotificationPointerUp);
-    topNotification.removeEventListener("pointercancel", onNotificationPointerCancel);
+    scrollReveal.cleanup();
 
-    dockApps.forEach((app) => {
-      const onDockClick = onDockClickByApp.get(app);
-      if (onDockClick) app.removeEventListener("click", onDockClick);
-    });
-
-    carouselRowStates.forEach((state) => {
-      state.cardHandlers.forEach(({ card, onPointerEnter, onPointerLeave }) => {
-        card.removeEventListener("pointerenter", onPointerEnter);
-        card.removeEventListener("pointerleave", onPointerLeave);
-      });
-    });
-
-    if (revealObserver) revealObserver.disconnect();
-    revealTargets.forEach((target) => {
-      target.classList.remove("is-visible");
-      target.style.removeProperty("--reveal-index");
-    });
-    document.documentElement.classList.remove("reveal-ready");
-
-    window.clearTimeout(hudTimer);
-    window.clearTimeout(islandFeedbackTimer);
-    window.clearTimeout(islandFeedbackStateTimer);
-    window.clearTimeout(islandFeedbackCloseTimer);
-    window.clearTimeout(islandFeedbackVisibilityTimer);
-    window.clearTimeout(notificationTimer);
-    window.clearTimeout(notificationLongPressTimer);
-    terminalConfigs.forEach((config) => stopTerminal(config));
-    window.clearInterval(lockClockTimer);
-    if (carouselRaf) window.cancelAnimationFrame(carouselRaf);
-    if (statusFadeRaf) window.cancelAnimationFrame(statusFadeRaf);
-    if (statusFadeLoopRaf) window.cancelAnimationFrame(statusFadeLoopRaf);
-    if (islandFeedbackRaf) window.cancelAnimationFrame(islandFeedbackRaf);
+    phoneControls.cleanup();
+    dockTap.cleanup();
+    islandFeedback.cleanup();
+    notification.cleanup();
+    terminalPlayback.stopAll();
+    lockClock.cleanup();
   };
 }

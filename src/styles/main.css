@@ -50,6 +50,16 @@
         inset 0 -1px 1px rgba(0, 0, 0, 0.28);
       transform: translateX(0) scale(1);
       transition: transform 1220ms cubic-bezier(0.16, 1, 0.3, 1), filter 640ms ease;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .iphone *,
+    .iphone img,
+    .iphone svg {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .rail {
@@ -263,283 +273,6 @@
       font-weight: 620;
     }
 
-    .education-panel {
-      position: absolute;
-      left: clamp(6vw, 9vw, 12vw);
-      top: 50%;
-      transform: translateY(-50%) translateX(42px);
-      width: min(54vw, 820px);
-      max-width: 820px;
-      max-height: min(68vh, 620px);
-      color: #0b0b0d;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 2;
-      transition: opacity 500ms ease, transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
-      padding: 2px 8px;
-      font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
-    }
-
-    .education-kicker {
-      margin: 0;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(0, 0, 0, 0.42);
-      font-weight: 640;
-    }
-
-    .education-title {
-      margin: 10px 0 0;
-      font-size: clamp(36px, 4.4vw, 62px);
-      line-height: 0.94;
-      letter-spacing: -0.045em;
-      color: #0b0b0d;
-      font-weight: 700;
-    }
-
-    .education-copy {
-      margin: 16px 0 0;
-      max-width: 64ch;
-      font-size: clamp(14px, 1vw, 16px);
-      line-height: 1.48;
-      letter-spacing: -0.01em;
-      color: rgba(0, 0, 0, 0.68);
-    }
-
-    .education-list {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      perspective: 1200px;
-    }
-
-    .education-item {
-      --education-card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(247, 248, 252, 0.72));
-      --education-accent: #2e6dff;
-      --education-accent-soft: rgba(46, 109, 255, 0.22);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 12px;
-      min-height: 150px;
-      padding: 16px;
-      border-radius: 24px;
-      overflow: hidden;
-      isolation: isolate;
-      border: 1px solid rgba(0, 0, 0, 0.075);
-      background: var(--education-card-bg);
-      backdrop-filter: blur(16px) saturate(1.15);
-      -webkit-backdrop-filter: blur(16px) saturate(1.15);
-      box-shadow:
-        0 18px 42px rgba(15, 23, 42, 0.08),
-        0 1px 0 rgba(255, 255, 255, 0.82) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.035) inset;
-      opacity: 0;
-      transform: translateY(18px) scale(0.985);
-      transition: opacity 360ms ease, transform 520ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms ease, border-color 260ms ease, background 280ms ease;
-    }
-
-    .education-item::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(130deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.1) 38%, transparent 62%),
-        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.88), transparent 28%);
-      opacity: 0.86;
-    }
-
-    .education-item::after {
-      content: "";
-      position: absolute;
-      right: -48px;
-      top: -52px;
-      z-index: 0;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      pointer-events: none;
-      background: radial-gradient(circle, var(--education-accent-soft) 0%, transparent 68%);
-      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 260ms ease;
-    }
-
-    .education-item:hover {
-      transform: translateY(-6px) scale(1.01);
-      border-color: rgba(0, 0, 0, 0.12);
-      box-shadow:
-        0 24px 54px rgba(15, 23, 42, 0.12),
-        0 1px 0 rgba(255, 255, 255, 0.9) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.04) inset;
-    }
-
-    .education-item:hover::after {
-      opacity: 0.95;
-      transform: scale(1.16);
-    }
-
-    .education-item-systems {
-      --education-card-bg: radial-gradient(circle at 84% 10%, rgba(72, 131, 255, 0.3), transparent 34%), linear-gradient(145deg, rgba(241, 247, 255, 0.96), rgba(255, 255, 255, 0.76));
-      --education-accent: #2e6dff;
-      --education-accent-soft: rgba(46, 109, 255, 0.24);
-    }
-
-    .education-item-dev {
-      --education-card-bg: radial-gradient(circle at 84% 10%, rgba(20, 184, 166, 0.28), transparent 34%), linear-gradient(145deg, rgba(239, 253, 250, 0.94), rgba(255, 255, 255, 0.76));
-      --education-accent: #0f9f8f;
-      --education-accent-soft: rgba(20, 184, 166, 0.24);
-    }
-
-    .education-item-language {
-      --education-card-bg: radial-gradient(circle at 84% 10%, rgba(168, 85, 247, 0.26), transparent 34%), linear-gradient(145deg, rgba(250, 245, 255, 0.95), rgba(255, 255, 255, 0.76));
-      --education-accent: #8b5cf6;
-      --education-accent-soft: rgba(139, 92, 246, 0.24);
-    }
-
-    .education-item-ai {
-      --education-card-bg: radial-gradient(circle at 88% 0%, rgba(201, 255, 47, 0.34), transparent 34%), radial-gradient(circle at 10% 100%, rgba(64, 128, 255, 0.28), transparent 42%), linear-gradient(145deg, #090a0f 0%, #151824 100%);
-      --education-accent: #c9ff2f;
-      --education-accent-soft: rgba(201, 255, 47, 0.24);
-      border-color: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      box-shadow:
-        0 22px 48px rgba(0, 0, 0, 0.18),
-        0 1px 0 rgba(255, 255, 255, 0.18) inset;
-    }
-
-    .education-item-ai::before {
-      background:
-        linear-gradient(130deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 42%, transparent 68%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 55%);
-      opacity: 1;
-    }
-
-    .education-pass-top,
-    .education-pass-body,
-    .education-pass-tags {
-      position: relative;
-      z-index: 1;
-    }
-
-    .education-pass-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .education-pass-badge {
-      width: 42px;
-      height: 42px;
-      border-radius: 15px;
-      display: grid;
-      place-items: center;
-      background: rgba(255, 255, 255, 0.72);
-      border: 1px solid rgba(255, 255, 255, 0.84);
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.1), 0 1px 0 rgba(255, 255, 255, 0.86) inset;
-      color: var(--education-accent);
-      font-size: 12px;
-      letter-spacing: -0.01em;
-      font-weight: 780;
-    }
-
-    .education-pass-status {
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.48);
-      border: 1px solid rgba(255, 255, 255, 0.56);
-      color: rgba(0, 0, 0, 0.58);
-      font-size: 10px;
-      line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      font-weight: 720;
-    }
-
-    .education-pass-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .education-pass-tags span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 25px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.52);
-      border: 1px solid rgba(255, 255, 255, 0.58);
-      color: rgba(0, 0, 0, 0.6);
-      font-size: 11px;
-      line-height: 1;
-      font-weight: 620;
-    }
-
-    .education-label,
-    .education-detail {
-      margin: 0;
-    }
-
-    .education-label {
-      font-size: clamp(19px, 1.6vw, 25px);
-      line-height: 1;
-      letter-spacing: -0.034em;
-      color: #0b0b0d;
-      font-weight: 740;
-    }
-
-    .education-detail {
-      margin-top: 6px;
-      font-size: clamp(12px, 0.9vw, 14px);
-      line-height: 1.34;
-      color: rgba(0, 0, 0, 0.6);
-      text-align: left;
-      max-width: none;
-    }
-
-    .education-detail a {
-      color: rgba(0, 0, 0, 0.84);
-      text-decoration-color: rgba(0, 0, 0, 0.24);
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
-      transition: color 180ms ease, text-decoration-color 180ms ease;
-    }
-
-    .education-detail a:hover {
-      color: rgba(0, 0, 0, 0.95);
-      text-decoration-color: rgba(0, 0, 0, 0.38);
-    }
-
-    .education-item-ai .education-pass-badge,
-    .education-item-ai .education-pass-status,
-    .education-item-ai .education-pass-tags span {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.16);
-      color: rgba(255, 255, 255, 0.82);
-      box-shadow: none;
-    }
-
-    .education-item-ai .education-pass-badge {
-      color: #d8ff62;
-    }
-
-    .education-item-ai .education-label {
-      color: #fff;
-    }
-
-    .education-item-ai .education-detail {
-      color: rgba(255, 255, 255, 0.68);
-    }
-
     .projects-intro-panel {
       position: absolute;
       left: 50%;
@@ -613,170 +346,6 @@
       color: rgba(255, 255, 255, 0.68);
     }
 
-    .projects-intro-composition {
-      --projects-intro-terminal-height: clamp(260px, 30vw, 360px);
-      --projects-intro-phone-height: clamp(340px, 38vw, 440px);
-      margin-top: 36px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: minmax(152px, 196px) minmax(168px, 214px) minmax(520px, 820px) minmax(168px, 214px) minmax(152px, 196px);
-      align-items: end;
-      justify-content: center;
-      gap: clamp(14px, 2.4vw, 34px);
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 520ms ease 80ms, transform 720ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
-    }
-
-    .projects-intro-phone {
-      position: relative;
-      justify-self: center;
-      width: clamp(166px, calc(var(--projects-intro-phone-height) * 0.486), 228px);
-      height: var(--projects-intro-phone-height);
-      aspect-ratio: 71.6 / 147.6;
-      border-radius: clamp(30px, 3.4vw, 42px);
-      padding: 9px;
-      background: linear-gradient(150deg, #202229 0%, #111218 46%, #090a0f 100%);
-      border: 1px solid rgba(0, 0, 0, 0.55);
-      box-shadow:
-        0 22px 48px rgba(15, 23, 42, 0.26),
-        0 8px 20px rgba(15, 23, 42, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.46);
-      overflow: hidden;
-    }
-
-    .projects-intro-phone::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      box-shadow:
-        inset 1px 0 1px rgba(255, 255, 255, 0.14),
-        inset -1px 0 1px rgba(0, 0, 0, 0.5),
-        inset 0 1px 1px rgba(255, 255, 255, 0.08),
-        inset 0 -1px 1px rgba(0, 0, 0, 0.4);
-      z-index: 4;
-    }
-
-    .projects-intro-phone-left {
-      transform: none;
-    }
-
-    .projects-intro-phone-left-outer {
-      transform: none;
-    }
-
-    .projects-intro-phone-left-inner {
-      transform: none;
-      z-index: 2;
-    }
-
-    .projects-intro-phone-right {
-      transform: none;
-    }
-
-    .projects-intro-phone-right-inner {
-      transform: none;
-      z-index: 2;
-    }
-
-    .projects-intro-phone-right-outer {
-      transform: none;
-    }
-
-    .projects-intro-phone-placeholder {
-      position: absolute;
-      inset: 9px;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-      border-radius: clamp(24px, 2.7vw, 34px);
-      border: 1px dashed rgba(255, 255, 255, 0.28);
-      background:
-        radial-gradient(circle at 28% 20%, rgba(201, 255, 47, 0.14), transparent 32%),
-        linear-gradient(160deg, #13151d 0%, #090a0e 100%);
-      color: rgba(255, 255, 255, 0.58);
-      font-size: 10px;
-      line-height: 1.25;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-      z-index: 1;
-    }
-
-    .projects-intro-phone-notch {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      width: 42%;
-      height: 16px;
-      border-radius: 999px;
-      background: #07080b;
-      transform: translateX(-50%);
-      z-index: 5;
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-        0 1px 2px rgba(0, 0, 0, 0.42);
-    }
-
-    .projects-intro-phone-notch::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      transform: translateY(-50%);
-      background: radial-gradient(circle at 35% 35%, #222830 0%, #0a0c10 68%, #050608 100%);
-      box-shadow: inset 0 0 0 1px rgba(132, 158, 188, 0.18);
-    }
-
-    .projects-intro-terminal {
-      position: relative;
-      width: 100%;
-      height: var(--projects-intro-terminal-height);
-      border-radius: 24px;
-      border: 1px solid #1a1a21;
-      background:
-        radial-gradient(circle at 78% 18%, rgba(201, 255, 47, 0.08), transparent 32%),
-        linear-gradient(160deg, #111115 0%, #09090c 100%);
-      box-shadow:
-        0 32px 68px rgba(15, 23, 42, 0.26),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-
-    .projects-intro-terminal-body {
-      height: calc(100% - 40px);
-      padding: clamp(18px, 2vw, 28px);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 12px;
-      color: rgba(226, 232, 240, 0.9);
-      font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: clamp(12px, 1.12vw, 16px);
-      line-height: 1.5;
-      text-align: left;
-    }
-
-    .projects-intro-terminal-line {
-      display: block;
-    }
-
-    .projects-intro-terminal-muted {
-      color: #c9ff2f;
-    }
-
-    .projects-intro-terminal-success {
-      color: #c9ff2f;
-    }
-
-
     .app-tracker-panel {
       position: absolute;
       left: clamp(6vw, 9vw, 12vw);
@@ -800,75 +369,6 @@
       opacity: 0;
       transform: translateX(48px);
       transition: opacity 540ms ease, transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .app-tracker-img-wrap {
-      width: clamp(244px, 28vw, 340px);
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      border-radius: clamp(28px, 3.2vw, 30px);
-      background: linear-gradient(155deg, #141416 0%, #101013 48%, #0c0c0e 100%);
-      border: 1.5px solid #1b1b1f;
-      box-shadow:
-        0 32px 64px rgba(15, 23, 42, 0.35),
-        0 12px 28px rgba(15, 23, 42, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-        inset 1px 0 0 rgba(255, 255, 255, 0.08),
-        inset -1px 0 0 rgba(0, 0, 0, 0.5);
-    }
-
-    .app-tracker-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1080 / 2400;
-      object-fit: cover;
-      border-radius: clamp(14px, 1.8vw, 22px);
-    }
-
-    .app-tracker-phone-stack {
-      position: relative;
-      isolation: isolate;
-      width: clamp(280px, 32vw, 400px);
-      min-height: clamp(480px, 44vw, 610px);
-      display: grid;
-      align-items: end;
-    }
-
-    .app-tracker-phone-stack .app-tracker-img-wrap {
-      width: min(78%, 340px);
-    }
-
-    .app-tracker-img-wrap-front {
-      position: relative;
-      z-index: 2;
-      transform: translateX(4px) rotate(-2.5deg);
-      transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 320ms ease;
-    }
-
-    .app-tracker-img-wrap-back {
-      position: absolute;
-      right: -24px;
-      bottom: 0;
-      z-index: 1;
-      opacity: 0.9;
-      transform: translateX(34px) rotate(6deg) scale(0.9);
-      transform-origin: center bottom;
-      filter: saturate(0.95) brightness(0.96);
-      transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease, filter 320ms ease;
-    }
-
-    .app-tracker-img-wrap-front:hover {
-      transform: translateX(-2px) translateY(-12px) rotate(-4.5deg);
-      filter: saturate(1.04) brightness(1.02);
-    }
-
-    .app-tracker-img-wrap-back:hover {
-      opacity: 1;
-      transform: translateX(46px) translateY(-10px) rotate(8deg) scale(0.9);
-      filter: saturate(1.02) brightness(1.01);
     }
 
     .app-tracker-content {
@@ -967,7 +467,7 @@
       transition: opacity 540ms ease, transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .chillmeal-phone-stack {
+    .project-phone-stack {
       position: relative;
       isolation: isolate;
       width: clamp(280px, 32vw, 400px);
@@ -976,7 +476,7 @@
       align-items: end;
     }
 
-    .chillmeal-img-wrap {
+    .project-phone-card {
       width: clamp(244px, 28vw, 340px);
       display: flex;
       flex-direction: column;
@@ -993,41 +493,41 @@
         inset -1px 0 0 rgba(0, 0, 0, 0.5);
     }
 
-    .chillmeal-phone-stack .chillmeal-img-wrap {
+    .project-phone-stack .project-phone-card {
       width: min(78%, 340px);
     }
 
-    .chillmeal-img-wrap-front {
+    .project-phone-card-front {
       position: relative;
       z-index: 2;
       transform: translateX(4px) rotate(-2.5deg);
       transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 320ms ease;
     }
 
-    .chillmeal-img-wrap-back {
+    .project-phone-card-back {
       position: absolute;
       right: -24px;
       bottom: 0;
       z-index: 1;
-      opacity: 0.9;
+      opacity: 1;
       transform: translateX(34px) rotate(6deg) scale(0.9);
       transform-origin: center bottom;
       filter: saturate(0.95) brightness(0.96);
       transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease, filter 320ms ease;
     }
 
-    .chillmeal-img-wrap-front:hover {
+    .project-phone-card-front:hover {
       transform: translateX(-2px) translateY(-12px) rotate(-4.5deg);
       filter: saturate(1.04) brightness(1.02);
     }
 
-    .chillmeal-img-wrap-back:hover {
+    .project-phone-card-back:hover {
       opacity: 1;
       transform: translateX(46px) translateY(-10px) rotate(8deg) scale(0.9);
       filter: saturate(1.02) brightness(1.01);
     }
 
-    .chillmeal-img {
+    .project-phone-image {
       display: block;
       width: 100%;
       height: auto;
@@ -1096,76 +596,6 @@
       transition: opacity 540ms ease, transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .weatherapp-phone-stack {
-      position: relative;
-      isolation: isolate;
-      width: clamp(280px, 32vw, 400px);
-      min-height: clamp(480px, 44vw, 610px);
-      display: grid;
-      align-items: end;
-    }
-
-    .weatherapp-img-wrap {
-      width: clamp(244px, 28vw, 340px);
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      border-radius: clamp(28px, 3.2vw, 38px);
-      background: linear-gradient(155deg, #141416 0%, #101013 48%, #0c0c0e 100%);
-      border: 1.5px solid #1b1b1f;
-      box-shadow:
-        0 32px 64px rgba(15, 23, 42, 0.35),
-        0 12px 28px rgba(15, 23, 42, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-        inset 1px 0 0 rgba(255, 255, 255, 0.08),
-        inset -1px 0 0 rgba(0, 0, 0, 0.5);
-    }
-
-    .weatherapp-phone-stack .weatherapp-img-wrap {
-      width: min(78%, 340px);
-    }
-
-    .weatherapp-img-wrap-front {
-      position: relative;
-      z-index: 2;
-      transform: translateX(4px) rotate(-2.5deg);
-      transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), filter 320ms ease;
-    }
-
-    .weatherapp-img-wrap-back {
-      position: absolute;
-      right: -24px;
-      bottom: 0;
-      z-index: 1;
-      opacity: 0.9;
-      transform: translateX(34px) rotate(6deg) scale(0.9);
-      transform-origin: center bottom;
-      filter: saturate(0.95) brightness(0.96);
-      transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), opacity 320ms ease, filter 320ms ease;
-    }
-
-    .weatherapp-img-wrap-front:hover {
-      transform: translateX(-2px) translateY(-12px) rotate(-4.5deg);
-      filter: saturate(1.04) brightness(1.02);
-    }
-
-    .weatherapp-img-wrap-back:hover {
-      opacity: 1;
-      transform: translateX(46px) translateY(-10px) rotate(8deg) scale(0.9);
-      filter: saturate(1.02) brightness(1.01);
-    }
-
-    .weatherapp-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 1080 / 2400;
-      object-fit: cover;
-      border-radius: clamp(14px, 1.8vw, 22px);
-      background: rgba(30, 30, 40, 0.3);
-    }
-
     .weatherapp-features {
       margin-top: 18px;
       display: flex;
@@ -1221,7 +651,7 @@
     .remotelog-visual {
       position: relative;
       width: min(1040px, 82vw);
-      height: 650px;
+      height: 540px;
       justify-self: end;
       margin-right: calc(-1 * min(560px, 45vw));
       opacity: 0;
@@ -1231,22 +661,12 @@
 
     .remotelog-terminal-shell {
       width: min(1040px, 82vw);
-      height: 650px;
+      height: 540px;
       margin-top: 0;
     }
 
     .remotelog-terminal-content {
-      font-size: clamp(10px, 0.78vw, 12px);
-      line-height: 1.45;
       overflow: hidden;
-    }
-
-    @media (min-width: 901px) {
-      .remotelog-terminal-content,
-      .remotelog-terminal-content code {
-        font-size: 11px;
-        line-height: 1.4;
-      }
     }
 
     .remotelog-features {
@@ -1275,36 +695,14 @@
       max-width: 62ch;
     }
 
-    .app-tracker-img-wrap {
+    .project-phone-card {
       padding: 11px;
       border-radius: clamp(30px, 3.4vw, 42px);
       background: linear-gradient(155deg, #17181d 0%, #101116 50%, #08090d 100%);
       border-color: #191a20;
     }
 
-    .app-tracker-img {
-      border-radius: clamp(18px, 2vw, 26px);
-    }
-
-    .chillmeal-img-wrap {
-      padding: 11px;
-      border-radius: clamp(30px, 3.4vw, 42px);
-      background: linear-gradient(155deg, #17181d 0%, #101116 50%, #08090d 100%);
-      border-color: #191a20;
-    }
-
-    .chillmeal-img {
-      border-radius: clamp(18px, 2vw, 26px);
-    }
-
-    .weatherapp-img-wrap {
-      padding: 11px;
-      border-radius: clamp(30px, 3.4vw, 42px);
-      background: linear-gradient(155deg, #17181d 0%, #101116 50%, #08090d 100%);
-      border-color: #191a20;
-    }
-
-    .weatherapp-img {
+    .project-phone-image {
       border-radius: clamp(18px, 2vw, 26px);
     }
 
@@ -1366,7 +764,7 @@
       right: -24px;
       bottom: 0;
       z-index: 1;
-      opacity: 0.9;
+      opacity: 1;
       transform: translateX(34px) rotate(6deg) scale(0.9);
       transform-origin: center bottom;
       filter: saturate(0.95) brightness(0.96);
@@ -1819,223 +1217,6 @@
       letter-spacing: -0.038em;
       color: #0b0b0d;
       font-weight: 650;
-    }
-
-    .experience-note {
-      margin: 12px 0 0;
-      max-width: 62ch;
-      font-size: clamp(12px, 0.98vw, 15px);
-      line-height: 1.4;
-      color: rgba(0, 0, 0, 0.64);
-    }
-
-    .experience-layout {
-      margin-top: auto;
-      margin-bottom: auto;
-      display: grid;
-      grid-template-columns: minmax(190px, 238px) minmax(0, 1fr);
-      gap: 20px;
-      align-items: center;
-    }
-
-    .experience-selector {
-      position: relative;
-      margin-top: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 276px;
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 460ms ease, transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .experience-path {
-      --experience-line-gap: 18px;
-      --experience-line-color: rgba(12, 12, 15, 0.42);
-      position: absolute;
-      left: 6.5px;
-      top: 6.5px;
-      bottom: 75.5px;
-      width: 1px;
-      border-radius: 99px;
-      background: linear-gradient(
-        180deg,
-        transparent 0 var(--experience-line-gap),
-        var(--experience-line-color) var(--experience-line-gap) calc(50% - var(--experience-line-gap)),
-        transparent calc(50% - var(--experience-line-gap)) calc(50% + var(--experience-line-gap)),
-        var(--experience-line-color) calc(50% + var(--experience-line-gap)) calc(100% - var(--experience-line-gap)),
-        transparent calc(100% - var(--experience-line-gap)) 100%
-      );
-      transform: scaleY(0.15);
-      transform-origin: top;
-      opacity: 0;
-      transition: transform 760ms cubic-bezier(0.22, 1, 0.36, 1), opacity 320ms ease;
-    }
-
-    .experience-node {
-      appearance: none;
-      position: relative;
-      z-index: 1;
-      border: 0;
-      margin: 0;
-      padding: 0;
-      background: transparent;
-      text-align: left;
-      cursor: pointer;
-      color: rgba(0, 0, 0, 0.58);
-      display: grid;
-      gap: 6px;
-      align-content: start;
-      padding-left: 24px;
-      min-height: 80px;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 380ms ease, transform 540ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms ease;
-    }
-
-    .experience-node-dot {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: rgba(10, 10, 12, 0.22);
-      box-shadow: 0 0 0 6px rgba(10, 10, 12, 0.06);
-      transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), background 220ms ease, box-shadow 280ms ease;
-    }
-
-    .experience-node-date {
-      margin-top: 0;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(0, 0, 0, 0.46);
-      font-weight: 620;
-      transition: color 220ms ease;
-    }
-
-    .experience-node-company {
-      font-size: clamp(15px, 1.3vw, 19px);
-      line-height: 1.16;
-      letter-spacing: -0.014em;
-      color: currentColor;
-      font-weight: 620;
-      transition: color 220ms ease;
-    }
-
-    .experience-node:hover,
-    .experience-node:focus-visible,
-    .experience-node.is-active {
-      color: rgba(0, 0, 0, 0.92);
-    }
-
-    .experience-node:hover .experience-node-dot,
-    .experience-node:focus-visible .experience-node-dot,
-    .experience-node.is-active .experience-node-dot {
-      background: #0b0b0d;
-      box-shadow: 0 0 0 7px rgba(10, 10, 12, 0.13), 0 6px 16px rgba(10, 10, 12, 0.22);
-      transform: scale(1.08);
-    }
-
-    .experience-node:hover .experience-node-date,
-    .experience-node:focus-visible .experience-node-date,
-    .experience-node.is-active .experience-node-date {
-      color: rgba(0, 0, 0, 0.68);
-    }
-
-    .experience-node:focus-visible {
-      outline: none;
-    }
-
-    .experience-detail-content {
-      margin-top: 0;
-      align-self: start;
-      padding: 0;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 420ms ease, transform 580ms cubic-bezier(0.22, 1, 0.36, 1);
-      animation: experience-detail-change 520ms cubic-bezier(0.2, 0.9, 0.22, 1) both;
-    }
-
-    @keyframes experience-detail-change {
-      0% {
-        opacity: 0;
-        transform: translateY(14px) scale(0.985);
-        filter: blur(4px);
-      }
-
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-      }
-    }
-
-    .experience-work-logo {
-      display: block;
-      width: auto;
-      height: 48px;
-      max-width: min(240px, 52%);
-      object-fit: contain;
-      margin: 0 0 10px;
-    }
-
-    .experience-date,
-    .experience-company,
-    .experience-role,
-    .experience-meta,
-    .experience-copy,
-    .experience-points {
-      margin: 0;
-    }
-
-    .experience-date {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: rgba(0, 0, 0, 0.5);
-      font-weight: 620;
-    }
-
-    .experience-company {
-      margin-top: 4px;
-      font-size: clamp(20px, 1.8vw, 28px);
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      color: #0b0b0d;
-      font-weight: 640;
-    }
-
-    .experience-role {
-      margin-top: 6px;
-      font-size: clamp(14px, 1.1vw, 17px);
-      line-height: 1.32;
-      color: rgba(0, 0, 0, 0.86);
-      font-weight: 560;
-    }
-
-    .experience-meta {
-      margin-top: 4px;
-      font-size: 12px;
-      line-height: 1.3;
-      color: rgba(0, 0, 0, 0.58);
-    }
-
-    .experience-copy {
-      margin-top: 8px;
-      font-size: clamp(13px, 0.98vw, 15px);
-      line-height: 1.42;
-      color: rgba(0, 0, 0, 0.76);
-    }
-
-    .experience-points {
-      margin-top: 8px;
-      font-size: clamp(12px, 0.92vw, 14px);
-      line-height: 1.4;
-      color: rgba(0, 0, 0, 0.9);
-      font-weight: 520;
     }
 
     .portfolio-title {
@@ -2625,16 +1806,12 @@
     .stage.step-5 .home-screen,
     .stage.step-6 .home-screen,
     .stage.step-7 .home-screen,
-    .stage.step-8 .home-screen,
-    .stage.step-9 .home-screen,
     .stage.step-1 .lock-screen-panel,
     .stage.step-2 .lock-screen-panel,
     .stage.step-3 .lock-screen-panel,
     .stage.step-5 .lock-screen-panel,
     .stage.step-6 .lock-screen-panel,
-    .stage.step-7 .lock-screen-panel,
-    .stage.step-8 .lock-screen-panel,
-    .stage.step-9 .lock-screen-panel {
+    .stage.step-7 .lock-screen-panel {
       opacity: 1;
     }
 
@@ -2643,9 +1820,7 @@
     .stage.step-3 .power-overlay,
     .stage.step-5 .power-overlay,
     .stage.step-6 .power-overlay,
-    .stage.step-7 .power-overlay,
-    .stage.step-8 .power-overlay,
-    .stage.step-9 .power-overlay {
+    .stage.step-7 .power-overlay {
       opacity: 0;
     }
 
@@ -2654,9 +1829,7 @@
     .stage.step-3 .status-bar,
     .stage.step-5 .status-bar,
     .stage.step-6 .status-bar,
-    .stage.step-7 .status-bar,
-    .stage.step-8 .status-bar,
-    .stage.step-9 .status-bar {
+    .stage.step-7 .status-bar {
       opacity: 1;
     }
 
@@ -2687,23 +1860,11 @@
       pointer-events: auto;
     }
 
-    .stage.step-7 .iphone,
-    .stage.step-8 .iphone,
-    .stage.step-9 .iphone,
-    .stage.step-10 .iphone,
-    .stage.step-11 .iphone,
-    .stage.step-12 .iphone,
-    .stage.step-13 .iphone {
+    .stage.step-7 .iphone {
       transition: transform 3600ms cubic-bezier(0.16, 1, 0.3, 1), filter 900ms ease;
     }
 
-    .stage.step-7 .iphone,
-    .stage.step-8 .iphone,
-    .stage.step-9 .iphone,
-    .stage.step-10 .iphone,
-    .stage.step-11 .iphone,
-    .stage.step-12 .iphone,
-    .stage.step-13 .iphone {
+    .stage.step-7 .iphone {
       transform: translateX(130vw) translateY(110vh) scale(0.4) rotate(-30deg);
       opacity: 1;
       filter: none;
@@ -2733,8 +1894,7 @@
       animation: projects-cube-fill 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .stage.step-7 .projects-intro-header,
-    .stage.step-7 .projects-intro-composition {
+    .stage.step-7 .projects-intro-header {
       opacity: 1;
       transform: translateY(0);
       transition-delay: 110ms;
@@ -2750,125 +1910,9 @@
       }
     }
 
-    .stage.step-8 .projects-intro-panel {
-      opacity: 0;
-      transform: translate(-50%, -50%) translateY(-28px) scale(0.985);
-      pointer-events: none;
-    }
-
-    .stage.step-8 .sanotes-panel {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-      pointer-events: auto;
-    }
-
-    .stage.step-8 .sanotes-content,
-    .stage.step-8 .sanotes-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .stage.step-9 .sanotes-panel {
-      opacity: 0;
-      transform: translateY(-50%) translateX(26px);
-      pointer-events: none;
-    }
-
-    .stage.step-9 .projects-panel {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-      pointer-events: auto;
-    }
-
-    .stage.step-9 .projects-content,
-    .stage.step-9 .projects-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .stage.step-10 .projects-panel {
-      opacity: 0;
-      transform: translateY(-50%) translateX(26px);
-      pointer-events: none;
-    }
-
-    .stage.step-10 .chillmeal-panel {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-      pointer-events: auto;
-    }
-
-    .stage.step-10 .chillmeal-content,
-    .stage.step-10 .chillmeal-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .stage.step-11 .chillmeal-panel {
-      opacity: 0;
-      transform: translateY(-50%) translateX(26px);
-      pointer-events: none;
-    }
-
-    .stage.step-11 .weatherapp-panel {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-      pointer-events: auto;
-    }
-
-    .stage.step-11 .weatherapp-content,
-    .stage.step-11 .weatherapp-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .stage.step-12 .weatherapp-panel {
-      opacity: 0;
-      transform: translateY(-50%) translateX(26px);
-      pointer-events: none;
-    }
-
-    .stage.step-12 .app-tracker-panel {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-      pointer-events: auto;
-    }
-
-    .stage.step-12 .app-tracker-content,
-    .stage.step-12 .app-tracker-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .stage.step-13 .app-tracker-panel {
-      opacity: 0;
-      transform: translateY(-50%) translateX(26px);
-      pointer-events: none;
-    }
-
-    .stage.step-13 .remotelog-panel {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-      pointer-events: auto;
-    }
-
-    .stage.step-12 .app-tracker-content,
-    .stage.step-12 .app-tracker-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .stage.step-13 .remotelog-content,
-    .stage.step-13 .remotelog-visual {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
     .stage.step-5 .lock-screen-panel,
     .stage.step-6 .lock-screen-panel,
-    .stage.step-7 .lock-screen-panel,
-    .stage.step-8 .lock-screen-panel,
-    .stage.step-9 .lock-screen-panel {
+    .stage.step-7 .lock-screen-panel {
       transform: translateY(-104%);
     }
 
@@ -3314,7 +2358,6 @@
     }
 
     .single-page-content .about-panel,
-    .single-page-content .projects-intro-panel,
     .single-page-content .sanotes-panel,
     .single-page-content .projects-panel,
     .single-page-content .chillmeal-panel,
@@ -3343,8 +2386,6 @@
       padding-right: 0;
     }
 
-    .single-page-content .projects-intro-header,
-    .single-page-content .projects-intro-composition,
     .single-page-content .sanotes-content,
     .single-page-content .sanotes-visual,
     .single-page-content .projects-content,
@@ -4009,17 +3050,6 @@
       transform: translateY(-2px);
     }
 
-    .single-page-content .projects-intro-panel {
-      width: min(100%, 1180px);
-      min-height: auto;
-    }
-
-    .single-page-content .projects-intro-composition {
-      --projects-intro-terminal-height: clamp(230px, 26vw, 330px);
-      --projects-intro-phone-height: clamp(280px, 30vw, 390px);
-      grid-template-columns: minmax(120px, 160px) minmax(136px, 180px) minmax(360px, 620px) minmax(136px, 180px) minmax(120px, 160px);
-    }
-
     .single-page-content .sanotes-panel,
     .single-page-content .chillmeal-panel,
     .single-page-content .weatherapp-panel,
@@ -4108,6 +3138,13 @@
     }
 
     .single-page-content .projects-visual {
+      width: min(1040px, 82vw);
+      height: 540px;
+      margin-right: calc(-1 * min(560px, 45vw));
+      justify-self: end;
+    }
+
+    .single-page-content .remotelog-visual {
       width: min(1040px, 82vw);
       height: 540px;
       margin-right: calc(-1 * min(560px, 45vw));
@@ -4295,38 +3332,6 @@
     }
 
     @media (max-width: 1180px) {
-      .single-page-content .projects-intro-composition {
-        --projects-intro-terminal-height: clamp(220px, 30vw, 300px);
-        --projects-intro-phone-height: clamp(250px, 34vw, 340px);
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .single-page-content .projects-intro-terminal {
-        grid-column: 1 / -1;
-        grid-row: 1;
-      }
-
-      .single-page-content .projects-intro-phone-left,
-      .single-page-content .projects-intro-phone-left-outer,
-      .single-page-content .projects-intro-phone-left-inner {
-        grid-column: 1;
-        grid-row: 2;
-        transform: rotate(-3deg);
-      }
-
-      .single-page-content .projects-intro-phone-right,
-      .single-page-content .projects-intro-phone-right-inner,
-      .single-page-content .projects-intro-phone-right-outer {
-        grid-column: 2;
-        grid-row: 2;
-        transform: rotate(3deg);
-      }
-
-      .single-page-content .projects-intro-phone-left-outer,
-      .single-page-content .projects-intro-phone-right-outer {
-        display: none;
-      }
-
       .single-page-content .sanotes-panel,
       .single-page-content .projects-panel,
       .single-page-content .chillmeal-panel,
@@ -4392,20 +3397,13 @@
         min-height: clamp(450px, 76vw, 570px);
       }
 
-      .single-page-content .chillmeal-phone-stack {
-        width: min(100%, 370px);
-        min-height: clamp(450px, 76vw, 570px);
-      }
-
-      .single-page-content .weatherapp-phone-stack {
+      .single-page-content .project-phone-stack {
         width: min(100%, 370px);
         min-height: clamp(450px, 76vw, 570px);
       }
 
       .single-page-content .sanotes-phone-stack,
-      .single-page-content .chillmeal-phone-stack,
-      .single-page-content .weatherapp-phone-stack,
-      .single-page-content .app-tracker-phone-stack {
+      .single-page-content .project-phone-stack {
         justify-self: center;
         margin-inline: auto;
         transform: translateX(8px);
@@ -4425,7 +3423,6 @@
       }
 
       .single-page-content .about-panel,
-      .single-page-content .projects-intro-panel,
       .single-page-content .sanotes-panel,
       .single-page-content .projects-panel,
       .single-page-content .chillmeal-panel,
@@ -4443,66 +3440,6 @@
         justify-self: center;
       }
 
-      .single-page-content .projects-intro-composition {
-        --projects-intro-terminal-height: 250px;
-        --projects-intro-phone-height: 300px;
-        margin-top: 26px;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .single-page-content .projects-intro-panel {
-        min-height: clamp(260px, 56vw, 360px);
-        padding: 36px 20px;
-        border-radius: 26px;
-        background: #000;
-      }
-
-      .single-page-content .projects-intro-header {
-        opacity: 1;
-        transform: none;
-      }
-
-      .single-page-content .projects-intro-panel .projects-title {
-        font-size: clamp(34px, 11vw, 50px);
-      }
-
-      .single-page-content .projects-intro-panel .projects-carousel-intro {
-        font-size: clamp(14px, 4vw, 16px);
-      }
-
-      .single-page-content .projects-intro-terminal {
-        grid-column: 1 / -1;
-        grid-row: 1;
-        height: var(--projects-intro-terminal-height);
-      }
-
-      .single-page-content .projects-intro-phone {
-        width: clamp(150px, calc(var(--projects-intro-phone-height) * 0.486), 194px);
-        height: var(--projects-intro-phone-height);
-      }
-
-      .single-page-content .projects-intro-phone-left,
-      .single-page-content .projects-intro-phone-left-outer,
-      .single-page-content .projects-intro-phone-left-inner {
-        grid-column: 1;
-        grid-row: 2;
-        transform: rotate(-3deg);
-      }
-
-      .single-page-content .projects-intro-phone-right,
-      .single-page-content .projects-intro-phone-right-inner,
-      .single-page-content .projects-intro-phone-right-outer {
-        grid-column: 2;
-        grid-row: 2;
-        transform: rotate(3deg);
-      }
-
-      .single-page-content .projects-intro-phone-left-outer,
-      .single-page-content .projects-intro-phone-right-outer {
-        display: none;
-      }
-
       .single-page-content .sanotes-panel,
       .single-page-content .chillmeal-panel,
       .single-page-content .weatherapp-panel,
@@ -4512,26 +3449,12 @@
         flex-direction: column;
       }
 
-      .single-page-content .projects-intro-phone {
-        padding: 7px;
-        border-radius: clamp(24px, 8vw, 34px);
-      }
-
-      .single-page-content .projects-intro-phone-placeholder {
-        inset: 7px;
-        border-radius: clamp(18px, 6vw, 28px);
-      }
-
-      .single-page-content .app-tracker-img-wrap,
-      .single-page-content .chillmeal-img-wrap,
-      .single-page-content .weatherapp-img-wrap {
+      .single-page-content .project-phone-card {
         padding: 7px;
         border-radius: clamp(22px, 7vw, 30px);
       }
 
-      .single-page-content .app-tracker-img,
-      .single-page-content .chillmeal-img,
-      .single-page-content .weatherapp-img {
+      .single-page-content .project-phone-image {
         border-radius: clamp(14px, 5vw, 20px);
       }
 
@@ -4553,6 +3476,12 @@
       }
 
       .single-page-content .projects-visual {
+        width: 100%;
+        height: 320px;
+        margin: 34px 0 0;
+      }
+
+      .single-page-content .remotelog-visual {
         width: 100%;
         height: 320px;
         margin: 34px 0 0;
@@ -4632,13 +3561,7 @@
 
       .stage.step-5 .iphone,
       .stage.step-6 .iphone,
-      .stage.step-7 .iphone,
-      .stage.step-8 .iphone,
-      .stage.step-9 .iphone,
-      .stage.step-10 .iphone,
-      .stage.step-11 .iphone,
-      .stage.step-12 .iphone,
-      .stage.step-13 .iphone {
+      .stage.step-7 .iphone {
         transform: none;
         filter: none;
         pointer-events: auto;
@@ -4665,7 +3588,6 @@
       .portfolio-panel,
       .about-panel,
       .experience-panel,
-      .education-panel,
       .projects-intro-panel,
       .app-tracker-panel,
       .projects-panel,
@@ -4674,23 +3596,11 @@
       .stage.step-6 .about-panel,
       .stage.step-7 .about-panel,
       .stage.step-7 .experience-panel,
-      .stage.step-8 .experience-panel,
-      .stage.step-8 .education-panel,
-      .stage.step-9 .education-panel,
       .stage.step-7 .projects-intro-panel,
-      .stage.step-8 .projects-intro-panel,
-      .stage.step-8 .app-tracker-panel,
-      .stage.step-9 .app-tracker-panel,
-      .stage.step-9 .projects-panel,
       .sanotes-panel,
-      .stage.step-8 .sanotes-panel,
       .chillmeal-panel,
-      .stage.step-10 .chillmeal-panel,
       .weatherapp-panel,
-      .stage.step-11 .weatherapp-panel,
-      .remotelog-panel,
-      .stage.step-13 .remotelog-panel,
-      .stage.step-12 .app-tracker-panel {
+      .remotelog-panel {
         position: relative;
         inset: auto;
         left: auto;
@@ -4736,11 +3646,6 @@
         height: 150px;
       }
 
-      .education-panel {
-        max-height: none;
-        overflow: visible;
-      }
-
       .about-panel::before {
         display: none;
       }
@@ -4749,10 +3654,6 @@
       .about-title,
       .experience-title {
         font-size: clamp(38px, 12vw, 56px);
-      }
-
-      .education-title {
-        font-size: clamp(36px, 11.8vw, 54px);
       }
 
       .projects-title {
@@ -4766,22 +3667,36 @@
       .portfolio-intro,
       .about-story,
       .about-values,
-      .experience-note,
-      .experience-copy,
-      .experience-points,
-      .education-copy,
-      .education-detail,
       .projects-description,
       .projects-technical {
         font-size: 15px;
         line-height: 1.55;
       }
 
-      .projects-content,
-    .stage.step-9 .projects-content {
+      .projects-content {
         max-width: none;
         opacity: 1;
         transform: none;
+      }
+
+      .project-phone-card-front,
+      .project-phone-card-back,
+      .sanotes-phone-stack .sanotes-iphone-front,
+      .sanotes-phone-stack .sanotes-iphone-back {
+        transition: none;
+      }
+
+      .project-phone-card-front:hover,
+      .sanotes-phone-stack .sanotes-iphone-front:hover {
+        transform: translateX(4px) rotate(-2.5deg);
+        filter: none;
+      }
+
+      .project-phone-card-back:hover,
+      .sanotes-phone-stack .sanotes-iphone-back:hover {
+        transform: translateX(34px) rotate(6deg) scale(0.9);
+        opacity: 1;
+        filter: saturate(0.95) brightness(0.96);
       }
 
       .projects-intro-panel {
@@ -4853,46 +3768,6 @@
         transition-delay: 110ms;
       }
 
-      .projects-intro-composition {
-        --projects-intro-terminal-height: 250px;
-        --projects-intro-phone-height: 300px;
-        margin-top: 26px;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-
-      .projects-intro-terminal {
-        grid-column: 1 / -1;
-        grid-row: 1;
-        height: var(--projects-intro-terminal-height);
-      }
-
-      .projects-intro-phone {
-        width: clamp(150px, calc(var(--projects-intro-phone-height) * 0.486), 194px);
-        height: var(--projects-intro-phone-height);
-      }
-
-      .projects-intro-phone-left,
-      .projects-intro-phone-left-outer,
-      .projects-intro-phone-left-inner {
-        grid-column: 1;
-        grid-row: 2;
-        transform: rotate(-3deg);
-      }
-
-      .projects-intro-phone-right,
-      .projects-intro-phone-right-inner,
-      .projects-intro-phone-right-outer {
-        grid-column: 2;
-        grid-row: 2;
-        transform: rotate(3deg);
-      }
-
-      .projects-intro-phone-left-outer,
-      .projects-intro-phone-right-outer {
-        display: none;
-      }
-
       .app-tracker-panel {
         width: 100%;
         min-height: auto;
@@ -4912,33 +3787,6 @@
         display: grid;
         place-items: center;
         order: 2;
-      }
-
-      .app-tracker-img-wrap {
-        width: min(230px, 64vw);
-      }
-
-      .app-tracker-phone-stack {
-        width: auto;
-        max-width: 100%;
-        margin-inline: auto;
-        transform: translateX(8px);
-      }
-
-      .app-tracker-phone-stack .app-tracker-img-wrap {
-        width: min(230px, 64vw);
-      }
-
-      .app-tracker-img-wrap-back {
-        right: 14px;
-        bottom: 0;
-        opacity: 1;
-        filter: none;
-        transform: translateX(-6px) rotate(3deg) scale(0.95);
-      }
-
-      .app-tracker-img-wrap-back:hover {
-        transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
       }
 
       .app-tracker-content {
@@ -4984,7 +3832,7 @@
         order: 2;
       }
 
-      .chillmeal-phone-stack {
+      .project-phone-stack {
         width: auto;
         max-width: 100%;
         min-height: clamp(480px, 44vw, 610px);
@@ -4992,11 +3840,11 @@
         transform: translateX(8px);
       }
 
-      .chillmeal-phone-stack .chillmeal-img-wrap {
+      .project-phone-stack .project-phone-card {
         width: min(230px, 64vw);
       }
 
-      .chillmeal-phone-stack .chillmeal-img-wrap-back {
+      .project-phone-stack .project-phone-card-back {
         right: 14px;
         bottom: 0;
         opacity: 1;
@@ -5004,11 +3852,11 @@
         transform: translateX(-6px) rotate(3deg) scale(0.95);
       }
 
-      .chillmeal-phone-stack .chillmeal-img-wrap-back:hover {
+      .project-phone-stack .project-phone-card-back:hover {
         transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
       }
 
-      .chillmeal-img-wrap {
+      .project-phone-card {
         width: min(230px, 64vw);
       }
 
@@ -5045,34 +3893,6 @@
         order: 2;
       }
 
-      .weatherapp-img-wrap {
-        width: min(230px, 64vw);
-      }
-
-      .weatherapp-phone-stack {
-        width: auto;
-        max-width: 100%;
-        min-height: clamp(480px, 44vw, 610px);
-        margin-inline: auto;
-        transform: translateX(8px);
-      }
-
-      .weatherapp-phone-stack .weatherapp-img-wrap {
-        width: min(230px, 64vw);
-      }
-
-      .weatherapp-phone-stack .weatherapp-img-wrap-back {
-        right: 14px;
-        bottom: 0;
-        opacity: 1;
-        filter: none;
-        transform: translateX(-6px) rotate(3deg) scale(0.95);
-      }
-
-      .weatherapp-phone-stack .weatherapp-img-wrap-back:hover {
-        transform: translateX(2px) translateY(-8px) rotate(5deg) scale(0.95);
-      }
-
       .weatherapp-content {
         max-width: none;
         padding: 0;
@@ -5097,10 +3917,10 @@
 
       .remotelog-visual {
         width: 100%;
-        height: clamp(480px, 96vw, 620px);
-        margin: 0;
+        height: 320px;
+        margin: 34px 0 0;
         opacity: 1;
-        transform: translateX(-12px);
+        transform: none;
         display: grid;
         place-items: center;
         order: 2;
@@ -5207,8 +4027,7 @@
         min-height: 46px;
       }
 
-      .projects-visual,
-    .stage.step-9 .projects-visual {
+      .projects-visual {
         width: 100%;
         height: 320px;
         margin: 34px 0 0;
@@ -5253,53 +4072,6 @@
         overflow-x: auto;
       }
 
-      .education-list {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        margin-top: 20px;
-        perspective: none;
-      }
-
-      .education-item {
-        min-height: 142px;
-        padding: 16px;
-        opacity: 1;
-        transform: none;
-        border-radius: 24px;
-        gap: 12px;
-      }
-
-      .education-pass-badge {
-        width: 40px;
-        height: 40px;
-        border-radius: 14px;
-      }
-
-      .education-pass-status {
-        padding: 6px 9px;
-        font-size: 9px;
-      }
-
-      .education-pass-tags {
-        gap: 6px;
-      }
-
-      .education-pass-tags span {
-        min-height: 24px;
-        padding: 0 9px;
-        font-size: 10px;
-      }
-
-      .education-label {
-        font-size: 22px;
-      }
-
-      .education-detail {
-        margin-top: 5px;
-        max-width: none;
-        text-align: left;
-      }
-
       .portfolio-actions {
         gap: 10px;
       }
@@ -5309,98 +4081,9 @@
         padding: 0 18px;
       }
 
-      .experience-note {
-        max-width: none;
-      }
-
-      .experience-selector {
-        grid-template-columns: 1fr;
-        justify-content: space-between;
-        min-height: 246px;
-        margin-top: 0;
-        opacity: 1;
-        transform: none;
-      }
-
-      .experience-path {
-        left: 6.5px;
-        right: auto;
-        top: 6.5px;
-        bottom: 75.5px;
-        width: 1px;
-        height: auto;
-        transform: scaleY(1);
-        opacity: 0.6;
-      }
-
-      .experience-node {
-        opacity: 1;
-        transform: none;
-        padding-top: 0;
-        padding-left: 24px;
-        min-height: 72px;
-      }
-
-      .experience-layout {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        margin-top: 22px;
-        margin-bottom: 0;
-      }
-
-      .experience-detail-content {
-        margin-top: 0;
-        padding: 0;
-        opacity: 1;
-        transform: none;
-      }
-
-      .experience-work-logo {
-        height: 44px;
-        max-width: min(220px, 70%);
-        margin-bottom: 10px;
-      }
     }
 
     @media (max-width: 420px) {
-      .single-page-content .projects-intro-composition {
-        --projects-intro-terminal-height: 220px;
-        --projects-intro-phone-height: 266px;
-        grid-template-columns: 1fr;
-      }
-
-      .single-page-content .projects-intro-terminal {
-        grid-column: 1;
-        grid-row: 1;
-        height: var(--projects-intro-terminal-height);
-      }
-
-      .single-page-content .projects-intro-phone {
-        width: clamp(152px, calc(var(--projects-intro-phone-height) * 0.486), 200px);
-        height: var(--projects-intro-phone-height);
-      }
-
-      .single-page-content .projects-intro-phone-left,
-      .single-page-content .projects-intro-phone-left-inner,
-      .single-page-content .projects-intro-phone-left-outer {
-        grid-column: 1;
-        grid-row: 2;
-        transform: none;
-      }
-
-      .single-page-content .projects-intro-phone-right,
-      .single-page-content .projects-intro-phone-right-inner,
-      .single-page-content .projects-intro-phone-right-outer {
-        grid-column: 1;
-        grid-row: 3;
-        transform: none;
-      }
-
-      .single-page-content .projects-intro-phone-left-outer,
-      .single-page-content .projects-intro-phone-right-outer {
-        display: none;
-      }
-
       .single-page-content .projects-manga-panel {
         display: none;
         left: auto;
@@ -5413,50 +4096,16 @@
         height: 292px;
       }
 
+      .single-page-content .remotelog-visual {
+        height: 292px;
+      }
+
       .portfolio-button {
         width: 100%;
       }
 
       .about-actions {
         align-items: stretch;
-      }
-
-      .projects-intro-composition {
-        --projects-intro-terminal-height: 220px;
-        --projects-intro-phone-height: 266px;
-        grid-template-columns: 1fr;
-      }
-
-      .projects-intro-terminal {
-        grid-column: 1;
-        grid-row: 1;
-        height: var(--projects-intro-terminal-height);
-      }
-
-      .projects-intro-phone {
-        width: clamp(152px, calc(var(--projects-intro-phone-height) * 0.486), 200px);
-        height: var(--projects-intro-phone-height);
-      }
-
-      .projects-intro-phone-left,
-      .projects-intro-phone-left-inner,
-      .projects-intro-phone-left-outer {
-        grid-column: 1;
-        grid-row: 2;
-        transform: none;
-      }
-
-      .projects-intro-phone-right,
-      .projects-intro-phone-right-inner,
-      .projects-intro-phone-right-outer {
-        grid-column: 1;
-        grid-row: 3;
-        transform: none;
-      }
-
-      .projects-intro-phone-left-outer,
-      .projects-intro-phone-right-outer {
-        display: none;
       }
 
       .project-button {
@@ -5471,6 +4120,10 @@
         height: 292px;
       }
 
+      .remotelog-visual {
+        height: 292px;
+      }
+
       .phone-button:hover {
         filter: none;
         transform: none;
@@ -5480,23 +4133,13 @@
         transform: none;
       }
 
-      .app-tracker-img-wrap-front:hover,
-      .chillmeal-img-wrap-front:hover,
-      .weatherapp-img-wrap-front:hover,
+      .project-phone-card-front:hover,
       .sanotes-phone-stack .sanotes-iphone-front:hover {
         transform: translateX(4px) rotate(-2.5deg);
         filter: none;
       }
 
-      .app-tracker-img-wrap-back:hover {
-        transform: translateX(-6px) rotate(3deg) scale(0.95);
-      }
-
-      .chillmeal-phone-stack .chillmeal-img-wrap-back:hover {
-        transform: translateX(-6px) rotate(3deg) scale(0.95);
-      }
-
-      .weatherapp-phone-stack .weatherapp-img-wrap-back:hover {
+      .project-phone-card-back:hover {
         transform: translateX(-6px) rotate(3deg) scale(0.95);
       }
 
@@ -5529,9 +4172,27 @@
         padding-top: 42px;
         padding-bottom: 56px;
       }
+    }
 
-      .experience-detail-content {
-        padding: 0;
+    @media (hover: none), (pointer: coarse) {
+      .project-phone-card-front,
+      .project-phone-card-back,
+      .sanotes-phone-stack .sanotes-iphone-front,
+      .sanotes-phone-stack .sanotes-iphone-back {
+        transition: none !important;
+      }
+
+      .project-phone-card-front:hover,
+      .sanotes-phone-stack .sanotes-iphone-front:hover {
+        transform: translateX(4px) rotate(-2.5deg) !important;
+        filter: none !important;
+      }
+
+      .project-phone-card-back:hover,
+      .sanotes-phone-stack .sanotes-iphone-back:hover {
+        transform: translateX(-6px) rotate(3deg) scale(0.95) !important;
+        opacity: 1 !important;
+        filter: none !important;
       }
     }
 
