@@ -2,7 +2,7 @@ export default function ExperienceSection() {
   return (
     <aside className="experience-panel scroll-reveal" id="experience" aria-label="Experience and Background">
       <p className="experience-kicker">Personal Journey</p>
-      <h2 className="experience-title">Experience &amp; Background</h2>
+      <h2 className="experience-title">Experience &amp; Growth</h2>
       <p className="experience-intro">A visual look at the real work environment, studies and personal projects shaping how I learn, build and grow as a developer.</p>
       <section className="experience-bento" aria-label="Experience and background segments">
         <article className="experience-segment experience-segment-work">
