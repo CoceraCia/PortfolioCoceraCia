@@ -8,8 +8,8 @@ export default function HeroStage({ resumeCardOpen, onOpenResume }) {
           <button className="phone-button volume-up" type="button" aria-label="Subir volumen"></button>
           <button className="phone-button volume-down" type="button" aria-label="Bajar volumen"></button>
           <button className="phone-button power-button" type="button" aria-label="Boton lateral"></button>
-          <div className="screen" aria-hidden="true">
-            <div className="home-screen" aria-hidden="true">
+          <div className="screen">
+            <div className="home-screen">
               <div className="liquid-glass-notification" aria-hidden="true">
                 <span className="notification-app-logo">
                   <img className="notification-app-logo-icon" src="/assets/icons/app/happy-face.svg" alt="" />
@@ -19,7 +19,7 @@ export default function HeroStage({ resumeCardOpen, onOpenResume }) {
                   <span className="notification-body">For a better experience use a browser like Chrome.</span>
                 </span>
               </div>
-              <div className="liquid-glass-bar" aria-hidden="true">
+              <div className="liquid-glass-bar" aria-label="Phone dock links">
                 <a className="dock-app dock-linkedin" href="https://www.linkedin.com/in/miguelcoceracia" target="_blank" rel="noreferrer" aria-label="LinkedIn profile">
                   <img className="dock-app-icon" src="/assets/icons/social/linkedin.svg" alt="" />
                 </a>
@@ -104,7 +104,7 @@ export default function HeroStage({ resumeCardOpen, onOpenResume }) {
           </div>
         </aside>
         <aside className="about-panel scroll-reveal" id="about" aria-label="About me">
-          <p className="about-kicker">Background</p>
+          <p className="about-kicker">Next</p>
           <h2 className="about-title">About Me</h2>
           <p className="about-story">I&apos;m a developer from Barcelona finishing my Multimedia Application Development studies in about one month, with a strong focus on app development, backend systems, APIs, databases and software architecture.</p>
           <p className="about-story about-story-secondary">My current technical focus is Kotlin first, then Python, Swift and Java, combining mobile app development with server-side logic, data models, automation, frontend basics and user-facing interfaces.</p>

@@ -21,7 +21,7 @@ export default function SidebarNav({
   onOpenResume,
 }) {
   return (
-    <nav className={`sidebar ${navOpen ? "sidebar-open" : ""}`}>
+    <nav className={`sidebar ${navOpen ? "sidebar-open" : ""}`} id="portfolio-sidebar" aria-hidden={!navOpen}>
       <ul className="sidebar-links">
         <li><a className="sidebar-link" href="#hero" onClick={(event) => { event.preventDefault(); onClose(); scrollToStep(0.68); }}>Hero</a></li>
         <li><a className="sidebar-link" href="#about" onClick={(event) => { event.preventDefault(); onClose(); scrollToStep(0.74); }}>About</a></li>

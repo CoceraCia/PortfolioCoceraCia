@@ -49,7 +49,7 @@ export default function ProjectsSection() {
           <p className="projects-type">Python CLI · Scraping · Automation</p>
           <p className="projects-description">Educational Python CLI project built to practice web automation, scraping, asynchronous downloads, image processing, terminal-based configuration, and CBZ file generation.</p>
           <p className="projects-technical">The project includes concurrency-controlled asynchronous workflows, configurable CLI commands, automatic CBZ export, temporary file cleanup, optional grayscale/cropping/resizing image processing, and an extensible scraping architecture based on source adapters and Playwright.</p>
-            <div className="projects-tags" aria-label="Project highlights">
+          <div className="projects-tags" aria-label="Project highlights">
             <span className="project-tag">Advanced Python</span>
             <span className="project-tag">Modular architecture</span>
             <span className="project-tag">Scraping</span>

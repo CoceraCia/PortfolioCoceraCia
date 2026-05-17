@@ -14,6 +14,7 @@ function getStepFromProgress(progress, isCompactViewport) {
 
 export function createStageStepController({ scene, stage, isCompactViewport, initialStep = "step-0", onStepChange }) {
   let activeStep = initialStep;
+  let hasInitialized = false;
 
   const update = () => {
     const rect = scene.getBoundingClientRect();
@@ -24,12 +25,15 @@ export function createStageStepController({ scene, stage, isCompactViewport, ini
     const prevStep = activeStep;
     activeStep = nextStep;
 
-    if (prevStep !== nextStep) {
+    if (!hasInitialized || prevStep !== nextStep) {
       stage.classList.remove(...STAGE_STEP_CLASSES);
       stage.classList.add(nextStep);
     }
 
-    if (onStepChange) onStepChange({ prevStep, nextStep });
+    if (!hasInitialized || prevStep !== nextStep) {
+      hasInitialized = true;
+      if (onStepChange) onStepChange({ prevStep, nextStep });
+    }
   };
 
   const getActiveStep = () => activeStep;

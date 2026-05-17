@@ -4208,7 +4208,10 @@
       align-items: center;
       justify-content: center;
       border-radius: 50%;
+      border: 0;
+      padding: 0;
       background: rgba(255, 255, 255, 0.85);
+      color: #0b0b0d;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -4217,10 +4220,6 @@
 
     .hamburger:hover {
       background: rgba(255, 255, 255, 0.96);
-    }
-
-    .hamburger input {
-      display: none;
     }
 
     .hamburger svg {
