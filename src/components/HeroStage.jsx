@@ -91,7 +91,7 @@ export default function HeroStage({ resumeCardOpen, onOpenResume }) {
         <aside className="portfolio-panel scroll-reveal" aria-label="About me as a developer">
           <h1 className="portfolio-title">Miguel Cocera Cia</h1>
           <p className="portfolio-role">App &amp; Backend Developer | Kotlin, Python, Swift &amp; Java.</p>
-          <p className="portfolio-intro">I build practical software across mobile apps, backend systems, APIs, database-driven projects and automation tools, currently focusing most on Kotlin, followed by Python, Swift and Java.</p>
+          <p className="portfolio-intro">I build practical software across mobile apps, backend systems, APIs, database-driven projects and automation tools, with a strong focus on Kotlin, Python, Swift and Java.</p>
           <div className="portfolio-actions" aria-label="Profile links">
             <a className="portfolio-button portfolio-button-primary" href="https://github.com/CoceraCia" target="_blank" rel="noreferrer">
               <img className="portfolio-button-icon" src="/assets/icons/social/github.svg" alt="" />
@@ -106,7 +106,7 @@ export default function HeroStage({ resumeCardOpen, onOpenResume }) {
         <aside className="about-panel scroll-reveal" id="about" aria-label="About me">
           <p className="about-kicker">Next</p>
           <h2 className="about-title">About Me</h2>
-          <p className="about-story">I&apos;m a developer from Barcelona finishing my Multimedia Application Development studies in about one month, with a strong focus on app development, backend systems, APIs, databases and software architecture.</p>
+          <p className="about-story">I&apos;m a developer from Barcelona currently completing my Multiplatform Application Development studies, with a strong focus on app development, backend systems, APIs, databases and software architecture.</p>
           <p className="about-story about-story-secondary">My current technical focus is Kotlin first, then Python, Swift and Java, combining mobile app development with server-side logic, data models, automation, frontend basics and user-facing interfaces.</p>
           <p className="about-values">Core focus: Kotlin app development, Python backend work, Swift mobile projects, APIs and databases. Also experienced with Java, PHP, HTML/CSS, Git, GitHub, Android Studio, NetBeans, Figma, Canva and Gimp through personal and academic projects.</p>
           <div className="about-actions">

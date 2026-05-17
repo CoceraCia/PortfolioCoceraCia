@@ -153,7 +153,7 @@ export default function ProjectsSection() {
           <p className="projects-kicker">Current Project</p>
           <h2 className="projects-title">Media Tracker App</h2>
           <p className="projects-type app-tracker-type">Kotlin Multiplatform · GraphQL API · OAuth · Stremio Addon Bridge</p>
-          <p className="app-tracker-description">A real app currently in development, built to combine AniList and TrackTech into one unified catalog and tracking experience. The goal is to give users a more flexible place to organize what they want to watch, follow, and manage across different content sources.</p>
+          <p className="app-tracker-description">A real app currently in development, built to combine AniList and Trakt into one unified catalog and tracking experience. The goal is to give users a more flexible place to organize what they want to watch, follow, and manage across different content sources.</p>
           <div className="app-tracker-highlights" aria-label="Media Tracker App highlights">
             <p>Built with Kotlin Multiplatform so the Android foundation can evolve toward iPhone support later.</p>
             <p>Uses APIs and authentication to connect tracking data, catalog discovery, and user-specific state.</p>
@@ -161,7 +161,7 @@ export default function ProjectsSection() {
           </div>
           <div className="app-tracker-features">
             <span className="project-tag">Kotlin Multiplatform</span>
-            <span className="project-tag">AniList + TrackTech unified</span>
+            <span className="project-tag">AniList + Trakt unified</span>
             <span className="project-tag">APIs</span>
             <span className="project-tag">Authentication</span>
             <span className="project-tag">Stremio Addon Support</span>

@@ -71,7 +71,7 @@ export default function ExperienceSection() {
                     <h4 className="experience-history-title">Loterías y Apuestas del Estado</h4>
                     <p className="experience-history-subtitle">Customer Service</p>
                   </div>
-                  <span className="experience-history-date">2024–2025</span>
+                  <span className="experience-history-date">2023–2025</span>
                 </div>
                 <p className="experience-history-text">A customer-facing role focused on selling lottery tickets, assisting customers and handling daily point-of-sale tasks. It helped me strengthen communication, responsibility, organization and customer service skills.</p>
                 <div className="experience-history-tags" aria-label="Customer service skills">
@@ -90,13 +90,12 @@ export default function ExperienceSection() {
             <span className="experience-segment-badge">Academic Path</span>
             <h3 className="experience-segment-title">Education</h3>
             <p className="experience-segment-subtitle">From systems and networks to software development</p>
-            <p className="experience-segment-text">My studies show a clear progression from IT infrastructure into software development, combining technical foundations with a more application-focused profile.</p>
             <div className="experience-education-list" aria-label="Academic background">
               <article className="experience-education-item">
                 <div className="experience-history-head">
                   <div>
                     <h4 className="experience-history-title">Multiplatform Application Development</h4>
-                    <p className="experience-history-subtitle">2024–2026</p>
+                    <p className="experience-history-subtitle">LinkiaFP Online / STUCOM Centre d&apos;Estudis - Pelai</p>
                   </div>
                   <span className="experience-history-date">Finishing soon</span>
                 </div>
@@ -114,7 +113,7 @@ export default function ExperienceSection() {
                 <div className="experience-history-head">
                   <div>
                     <h4 className="experience-history-title">Microcomputer Systems and Networks</h4>
-                    <p className="experience-history-subtitle">2022–2024</p>
+                    <p className="experience-history-subtitle">STUCOM Centre d&apos;Estudis - Corsega</p>
                   </div>
                   <span className="experience-history-date">Completed</span>
                 </div>
@@ -128,24 +127,36 @@ export default function ExperienceSection() {
                   <span>IT infrastructure</span>
                 </div>
               </article>
+              <article className="experience-education-item">
+                <div className="experience-history-head">
+                  <div>
+                    <h4 className="experience-history-title">B2 English Certificate</h4>
+                    <p className="experience-history-subtitle">Janet&apos;s School - English Academy</p>
+                  </div>
+                  <span className="experience-history-date">COMPLETED</span>
+                </div>
+                <p className="experience-history-text">Certified B2 English level, supporting professional communication, technical documentation reading and international project collaboration.</p>
+                <div className="experience-history-tags" aria-label="English certificate skills">
+                  <span>English B2</span>
+                  <span>Professional communication</span>
+                  <span>Technical reading</span>
+                </div>
+              </article>
             </div>
           </div>
         </article>
         <article className="experience-segment experience-segment-background">
           <div className="experience-segment-copy">
             <span className="experience-segment-badge">Learning by Building</span>
-            <h3 className="experience-segment-title">Background</h3>
-            <p className="experience-segment-subtitle">Personal Journey</p>
-            <p className="experience-segment-text">Passionate about learning by building. My background is shaped by personal projects focused on backend development, mobile apps, automation, APIs and useful software tools. I enjoy creating practical solutions, experimenting and improving through real projects.</p>
-            <p className="experience-segment-text">Outside formal work and studies, I treat every project as a chance to improve both technical quality and product thinking: cleaner architecture, better usability, and more practical results.</p>
-            <div className="experience-background-points" aria-label="Background development focus">
-              <p className="experience-background-heading">How I approach projects</p>
-              <ul className="experience-background-list">
-                <li><span>Builder mindset:</span> turn ideas into working tools quickly, then iterate.</li>
-                <li><span>Product thinking:</span> prioritize usefulness, clarity and real outcomes.</li>
-                <li><span>Continuous growth:</span> learn through experimentation, feedback and consistency.</li>
-              </ul>
-            </div>
+            <h3 className="experience-segment-title">How I Approach Projects</h3>
+            <p className="experience-segment-text">I enjoy building projects that challenge me and push me to learn something new. For me, creating an app is not only about writing code, but about turning an idea into something real, useful and polished.</p>
+            <br />
+            <ul className="experience-background-list">
+              <li><span>Challenge-driven:</span> choose projects that make me think, solve problems and grow technically.</li>
+              <li><span>Build useful first:</span> focus on a working version that solves the core idea before adding complexity.</li>
+              <li><span>Learn by doing:</span> use each project to improve my skills, architecture decisions and product thinking.</li>
+              <li><span>Refine with care:</span> keep iterating until the result feels reliable, clean and enjoyable to use.</li>
+            </ul>
           </div>
         </article>
       </section>
