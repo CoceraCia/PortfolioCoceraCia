@@ -1,31 +1,186 @@
 import { useRef, useEffect, useState } from "react";
 
+const skills = [
+  { icon: "/assets/icons/skills/java.svg", label: "Java" },
+  { icon: "/assets/icons/skills/python.svg", label: "Python" },
+  { icon: "/assets/icons/skills/fastapi.svg", label: "FastAPI" },
+  { icon: "/assets/icons/skills/rest-api.svg", label: "REST APIs" },
+  { icon: "/assets/icons/skills/graphql.svg", label: "GraphQL" },
+  { icon: "/assets/icons/skills/oop-mvvm.svg", label: "OOP" },
+  { icon: "/assets/icons/skills/kotlin.svg", label: "Kotlin" },
+  { icon: "/assets/icons/skills/android-studio.svg", label: "Android Studio" },
+  { icon: "/assets/icons/skills/swift.svg", label: "Swift" },
+  { icon: "/assets/icons/skills/jetpack-compose.svg", label: "Jetpack Compose" },
+  { icon: "/assets/icons/skills/sqlite.svg", label: "SQLite" },
+  { icon: "/assets/icons/skills/oop-mvvm.svg", label: "MVVM" },
+  { icon: "/assets/icons/skills/mysql.svg", label: "MySQL" },
+  { icon: "/assets/icons/skills/mariadb.svg", label: "MariaDB" },
+  { icon: "/assets/icons/skills/mongodb.svg", label: "MongoDB" },
+  { icon: "/assets/icons/skills/firebase.svg", label: "Firebase" },
+  { icon: "/assets/icons/skills/git.svg", label: "Git" },
+  { icon: "/assets/icons/skills/github.svg", label: "GitHub" },
+  { icon: "/assets/icons/skills/netbeans.svg", label: "NetBeans" },
+  { icon: "/assets/icons/skills/vs-code.svg", label: "VS Code" },
+  { icon: "/assets/icons/skills/figma.svg", label: "Figma" },
+  { icon: "/assets/icons/skills/canva.svg", label: "Canva" },
+  { icon: "/assets/icons/skills/gimp.svg", label: "GIMP" },
+  { icon: "/assets/icons/skills/cli-tools.svg", label: "CLI Tools" },
+  { icon: "/assets/icons/skills/web-scraping.svg", label: "Web Scraping" },
+  { icon: "/assets/icons/skills/automation.svg", label: "Automation" },
+  { icon: "/assets/icons/skills/client-server.svg", label: "Client-Server" },
+  { icon: "/assets/icons/skills/php.svg", label: "PHP" },
+];
+
 export default function PortfolioScene() {
+  const marqueeRef = useRef(null);
   const trackRef = useRef(null);
   const [navOpen, setNavOpen] = useState(false);
   const [resumeCardOpen, setResumeCardOpen] = useState(false);
+  const [isDraggingSkills, setIsDraggingSkills] = useState(false);
 
   useEffect(() => {
+    const marquee = marqueeRef.current;
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || !marquee) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let position = 0;
     let rafId;
+    let isPointerDown = false;
+    let activePointerId = null;
+    let pointerStartX = 0;
+    let dragStartPosition = 0;
+    let autoResumeAt = 0;
+    let pausedByHover = false;
+    let velocityX = 0;
+    let lastMoveX = 0;
+    let lastMoveTs = 0;
+
+    function getLoopWidth() {
+      return track.scrollWidth / 2;
+    }
+
+    function normalizePosition(rawPosition) {
+      const loopWidth = getLoopWidth();
+      if (!loopWidth) return rawPosition;
+      return ((rawPosition % loopWidth) + loopWidth) % loopWidth;
+    }
+
+    function applyTransform() {
+      track.style.transform = `translateX(${-position}px)`;
+    }
+
+    function pauseAutoScroll(ms = 0) {
+      autoResumeAt = performance.now() + ms;
+    }
+
+    function onPointerDown(event) {
+      if (!event.isPrimary || event.button !== 0) return;
+      isPointerDown = true;
+      activePointerId = event.pointerId;
+      pointerStartX = event.clientX;
+      dragStartPosition = position;
+      velocityX = 0;
+      lastMoveX = event.clientX;
+      lastMoveTs = performance.now();
+      setIsDraggingSkills(true);
+      pauseAutoScroll(500);
+      marquee.setPointerCapture(event.pointerId);
+    }
+
+    function onPointerMove(event) {
+      if (!isPointerDown || event.pointerId !== activePointerId) return;
+      const deltaX = event.clientX - pointerStartX;
+      position = normalizePosition(dragStartPosition - deltaX);
+      applyTransform();
+
+      const now = performance.now();
+      const elapsed = now - lastMoveTs;
+      if (elapsed > 0) {
+        velocityX = (event.clientX - lastMoveX) / elapsed;
+        lastMoveX = event.clientX;
+        lastMoveTs = now;
+      }
+    }
+
+    function finishDrag(event) {
+      if (event && event.pointerId !== activePointerId) return;
+      if (isPointerDown && activePointerId !== null && marquee.hasPointerCapture(activePointerId)) {
+        marquee.releasePointerCapture(activePointerId);
+      }
+      isPointerDown = false;
+      activePointerId = null;
+      setIsDraggingSkills(false);
+      pauseAutoScroll(750);
+    }
+
+    function onPointerUp(event) {
+      finishDrag(event);
+    }
+
+    function onPointerCancel(event) {
+      finishDrag(event);
+    }
+
+    function onLostPointerCapture(event) {
+      finishDrag(event);
+    }
+
+    function onMouseEnter() {
+      pausedByHover = true;
+    }
+
+    function onMouseLeave() {
+      pausedByHover = false;
+      pauseAutoScroll(160);
+    }
 
     function animate() {
-      position -= 0.6;
+      const now = performance.now();
 
-      if (Math.abs(position) >= track.scrollWidth / 2) {
-        position = 0;
+      if (isPointerDown) {
+        rafId = requestAnimationFrame(animate);
+        return;
       }
 
-      track.style.transform = `translateX(${position}px)`;
+      if (Math.abs(velocityX) > 0.01 && !reduceMotion) {
+        position = normalizePosition(position - velocityX * 18);
+        velocityX *= 0.92;
+      } else {
+        velocityX = 0;
+      }
+
+      const autoScrollEnabled = !reduceMotion && !pausedByHover && now >= autoResumeAt;
+      if (autoScrollEnabled) {
+        position = normalizePosition(position + 0.6);
+      }
+
+      applyTransform();
       rafId = requestAnimationFrame(animate);
     }
 
+    marquee.addEventListener("pointerdown", onPointerDown);
+    marquee.addEventListener("pointermove", onPointerMove);
+    marquee.addEventListener("pointerup", onPointerUp);
+    marquee.addEventListener("pointercancel", onPointerCancel);
+    marquee.addEventListener("lostpointercapture", onLostPointerCapture);
+    marquee.addEventListener("mouseenter", onMouseEnter);
+    marquee.addEventListener("mouseleave", onMouseLeave);
+
+    applyTransform();
     rafId = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(rafId);
+    return () => {
+      cancelAnimationFrame(rafId);
+      marquee.removeEventListener("pointerdown", onPointerDown);
+      marquee.removeEventListener("pointermove", onPointerMove);
+      marquee.removeEventListener("pointerup", onPointerUp);
+      marquee.removeEventListener("pointercancel", onPointerCancel);
+      marquee.removeEventListener("lostpointercapture", onLostPointerCapture);
+      marquee.removeEventListener("mouseenter", onMouseEnter);
+      marquee.removeEventListener("mouseleave", onMouseLeave);
+    };
   }, []);
 
   function scrollToStep(threshold) {
@@ -137,8 +292,8 @@ export default function PortfolioScene() {
         </main>
         <aside className="portfolio-panel scroll-reveal" aria-label="About me as a developer">
           <h1 className="portfolio-title">Miguel Cocera Cia</h1>
-          <p className="portfolio-role">Mobile &amp; Backend Developer | AI Agents Developer.</p>
-          <p className="portfolio-intro">I am a cross-platform developer with experience in Kotlin, Swift, Python, Java, backend systems, automations, and AI agents. I currently work at Glofera, building conversational AI solutions for WhatsApp and voice.</p>
+          <p className="portfolio-role">App &amp; Backend Developer | Kotlin, Python, Swift &amp; Java.</p>
+          <p className="portfolio-intro">I build practical software across mobile apps, backend systems, APIs, database-driven projects and automation tools, currently focusing most on Kotlin, followed by Python, Swift and Java.</p>
           <div className="portfolio-actions" aria-label="Profile links">
             <a className="portfolio-button portfolio-button-primary" href="https://github.com/CoceraCia" target="_blank" rel="noreferrer">
               <img className="portfolio-button-icon" src="/assets/icons/social/github.svg" alt="" />
@@ -151,11 +306,11 @@ export default function PortfolioScene() {
           </div>
         </aside>
         <aside className="about-panel scroll-reveal" id="about" aria-label="About me">
-          <p className="about-kicker">Next</p>
+          <p className="about-kicker">Background</p>
           <h2 className="about-title">About Me</h2>
-          <p className="about-story">I&apos;m 21, from Barcelona, and since I discovered programming, I&apos;ve been obsessed with building things. I started with systems computing through SMIX, continued with DAM to specialize in cross-platform development, and I currently work at Glofera creating AI agents for WhatsApp and voice.</p>
-          <p className="about-story about-story-secondary">I enjoy building useful tools, automating processes, designing mobile experiences, and exploring how AI can become a real product.</p>
-          <p className="about-values">Creativity. Genuine passion for programming. Fast learning. Future-focused interest in AI and Big Data. Product mindset, not just a code mindset.</p>
+          <p className="about-story">I&apos;m a developer from Barcelona finishing my Multimedia Application Development studies in about one month, with a strong focus on app development, backend systems, APIs, databases and software architecture.</p>
+          <p className="about-story about-story-secondary">My current technical focus is Kotlin first, then Python, Swift and Java, combining mobile app development with server-side logic, data models, automation, frontend basics and user-facing interfaces.</p>
+          <p className="about-values">Core focus: Kotlin app development, Python backend work, Swift mobile projects, APIs and databases. Also experienced with Java, PHP, HTML/CSS, Git, GitHub, Android Studio, NetBeans, Figma, Canva and Gimp through personal and academic projects.</p>
           <div className="about-actions">
             <button className="portfolio-button portfolio-button-primary about-resume-button" type="button" aria-haspopup="dialog" aria-expanded={resumeCardOpen} onClick={() => setResumeCardOpen(true)}>
               Download Resume
@@ -383,64 +538,14 @@ export default function PortfolioScene() {
         <section className="skills-section scroll-reveal" id="skills" aria-label="Skills">
           <p className="skills-kicker">Technical Range</p>
           <h2 className="skills-title">Skills</h2>
-          <div className="skills-marquee">
+          <div className={`skills-marquee${isDraggingSkills ? " is-dragging" : ""}`} ref={marqueeRef}>
             <div className="skills-marquee-track" ref={trackRef}>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/java.svg" alt="" /><span className="skill-item-label">Java</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/python.svg" alt="" /><span className="skill-item-label">Python</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/fastapi.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/rest-api.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/graphql.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">OOP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/kotlin.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/android-studio.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/swift.svg" alt="" /><span className="skill-item-label">Swift</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/jetpack-compose.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/sqlite.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mysql.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mariadb.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mongodb.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/firebase.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/git.svg" alt="" /><span className="skill-item-label">Git</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/github.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/netbeans.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/vs-code.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/figma.svg" alt="" /><span className="skill-item-label">Figma</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/canva.svg" alt="" /><span className="skill-item-label">Canva</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/gimp.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/cli-tools.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/web-scraping.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/automation.svg" alt="" /><span className="skill-item-label">Automation</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/client-server.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/php.svg" alt="" /><span className="skill-item-label">PHP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/java.svg" alt="" /><span className="skill-item-label">Java</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/python.svg" alt="" /><span className="skill-item-label">Python</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/fastapi.svg" alt="" /><span className="skill-item-label">FastAPI</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/rest-api.svg" alt="" /><span className="skill-item-label">REST APIs</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/graphql.svg" alt="" /><span className="skill-item-label">GraphQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">OOP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/kotlin.svg" alt="" /><span className="skill-item-label">Kotlin</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/android-studio.svg" alt="" /><span className="skill-item-label">Android Studio</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/swift.svg" alt="" /><span className="skill-item-label">Swift</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/jetpack-compose.svg" alt="" /><span className="skill-item-label">Jetpack Compose</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/sqlite.svg" alt="" /><span className="skill-item-label">SQLite</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/oop-mvvm.svg" alt="" /><span className="skill-item-label">MVVM</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mysql.svg" alt="" /><span className="skill-item-label">MySQL</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mariadb.svg" alt="" /><span className="skill-item-label">MariaDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/mongodb.svg" alt="" /><span className="skill-item-label">MongoDB</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/firebase.svg" alt="" /><span className="skill-item-label">Firebase</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/git.svg" alt="" /><span className="skill-item-label">Git</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/github.svg" alt="" /><span className="skill-item-label">GitHub</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/netbeans.svg" alt="" /><span className="skill-item-label">NetBeans</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/vs-code.svg" alt="" /><span className="skill-item-label">VS Code</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/figma.svg" alt="" /><span className="skill-item-label">Figma</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/canva.svg" alt="" /><span className="skill-item-label">Canva</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/gimp.svg" alt="" /><span className="skill-item-label">GIMP</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/cli-tools.svg" alt="" /><span className="skill-item-label">CLI Tools</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/web-scraping.svg" alt="" /><span className="skill-item-label">Web Scraping</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/automation.svg" alt="" /><span className="skill-item-label">Automation</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/client-server.svg" alt="" /><span className="skill-item-label">Client-Server</span></div>
-              <div className="skill-item"><img className="skill-icon" src="/assets/icons/skills/php.svg" alt="" /><span className="skill-item-label">PHP</span></div>
+              {[...skills, ...skills].map((skill, index) => (
+                <div className="skill-item" key={`${skill.label}-${index}`}>
+                  <img className="skill-icon" src={skill.icon} alt="" />
+                  <span className="skill-item-label">{skill.label}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
