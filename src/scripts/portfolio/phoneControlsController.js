@@ -33,7 +33,7 @@ export function createPhoneControlsController({
     if (audioCtx.state === "suspended") {
       try {
         await audioCtx.resume();
-      } catch (_) {
+      } catch {
         return null;
       }
     }
