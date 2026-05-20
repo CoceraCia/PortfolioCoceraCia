@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "depth-effect-ios",
+  "name": "portfolio_cocera_cia",
   "compatibility_date": "2026-05-16",
   "observability": {
     "enabled": true
